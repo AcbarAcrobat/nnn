@@ -1,0 +1,38 @@
+
+
+## FOR 1st MASTER
+
+- name: Run bootstrap from all masters to first master, delegated to run on 1st Master
+  shell: |
+    kubeadm init phase certs etcd-server --config=/etc/kubernetes/kubeadmcfg-{{ hostvars[item].ansible_nodename }}.yaml 
+    kubeadm init phase certs etcd-peer --config=/etc/kubernetes/kubeadmcfg-{{ hostvars[item].ansible_nodename }}.yaml 
+    kubeadm init phase certs etcd-healthcheck-client --config=/etc/kubernetes/kubeadmcfg-{{ hostvars[item].ansible_nodename }}.yaml 
+    kubeadm init phase certs apiserver-etcd-client --config=/etc/kubernetes/kubeadmcfg-{{ hostvars[item].ansible_nodename }}.yaml 
+    cp -R /etc/kubernetes/pki /opt/ca/{{ hostvars[item].ansible_nodename }}/ 
+    find /etc/kubernetes/pki -not -name ca.crt -not -name ca.key -type f -delete
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  with_items: |
+    {% set hostslist = [] %}
+    {% for host in groups['kubernetes-master'] %}
+    {% if host in groups['kubernetes-master'][0] %}
+    {% set hostslist2 = hostslist.append(hostvars[host]['ansible_nodename']) %}
+    {% endif %}
+    {% endfor %}
+    {{ hostslist }}  
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+  ignore_errors: true
+
+- name: Run bootstrap from all masters to first master, delegated to run on 1st Master
+  shell: |
+    cp -R /etc/kubernetes/pki /opt/ca/{{ hostvars[item].ansible_nodename }}/ 
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  with_items: |
+    {% set hostslist = [] %}
+    {% for host in groups['kubernetes-master'] %}
+    {% if host in groups['kubernetes-master'][0] %}
+    {% set hostslist2 = hostslist.append(hostvars[host]['ansible_nodename']) %}
+    {% endif %}
+    {% endfor %}
+    {{ hostslist }}  
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+  ignore_errors: true

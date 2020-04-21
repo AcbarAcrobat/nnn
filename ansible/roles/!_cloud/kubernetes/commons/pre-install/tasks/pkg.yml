@@ -1,0 +1,31 @@
+---
+- name: GET | Register the release codename
+  shell: "echo $(lsb_release -cs)"
+  register: lsb_release
+  when: ansible_os_family == "Debian"
+
+- name: Add Kubernetes APT GPG key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Itself double save
+  shell: rm -rf /etc/apt/sources.list.d/kubernetes.list
+  ignore_errors: true
+
+- name: Add Kubernetes APT repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-{{ ansible_lsb.codename }} main
+    state: present
+    filename: 'kubernetes'
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Install kubernetes packages (Debian/Ubuntu)
+  when: ansible_os_family == "Debian"
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  with_items: "{{ pkgs }}"

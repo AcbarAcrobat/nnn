@@ -1,0 +1,25 @@
+{% raw %}{
+    "hosts": [
+        "{% endraw %}{{ K8S_CLUSTER_ADDRESS }}{% raw %}",
+        "{% endraw %}{{ CALICO_ETCD_CLUSTER_IP }}{% raw %}",
+        "{% endraw %}{{ public_consul_domain }}{% raw %}",
+        "vortex",
+        "{% endraw %}{% for host in groups['kubernetes-master'] %}{% raw %}"
+        "{% endraw %}{{ hostvars[host]['ansible_nodename'] }}{% raw %}",
+        "{% endraw %}{{ hostvars[host]['second_ip'] }}{% raw %}",
+        "{% endraw %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% raw %}",
+      {% endraw %}{% endif %}{% endfor %}{% raw %}
+    ],
+    "CN": "www.example.com",
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [{
+        "C": "US",
+        "L": "San Francisco",
+        "O": "Example Company, LLC",
+        "OU": "Operations",
+        "ST": "California"
+    }]
+}

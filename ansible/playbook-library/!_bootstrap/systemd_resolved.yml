@@ -1,0 +1,31 @@
+
+# Facts Getting from All Server's clients for systemd_resolved templating
+- name: Delegate tasks for gathering facts
+  hosts: all
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+  tasks:
+
+    - name: Gather facts from master-bind-master-backend servers
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      loop: "{{ groups['master-bind-master-backend'] }}"
+
+    - name: Gather facts from master-bind-master-backend servers
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      loop: "{{ groups['all'] }}"
+
+- name: Fact gathering
+  hosts: all
+  tasks: []
+  tags: [get_facts, always]
+
+- name: Setup systemd resolved service for run specific tasks
+  hosts: all
+  roles:
+
+    - name: Run systemd_resolved service role
+      role: ./!_bootstrap/systemd_resolved

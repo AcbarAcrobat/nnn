@@ -1,0 +1,38 @@
+{
+  "name": "pxconsole",
+  "version": "0.1.0",
+  "description": "phoenix console",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint ./**",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "phoenix",
+    "console",
+    "postgres"
+  ],
+  "author": "p.timmermans@evs.com",
+  "license": "ISC",
+  "dependencies": {
+    "eslint-plugin-prettier": "^2.6.1",
+    "express": "^4.15.2",
+    "express-ws": "^4.0.0",
+    "node-js": "^1.0.0",
+    "pg": "7.4.3",
+    "postgres-interval": "^1.1.1",
+    "prettier": "^1.13.5",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jest": "^21.17.0",
+    "jest": "^23.1.0",
+    "mocha": "^5.2.0",
+    "sinon": "^5.1.1"
+  }
+}

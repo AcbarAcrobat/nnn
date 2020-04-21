@@ -1,0 +1,10 @@
+- name: re/Create a new alicloud VPC resource
+  ali_vpc:
+    alicloud_region: '{{ item.value.alicloud_region }}'
+    state: 'present'
+    cidr_block: '{{ item.value.cidr_block }}'
+    vpc_name: '{{ item.value.vpc_name }}'
+    description: '{{ item.value.vpc_description }}'
+    alicloud_secret_key: "{{ alicloud_secret_key }}"
+    alicloud_access_key: "{{ alicloud_access_key }}"
+  with_dict: "{{ cloud_bootstrap.vpc_zones }}"

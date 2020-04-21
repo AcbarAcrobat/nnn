@@ -1,0 +1,25 @@
+
+- name: Delegate tasks for gathering facts
+  hosts: "{{ HOSTS | default('master-bind-master-backend') }}"
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+  tasks:
+    - name: Gather facts from master-bind-master-backend servers
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      loop: "{{ groups['master-bind-master-backend'] }}"
+    - name: Gather facts from master-bind-master-backend servers
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      loop: "{{ groups['all'] }}"
+
+- name: Setup dns backend service for run specific tasks
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+  hosts: "{{ HOSTS | default('master-bind-master-backend') }}:all"
+  roles:
+    - name: Run dns service role
+      role: ./!_bootstrap/dns-backend
+  serial: 1

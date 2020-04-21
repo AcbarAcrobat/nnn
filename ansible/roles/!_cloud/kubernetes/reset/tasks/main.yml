@@ -1,0 +1,88 @@
+# RESET ALL
+
+
+- name: Task for able to access to some server resource
+  shell: ls -la /etc/kubernetes 
+  ignore_errors: true
+
+
+  # with_nested:
+  #   - "{{ array1 }}"
+  #   - "{{ array2 }}"
+
+## stop services
+- name: Stop all services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - kubelet
+    - etcd
+  ignore_errors: true
+
+# value: 1  # 0/1 int
+# value: 0  # 0/1 int
+
+# value: string # string
+# value: myVeryGigstring731rhiuv9ebt1t1 # string
+
+# value: # list
+#   - 1
+#   - 2
+#   - 3
+#   - 4
+
+# value: 
+#   - 1a
+#   - 2
+
+# - name: Shell get
+#   shell: wget https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+#   when: download_uri is defined
+
+# - name: Shell +x
+#   shell: chmod +x /usr/local/bin/kubectl
+
+# RESET CA
+
+- name: Clear ca directories
+  shell: rm -rf {{ item.value }}
+  with_dict: "{{ ca_service_settings.directories | default({}) }}"
+
+# RESET KUBE
+
+- name: Stop kubelet
+  shell: systemctl stop kubelet
+
+- name: Reset Kubernetes component
+  shell: "kubeadm reset --force --cri-socket /var/run/dockershim.sock"
+  ignore_errors: true
+
+- name: Remove possible old configs
+  shell: |
+    rm /etc/kubernetes/manifests/*
+    rm /etc/kubernetes/kubelet.conf
+    rm /etc/kubernetes/controller-manager.conf
+    rm /etc/kubernetes/scheduler.conf
+    rm /etc/kubernetes/admin.conf
+  ignore_errors: true
+
+- name: Clear kube directories
+  shell: rm -rf {{ item.value }}
+  with_dict: "{{ k8s_service_settings.directories | default({}) }}"
+  ignore_errors: true
+
+- name: Clear /var/lib/kubelet directories
+  shell: rm -rf /var/lib/kubelet/*
+  ignore_errors: true
+
+# RESET ETCD
+
+- name: Stop etcd
+  shell: systemctl stop etcd
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Clear etcd directories
+  shell: rm -rf {{ item.value }}
+  with_dict: "{{ etcd_service_settings.directories | default({}) }}"
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']

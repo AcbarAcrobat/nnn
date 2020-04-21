@@ -1,0 +1,67 @@
+---
+# - hosts: kubernetes-cluster
+#   gather_facts: yes
+#   become: yes
+#   vars_files:
+#     - "./group_vars/!_K8s_Template/main.settings.template.yml"
+#   roles:
+#     - { role: ./!_cloud/k8/docker, tags: docker }
+
+- name: Create a Kubernetes cluster with workers
+  hosts: kubernetes-cluster
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - "group_vars/nginx-frontend/all.yml"
+    - "group_vars/all/all.yml"
+    - "./group_vars/!_K8s_Template/main.settings.template.yml"
+  roles:
+    # - { role: ./!_cloud/k8/kubernetes/master, tags: master }
+    - { role: ./!_0_killer/entrypoint, tags: entrypoint }
+    # - { role: ./!_cloud/k8/etcd, tags: master }
+    # - { role: ./!_cloud/k8/cni, tags: cni }
+
+# - hosts: kubernetes-worker
+#   gather_facts: yes
+#   become: yes
+#   vars_files:
+#     - "./group_vars/!_K8s_Template/main.settings.template.yml"
+#   roles:
+#     - { role: ./!_cloud/k8/kubernetes/node, tags: node }
+
+# - hosts: kubernetes-master
+#   gather_facts: yes
+#   become: yes
+#   vars_files:
+#     - "./group_vars/!_K8s_Template/main.settings.template.yml"
+#   tasks:
+#     - name: "Helm role"
+#       include_role:
+#         name: ./!_cloud/k8/helm
+#       when: "additional_features.helm"
+#       run_once: yes
+#       tags: helm
+
+#     - name: "MetalLB role"
+#       include_role:
+#         name: ./!_cloud/k8/metallb
+#       when: "additional_features.metallb"
+#       run_once: yes
+#       tags: metallb
+
+#     - name: "Healthcheck role"
+#       include_role:
+#         name: ./!_cloud/k8/healthcheck
+#       when: "additional_features.healthcheck"
+#       run_once: yes
+#       tags: healthcheck
+
+#     # - name: "Management role"
+#     #   include_role:
+#     #     name: ./!_cloud/k8/management
+#     #   run_once: yes
+
+#     # - name: "Dashboard role"
+#     #   include_role:
+#     #     name: ./!_cloud/k8/dashboard
+#     #   run_once: yes

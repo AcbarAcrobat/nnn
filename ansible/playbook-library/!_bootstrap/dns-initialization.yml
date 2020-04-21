@@ -1,0 +1,14 @@
+
+# Facts Getting from All Server's clients for DNS templating
+- name: Fact gathering
+  hosts: "cloud-bind-frontend-dns:all"
+  tasks: []
+  tags: [get_facts, always]
+
+- name: Setup dns service for run specific tasks
+  hosts: cloud-bind-frontend-dns:all
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/dns-initialization/dns-initialization.yml"
+  roles:
+    - name: Run dns service role
+      role: ./!_bootstrap/dns-initialization

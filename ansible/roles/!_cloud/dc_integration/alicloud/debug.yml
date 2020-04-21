@@ -1,0 +1,140 @@
+
+      # - name: Show ls -la 
+      #   raw: "ls -la ./"
+      #   register: debug_ls_current
+
+      # - name: Show contents
+      #   debug:
+      #     msg: "{{ debug_ls_current }}"
+
+      # - name: Show contents items
+      #   debug:
+      #     msg: "{{ item }}"
+      #   with_items:
+      #     - "{{ alicloud_secret_key }}"
+      #     - "{{ alicloud_access_key }}"
+      #     - "{{ ansible_product }}"
+      #     - "{{ ansible_environment }}"
+      #     - "{{ ansible_environment_root_group_vars }}"
+      #     - "{{ test_variable_01 }}"
+      #     - "{{ getlocal_groups }}"
+      #     - "{{ group_vars_path_my }}"
+      #     - "{{ alicloud_region }}"
+      #     - "{{ alicloud_zone }}"
+
+      # - name: Show contents group_inboundRules
+      #   debug:
+      #     msg: "{{ item }}"
+      #   with_items: "{{ group_inboundRules }}"
+
+      # - name: Show contents cloud_bootstrap.servers
+      #   debug:
+      #     msg: "{{ item }}"
+      #   with_items: "{{ cloud_bootstrap.servers }}"
+
+      # - name: Show contents switches
+      #   debug:
+      #     msg: "{{ item }}"
+      #   with_items: "{{ cloud_bootstrap.switches }}"
+
+      # - name: Get the existing vswitch info
+      #   ali_vswitch_facts:
+      #     name_prefix: '{{ item.value.name }}'
+      #     # filters:
+      #     #   vpc_id: '{{ vpc.vpc.id }}'
+      #   register: vswitches
+      #   with_dict: "{{ cloud_bootstrap.switches }}"
+      #   when: check is defined
+
+      # - name: Get the existing vpc
+      #   ali_vpc_facts:
+      #     region: '{{ alicloud_region }}'
+      #     vpc_name: 'test'
+      #     alicloud_secret_key: "{{ alicloud_secret_key }}"
+      #     alicloud_access_key: "{{ alicloud_access_key }}"
+      # #   register: vpcs
+
+        # with_dict: "{{ VPC_ID.results }}"
+        # when: item.key == 'stdout'
+
+
+      # - name: Create vpc_id
+      #   shell: "{% raw %}echo {% endraw %}{{ VPC_ID.stdout }}{% raw %} | tr -d '\\n' | egrep -o vpc.+%?' '{% endraw %}"
+      #   register: VPC_ID_g
+
+      # - name: Debug VPC_ID_g
+      #   debug: 
+      #     msg: "{{ VPC_ID_g.stdout_lines | join }}"
+
+
+      # - name: Debug vpcs
+      #   raw: "echo '{{ VPC_ID_g.stdout }}' | awk '{print $1}'"
+      #   register: VPCC
+
+      # - name: Debug VPCC
+      #   debug: 
+      #     msg: "{{ VPCC | join }}"
+
+      # - name: Debug vpcs
+      #   shell: "echo '{{ VPCC.stdout | join }}' |  tr -d '\\n'"
+      #   register: VPCC_F
+
+      # - name: Debug VPCC_F
+      #   debug: 
+      #     msg: "{{ VPCC_F | join }}"
+
+      # - name: Get the existing vpc
+      #   ali_vpc_facts:
+      #     region: '{{ item.value.alicloud_region }}'
+      #     vpc_name: '{{ item.value.vpc_name }}'
+      #     alicloud_secret_key: "{{ alicloud_secret_key }}"
+      #     alicloud_access_key: "{{ alicloud_access_key }}"
+      #   register: vpcs_{{ item.value.vpc_name }}
+      #   with_dict: "{{ cloud_bootstrap.vpc_zones }}"
+
+
+      # - name: Debug multivar
+      #   debug:
+      #     var: "vpcs_{{ item.value.vpc_name }}"
+      #   with_dict: "{{ cloud_bootstrap.vpc_zones }}"
+
+      # - name: re/Create a new alicloud VSwitch resource
+      #   ali_vswitch:
+      #     cidr_block: '{{ item.value.vswitch_cidr }}'
+      #     vpc_id: '{{ VPC_ID_FOR }}'
+      #     name: '{{ item.value.vswitch_name }}'
+      #     alicloud_secret_key: "{{ alicloud_secret_key }}"
+      #     alicloud_access_key: "{{ alicloud_access_key }}"
+      #     alicloud_region: '{{ alicloud_region }}'
+      #     #alicloud_region: "eu-west-1"
+      #     #alicloud_zone: "eu-west-a"
+      #     #zone_id: eu-west-a
+      #     alicloud_zone: "eu-west-a"
+      #     state: present
+      #     vswitch_name: "{{ item.value.vswitch_name }}"
+      #     description: "{{ item.value.vswitch_description }}"
+      #   register: vswitch
+      #   with_dict: "{{ cloud_bootstrap.switches }}"
+
+      # - name: re/Create a new alicloud VSwitch resource
+      #   ali_vswitch:
+      #     alicloud_region: "{{ item.value.alicloud_region }}"
+      #     alicloud_zone: "{{ item.value.alicloud_zone }}"
+      #     state: 'present'
+      #     cidr_block: "{{ item.value.cidr_block }}"
+      #     vswitch_name: "{{ item.value.vswitch_name }}"
+      #     description: "{{ item.value.vswitch_description }}"
+      #     alicloud_secret_key: "{{ alicloud_secret_key }}"
+      #     alicloud_access_key: "{{ alicloud_access_key }}"
+      #     vpc_id: "{{ VPC_ID_FOR }}"
+      #   with_dict: "{{ cloud_bootstrap.switches }}"
+
+      # - name: Create the vswitch_id
+      #   set_fact: 
+      #     vswitch_id: "{{ item['vswitch']['vswitch_id'] }}"
+      #   with_items: 
+      #      - "{{ vswitch['results'] }}"
+
+      # - name: debug alicloud_region
+      #   debug:
+      #     msg: "{{ alicloud_region }}"

@@ -1,0 +1,292 @@
+# NG DEPLOY STRATEGY
+
+deploy_strategy:
+  main:
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        failure_action: pause
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 50s
+        max_attempts: 10
+        window: 120s
+      # placement:
+      #   constraints:
+      #     - node.role == worker
+  stateless:
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        failure_action: pause
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 120s
+  longress:
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        parallelism: 1
+        failure_action: pause
+        delay: 300s
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 6
+        window: 300s
+      # placement:
+      #   constraints:
+      #     - node.role == worker
+    # configs:
+    #   - source: common_config
+    #     target: /data/config/node_swarm_config.json
+    #   - source: consul_server_config
+    #     target: /data/config/config.json
+    # secrets:
+    #   - consul_ca_file.cer
+    #   - consul_cert_file.cer
+    #   - consul_key_file.key
+    #   - consul_common_secrets_config.json
+    #   - consul_server_secrets_config.json
+
+all_services_remap_docker_compose_generate:
+
+    mongo:
+      image: "mongo"
+      build_context: dockerfiles
+      tag: "latest"
+      location: "{{ default_docker_image_environment_location }}"
+      volumes:
+        - "{{ default_docker_database_mongo_environment_location }}"
+      scale: 1
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      container_type: database
+      placement: manager
+      k8s_container_type: database
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+      k8s_storage_space_size: 20Gi
+
+    postgres:
+      image: "postgres"
+      build_context: dockerfiles
+      tag: "latest"
+      volumes:
+        - "{{ default_docker_database_postgresql_environment_location }}"
+        - "{{ default_docker_database_postgresql_logs_environment_location }}"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ postgres_service_listen_port }}:{{ postgres_service_listen_port }}"
+      scale: 1
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 50s
+        timeout: 5s
+        retries: 10
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      container_type: database
+      resources:
+        limits:
+          cpus: "4"
+          memory: "2045M"
+        reservations:
+          cpus: "2"
+          memory: "2045M"
+      placement: manager
+      k8s_container_type: database
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+      k8s_storage_space_size: 20Gi
+
+    redis:
+      image: "redis"
+      build_context: dockerfiles
+      tag: "latest"
+      command: "redis-server"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ redis_service_listen_port }}:6379"
+      scale: 1
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      container_type: database
+      placement: manager
+      k8s_container_type: database
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+
+    metabase:
+      image: "metabase"
+      build_context: dockerfiles
+      tag: "latest"
+      volumes:
+        - "{{ default_docker_metabase_environment_location }}"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: "{{ metabase_service_listen_port }}:3000"
+      scale: 1
+      depends_on:
+        - "postgres"
+      depends_on_condition:
+        postgres:
+          condition: service_healthy
+      mode: global
+      endpoint_mode: dnsrr
+      order: start-first
+      container_type: service
+      placement: "{{ METABASE_PLACEMENT_SWARM_CLUSTER_TYPE }}"
+      k8s_container_type: service
+      k8s_service_placement: true
+
+    core:
+      image: "core"
+      build_context: services
+      tag: "{{ version_ansible_build_id }}"
+      # entrypoint: "/core/docker-compose-entrypoint.sh"
+      # command: "while true; do echo 1; sleep 1; done"
+      # command: "rails server -b 0.0.0.0 -p 3000"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ core_service_listen_port }}:3000"
+      scale: 2
+      deployment_strategy: high_availability
+      rollback_parallelism: 1
+      rollback_monitor: 60s
+      rollback_max_failure_ratio: ".2"
+      depends_on:
+        - "postgres"
+        - "redis"
+      depends_on_condition:
+        postgres:
+          condition: service_healthy
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      container_type: service
+      placement: manager
+      k8s_container_type: ruby
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+
+    minio:
+      image: "minio"
+      build_context: dockerfiles
+      tag: "latest"
+      volumes:
+        - "{{ default_docker_database_minio_environment_location }}"
+        - "{{ default_docker_database_minio_config_environment_location }}"
+      command: "server /export"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ minio_service_listen_port }}:9000"
+      scale: 1
+      attached_networks_main: "default"
+      deployment_strategy: high_availability
+      depends_on_condition:
+        postgres:
+          condition: service_healthy
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      no_healthcheck: true
+      container_type: database
+      placement: manager
+      k8s_container_type: storage
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+      k8s_storage_space_size: 20Gi
+
+    nginx:
+      image: "nginx"
+      build_context: dockerfiles
+      tag: "latest"
+      # volumes:
+      #   - "{{ default_docker_database_nginx_environment_location }}"
+      #   - "{{ default_docker_database_nginx_config_environment_location }}"
+      # command: "nginx -g daemon off;"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ nginx_http_service_listen_port }}:{{ nginx_http_service_listen_port }}"
+        - "{{ nginx_https_service_listen_port }}:{{ nginx_https_service_listen_port }}"
+      scale: 1
+      attached_networks_main: "default"
+      deployment_strategy: high_availability
+      depends_on_condition:
+        postgres:
+          condition: service_healthy
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      no_healthcheck: true
+      container_type: service
+      placement: manager
+      k8s_container_type: webserver
+      k8s_container_node: cloud-bind-frontend-dns
+      k8s_service_protocol: HTTPS
+      k8s_service_placement: true
+
+special_all_services_remap_docker_compose_generate:
+    test:
+      image: "test"
+      build_context: dockerfiles
+      tag: "{{ version_ansible_build_id }}"
+      location: "{{ default_docker_image_environment_location }}"
+      ports: 
+        - "{{ test_service_listen_port }}:5070"
+      scale: 1
+      deployment_strategy: high_availability
+      rollback_parallelism: 1
+      rollback_monitor: 40s
+      rollback_max_failure_ratio: ".2"
+      mode: global
+      endpoint_mode: vip
+      order: start-first
+      container_type: service
+      placement: manager
+
+special_only_build_services_remap_docker_compose_generate:
+    wazuh_manager:
+      image: "wazuh-manager"
+      build_context: dockerfiles
+      tag: "latest"
+    wazuh_kibana:
+      image: "wazuh-kibana"
+      build_context: dockerfiles
+      tag: "latest"
+    wazuh_elasticsearch:
+      image: "wazuh-elasticsearch"
+      build_context: dockerfiles
+      tag: "latest"
+    elasticsearch:
+      image: "elasticsearch"
+      build_context: dockerfiles
+      tag: "latest"
+    kibana:
+      image: "kibana"
+      build_context: dockerfiles
+      tag: "latest"
+    pgsql:
+      image: "pgsql"
+      build_context: dockerfiles
+      tag: "latest"
+    pgmanager:
+      image: "pgmanager"
+      build_context: dockerfiles
+      tag: "latest"
+    pgpool:
+      image: "pgpool"
+      build_context: dockerfiles
+      tag: "latest"

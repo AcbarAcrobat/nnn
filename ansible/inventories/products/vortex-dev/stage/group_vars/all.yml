@@ -1,0 +1,1285 @@
+ansible_product: do-dev
+ansible_git_project_path: "vortex/ng-engine-vortex"
+ansible_environment: "stage"
+ansible_rails_environment: production
+ansible_children_environment: "yes"
+
+# PCI DSS!
+
+# POSTFIX MAIL SEND
+
+default_mail_relayhost_address: "smtp.gmail.com"
+default_mail_relayhost_port: "587"
+default_mail_relay_host_port: "{{ default_mail_relayhost_address }}:{{ default_mail_relayhost_port }}"
+default_mail_username: "admin@vortex.com"
+default_mail_password: "2304i10i120i412"
+default_localhost_relay: "localhost"
+default_localhost_port: "25"
+default_localhost_stmp_string: "{{ default_localhost_relay }}:{{ default_localhost_port }}"
+
+# CLAMAV
+
+CLAMAV_MAILING_USER: clamav-scanner@vortex.com
+CLAMAV_MAILING_HOSTNAME_URI: "smtp://{{ default_localhost_relay }}:{{ default_localhost_port }}"
+CLAMAV_MAILING_PASSWORD: "example-password"
+CLAMAV_MAILING_DESTINATION: pci-devops@vortex.com
+
+# OSSEC
+
+ossec_wazuh_smtp_server: "{{ default_mail_relayhost_address }}"
+ossec_wazuh_email_from: "{{ default_mail_username }}"
+ossec_wazuh_email_to: "security@vortex.com"
+ossec_wazuh_email_notification: yes
+ossec_wazuh_email_alerts_log: yes
+ossec_wazuh_use_password: yes
+
+# pci_dss_environment: true
+environment_rsyslog_rotate_days: 365
+
+# # DATABASE BACKEND CLUSTER SETTINGS
+
+# redis_backend_service_listen_port: "{{ redis_public_port }}"
+# pgbouncer_backend_service_listen_port: 5432
+# mongo_backend_service_listen_port: 27017
+# minio_backend_service_listen_port: 9101
+# elasticsearch_backend_service_listen_port: 11400
+
+# DATABASE FRONTEND CONFIGURATION FOR CONNECTION 
+
+## VIP BALANCER ENDPOINT TO LOCAL SWARM CLUSTER
+
+vip_balancer_endpoint_host: postgres
+#vip_balancer_endpount_ip: 172.16.1.100
+
+postgres_database_host: "postgres"
+mongo_database_host: "mongo"
+minio_database_host: "minio"
+redis_database_host: "redis"
+elasticsearch_database_host: "elasticsearch"
+
+KIBANA_ELASTICSEARCH_URL: "elasticsearch"
+
+# APP BASIC SETTINGS FOR BACKENDS
+
+METABASE_DB_TYPE: "MB_DB_TYPE: postgres"
+METABASE_PLACEMENT_SWARM_CLUSTER_TYPE: manager
+
+# APP SECURITY SETTINGS
+
+MINIO_ACCESS_KEY: JGfgJ77UAGfg15617hA9991A15s61A1JhsU51A1UAGfg61hs
+MINIO_SECRET_KEY: nZBj7O3400hfasA9As1fO9ahZBj123sAGf1hFA511h7n1f
+
+COMMISSION_SERVICE_USERNAME: commission_manager
+COMMISSION_SERVICE_PASSWORD: puH3ABMBkE6puABM6HBkE333
+
+ANTI_FRAUD_SERVICE_USERNAME: risk_manager
+ANTI_FRAUD_SERVICE_PASSWORD: GnEnPbPbZ8TGZHBkE3JvFzvE8TbFzJGZ
+
+# MAILING SETTINGS
+
+APP_DOMAIN: vortex.com
+APP_COMPANY_NAME: vortex
+APP_SUPPORT_EMAIL: support@vortex.com
+APP_MAIL_DOMAIN: vortex.com
+APP_MAILER_SERVER: smtp.gmail.com
+APP_MAILER_PASSWORD: 2304i10i120i412
+APP_MAILER_USER: admin@vortex.coms
+APP_NOREPLY_EMAIL: noreply@vortex.com
+
+# GATEWAY SETTINGS
+
+APP_MILLIKART_PAYMENT_BASE_URL: https://pay.millikart.az
+
+APP_CONNECTUM_PAYMENT_BASE_URL: https://api.connectum.eu/orders
+
+RFI_PAYMENT_BASE_URL: https://secure.rficb.ru
+RFI_SECRET: ad64bdb6c1
+RFI_SERVICE_ID: 82571
+
+INDIAN_H2H_URL_ENV: https://vortex.com/FE/rest/tx/sync/purchase
+INDIAN_REFUND_URL_ENV: https://vortex.com/FE/rest/tx/refund
+
+# BUSINESS SETTINGS
+
+SECURE_CODE_SIMULATOR_URL: https://demo.{{ public_consul_domain }}/demo/3ds
+APP_ECOMM_PAYMENT_BASE_URL: https://gate.e-comprocessing.net
+APP_PAYLER_PAYMENT_BASE_URL: https://secure.payler.com/mapi/Pay
+APP_PAYLER_PAYMENT_STATUS_URL: https://secure.payler.com/mapi/GetAdvancedStatus
+APP_PAYLER_PAYMENT_3DS_URL: https://secure.payler.com/mapi/Send3DS
+APP_PAYLER_PAYMENT_REFUND_URL: https://secure.payler.com/mapi/Refund
+APP_PASTA_PAYMENT_BASE_URL: https://demo.ipsp.lv/api/v2/soap
+APP_PAYMEGA_CARDGATE_BASE_URL: https://cardgate.paymega.io/
+APP_PAYMEGA_PAYMENT_BASE_URL: https://api.paymega.io/
+APP_CAURI_PAYMENT_BASE_URL: https://api.cauri.com/rest-v1/
+APP_RBK_MONEY_PAYMENT_BASE_URL: https://api.rbk.money/v2
+APP_EEZIEPAY_PAYMENT_BASE_URL: https://www.jojostreet616.com/
+APP_WINPAY_MOBILE_PAYMENT_BASE_URL: https://it4pay.ru/
+APP_UZCARD_PAYMENT_BASE_URL: https://freelanceme.kz/api/v3.3/
+
+# APPLICATION SETTINGS
+
+CLIENT_APP_NAME: vortex
+
+DEV_ADMIN_USER: admin@admin.admin
+DEV_ADMIN_PASSWORD: admin@admin.admin
+
+# ANSIBLE 0z-Cloud INVENTORY TYPE
+# possible values: bare / alicloud / vsphere
+
+ansible_cloud_type: bare
+
+# DATABASE CONNECTION APPLICATION SETTINGS
+
+TEST_ENVIRONMENT_USERNAME: postgres
+TEST_ENVIRONMENT_PASSWORD: "{{ TEST_ENVIRONMENT_USERNAME }}"
+
+PCI_IN_SWARM_POSTGRESQL_NAME: "{{ TEST_ENVIRONMENT_USERNAME }}"
+
+ENVIRONMENT_DB_SETTINGS:
+  WALLET:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+  CARD_STORAGE:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+  BUSINESS:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+  CORE:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+  SETTINGS:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+  METABASE:
+    APP_DB_USERNAME_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+    APP_DB_PASSWORD_ENV: "{{ TEST_ENVIRONMENT_USERNAME }}"
+
+# IDS KEEPALIVED PRIMARY_GATEWAY
+
+ids_primary_vip_gateway: "172.16.21.1"
+ids_public_vip_ip: "172.16.31.5"
+primary_cloud_gw: "172.16.0.253"
+nginx_frontend_ip_01: "172.16.21.150"
+
+# Docker Inventory Location Settings
+default_docker_image_environment_tag: latest
+default_docker_image_environment_location: registry
+
+default_docker_database_postgresql_environment_location: "{{ all_services_location_map.directories.database }}:/var/lib/postgresql/data"
+default_docker_database_postgresql_logs_environment_location: "{{ all_services_location_map.directories.database_log }}:/var/log/postgresql"
+
+default_docker_database_mongo_environment_location: "{{ all_services_location_map.directories.mongo }}:/data/db"
+default_docker_database_minio_environment_location: "{{ all_services_location_map.directories.minio }}:/export"
+default_docker_database_minio_config_environment_location: "{{ all_services_location_map.directories.minio_config }}:/root/.minio"
+default_docker_database_settings_environment_location: "{{ all_services_location_map.directories.settings_storage }}:/storage"
+default_docker_database_business_environment_location: "{{ all_services_location_map.directories.settings_storage }}:/business/storage"
+default_docker_metabase_environment_location: "{{ all_services_location_map.directories.metabase_storage }}:/metabase-data"
+
+default_docker_database_pritunl_mongo_environment_location: "{{ all_access_services_location_map.directories.mongo }}:/data/db"
+default_docker_database_pritunl_service_environment_location: "{{ all_access_services_location_map.directories.mongo }}:/mount"
+
+# DOCKER SETTINGS
+
+docker_test_release: False
+
+#
+
+ssh_users_allhosts_adduser__to_merge:
+  - { name: 'vortex', groups: 'adm, sudo', shell: '/bin/bash', key: 'rostislav.pub' }
+
+# cloud_dir: /mnt/glusterfs
+
+#### CONSUL SECTION
+
+consul:
+  master_key: "PjqEOgzbgbM00fQxaRQ+IA=="
+  directories:
+    ca_certs_directory: /cloud/local/opt/consul/opt/pki/ca-certs
+    working_etc_directory: /cloud/local/opt/consul/etc
+    working_directory: /cloud/local/opt
+    working_opt_directory: /cloud/local/opt/consul/opt
+    working_opt_pki: /cloud/local/opt/consul/opt/pki
+    working_opt_pki_cert: /cloud/local/opt/consul/opt/pki/cert
+    working_opt_pki_private: /cloud/local/opt/consul/opt/pki/private
+    working_consul: /cloud/local/opt/consul
+    working_consul_data: /cloud/local/opt/consul/data
+    working_consul_data_raft: /cloud/local/opt/consul/data/raft
+    ui_dir: /cloud/local/opt/consul/ui
+    configs_dir: /cloud/local/opt/consul/etc/consul.d
+    crazy_hop_d: /cloud/local/opt/consul/etc/crazy_hop.d
+    consul_get_url: https://releases.hashicorp.com/consul/1.4.2/consul_1.4.2_linux_amd64.zip
+    consul_get_zip: consul_1.4.2_linux_amd64.zip
+    logging_dir: /cloud/local/opt/consul/logs
+  consul_security:
+    linux_username: consul
+    linux_group: consul
+  consul_name: "cloud-{{ ansible_hostname }}"
+  datacenter: "{{ consul_datacenter }}"
+
+consul_datacenter: "dc1"
+
+# PREFIXES
+
+consul_business_prefix: "business"
+consul_core_prefix: "core"
+consul_guard_prefix: "guard"
+consul_settings_prefix: "settings"
+consul_demo_prefix: "demo"
+consul_metabase_prefix: "metabase"
+consul_docs_business_prefix: "docs.business"
+consul_tests_prefix: "tests"
+
+# CONSUL DOMAINS
+
+consul_public_prefix: "me"
+cosnul_private_prefix: "consul"
+consul_powerdns_prefix: "powerdns"
+consul_domain_name: "stage.vortex.consul."
+consul_merge_domain_name: "stage.vortex.com."
+merge_consul_domain: "stage.vortex.com"
+public_consul_domain: "stage.vortex.com"
+internal_consul_domain: "stage.vortex.consul"
+main_other_consul_domain: "vortex.com"
+
+consul_cloud_fqdn_full: "cloud.{{ consul_merge_domain_name }}"
+
+internal_service_consul_cloud_fqdn: "service.{{ merge_consul_domain }}"
+dot_internal_service_consul_cloud_fqdn: "service.{{ consul_merge_domain_name }}"
+
+cloud_service_consul_cloud_fqdn: "service.cloud.{{ merge_consul_domain }}"
+dot_cloud_service_consul_cloud_fqdn: "service.cloud.{{ consul_merge_domain_name }}"
+
+consul_service_cloud_domain_name: "{{ cosnul_private_prefix }}.{{ cloud_service_consul_cloud_fqdn }}"
+
+## ACME WILDCARD
+
+### ACME
+
+acme_cloud_url: "acme.{{ public_consul_domain }}"
+
+acme_wildcard_domain: "*.{{ public_consul_domain }}"
+acme_listen_port: 8099
+amce_wildcard: "true"
+
+## NGINX FRONTEND SITES
+
+### Common HTTP Settings
+http_server:
+  max_request_length: 1191200
+  ## in kb
+  access_control_allow_origin: "$http_origin"
+  cdn_access_control_allow_origin: "*"
+
+## w.stage.vortex.com
+
+ansible_global_w_vortex_wallet_site_name: "w.stage.vortex.com"
+
+## Main Sites
+ansible_global_wallet_site_name: "wallet.{{ public_consul_domain }}"
+ansible_global_files_site_name: "files.{{ public_consul_domain }}"
+
+ansible_global_minio_site_name: "minio.{{ public_consul_domain }}"
+
+ansible_global_sms_gate_site_name: "sms-gate.{{ public_consul_domain }}"
+ansible_global_temp_site_name: "temp.{{ public_consul_domain }}"
+ansible_global_www_site_name: "www.{{ public_consul_domain }}"
+ansible_global_prometheus_site_name: "prometheus.{{ public_consul_domain }}"
+ansible_global_grafana_site_name: "grafana.{{ public_consul_domain }}"
+ansible_global_alertmanager_site_name: "alertmanager.{{ public_consul_domain }}"
+
+ansible_global_prometheus_site_name: "prometheus.{{ public_consul_domain }}"
+ansible_global_grafana_site_name: "grafana.{{ public_consul_domain }}"
+ansible_global_alertmanager_site_name: "alertmanager.{{ public_consul_domain }}"
+
+# OSSEC | Wazuh
+ansible_global_wazuh_site_name: "wazuh.{{ public_consul_domain }}"
+
+# SENTRY
+
+ansible_global_sentry_site_name: "sentry.{{ public_consul_domain }}"
+
+ansible_global_consul_site_name: "consul.{{ public_consul_domain }}"
+ansible_global_core_site_name: "{{ consul_core_prefix }}.{{ public_consul_domain }}"
+ansible_global_business_site_name: "{{ consul_business_prefix }}.{{ public_consul_domain }}"
+ansible_global_guard_site_name: "{{ consul_guard_prefix }}.{{ public_consul_domain }}"
+ansible_global_settings_site_name: "{{ consul_settings_prefix }}.{{ public_consul_domain }}"
+ansible_global_demo_site_name: "{{ consul_demo_prefix }}.{{ public_consul_domain }}"
+ansible_global_metabase_site_name: "{{ consul_metabase_prefix }}.{{ public_consul_domain }}"
+ansible_global_docs_business_site_name: "{{ consul_docs_business_prefix }}.{{ public_consul_domain }}"
+ansible_global_primary_site_name: "{{ public_consul_domain }}"
+ansible_global_rate_site_name: "rate.{{ public_consul_domain }}"
+ansible_global_mongo_express_site_name: "mongo-express.{{ public_consul_domain }}"
+ansible_global_flexy_guard_site_name: "flexy-guard.{{ public_consul_domain }}"
+ansible_global_flexy_guard_admin_site_name: "flexy-guard-admin.{{ public_consul_domain }}"
+ansible_global_flexy_commission_site_name: "flexy-commission.{{ public_consul_domain }}"
+ansible_global_flexy_commission_admin_site_name: "flexy-commission-admin.{{ public_consul_domain }}"
+ansible_global_tests_site_name: "{{ consul_tests_prefix }}.{{ public_consul_domain }}"
+ansible_global_kibana_site_name: "kibana.{{ public_consul_domain }}"
+ansible_global_teamcity_site_name: "teamcity.{{ public_consul_domain }}"
+ansible_global_card_storage_site_name: "card-storage.{{ public_consul_domain }}"
+
+# OSSEC | Wazuh
+ansible_global_wazuh_site_name: "wazuh.{{ public_consul_domain }}"
+
+# Primary Production Domain for public services
+production_public_domain: "vortex.com"
+primary_parent_shared_inventory_domain: "develop.vortex.com"
+
+# gitlab-server and registry
+ansible_global_gitlab_site_name: "gitlab.{{ production_public_domain }}"
+ansible_global_gitlab_registry_site_name: "registry.{{ production_public_domain }}"
+initial_shared_runners_registration_token: 55b114e6c80722de1fdb6ffe114f59
+
+### NGINX CORE SETTING
+# POSSIBLE VALUES = http_only or https_only or acme
+
+
+acme_certificate_name: "*.{{ public_consul_domain }}"
+nginx_core_type: https_only
+
+# acme_third_level_business_domain 
+# acme_primary_domain
+# acme_wildcard_domain
+
+# third_level_business
+# primary
+# wildcard
+
+acme_third_level_business_domain: "*.{{ ansible_global_business_site_name }}"
+acme_primary_domain: "{{ public_consul_domain }}"
+# acme_wildcard_domain: "{{ acme_certificate_name }}"
+
+unification_sites:
+  - {
+    name: "{{ ansible_global_sentry_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_sentry_site_name }}",
+    type: "{{ ansible_global_sentry_site_name }}",
+    location: "sentry",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_www_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_www_site_name }}",
+    type: "{{ ansible_global_www_site_name }}",
+    location: "www",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_grafana_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_grafana_site_name }}",
+    type: "{{ ansible_global_grafana_site_name }}",
+    location: "grafana",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_prometheus_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_prometheus_site_name }}",
+    type: "{{ ansible_global_prometheus_site_name }}",
+    location: "prometheus",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_alertmanager_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_alertmanager_site_name }}",
+    type: "{{ ansible_global_alertmanager_site_name }}",
+    location: "alertmanager",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_wazuh_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_wazuh_site_name }}",
+    type: "{{ ansible_global_wazuh_site_name }}",
+    location: "wazuh",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_sms_gate_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_sms_gate_site_name }}",
+    type: "{{ ansible_global_sms_gate_site_name }}",
+    location: "sms_gate",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_minio_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_minio_site_name }}",
+    type: "{{ ansible_global_minio_site_name }}",
+    location: "minio",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_wallet_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_wallet_site_name }}",
+    type: "{{ ansible_global_wallet_site_name }}",
+    location: "wallet",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_w_vortex_wallet_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    # value: "custom"
+    prefix: "{{ ansible_global_w_vortex_wallet_site_name }}",
+    type: "{{ ansible_global_w_vortex_wallet_site_name }}",
+    location: "wallet",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_files_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_files_site_name }}",
+    type: "{{ ansible_global_files_site_name }}",
+    location: "files",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_teamcity_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_teamcity_site_name }}",
+    type: "{{ ansible_global_teamcity_site_name }}",
+    location: "teamcity",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_card_storage_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_card_storage_site_name }}",
+    type: "{{ ansible_global_card_storage_site_name }}",
+    location: "card_storage",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_tests_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_tests_site_name }}",
+    type: "{{ ansible_global_tests_site_name }}",
+    location: "tests",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_kibana_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_kibana_site_name }}",
+    type: "{{ ansible_global_kibana_site_name }}",
+    location: "kibana",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_primary_site_name }}",
+    published: "enabled",
+    value: "primary",
+    prefix: "{{ ansible_global_primary_site_name }}",
+    type: "{{ ansible_global_primary_site_name }}",
+    location: "www",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_docs_business_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_docs_business_site_name }}",
+    type: "{{ ansible_global_docs_business_site_name }}",
+    location: "docs",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_core_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_core_site_name }}",
+    type: "{{ ansible_global_core_site_name }}",
+    location: "core",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_demo_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_demo_site_name }}",
+    type: "{{ ansible_global_demo_site_name }}",
+    location: "demo",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_metabase_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_metabase_site_name }}",
+    type: "{{ ansible_global_metabase_site_name }}",
+    location: "metabase",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_business_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_business_site_name }}",
+    type: "{{ ansible_global_business_site_name }}",
+    location: "business",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_mongo_express_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_mongo_express_site_name }}",
+    type: "{{ ansible_global_mongo_express_site_name }}",
+    location: "mongo_express",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_flexy_guard_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_flexy_guard_site_name }}",
+    type: "{{ ansible_global_flexy_guard_site_name }}",
+    location: "flexy_guard",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_flexy_guard_admin_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_flexy_guard_admin_site_name }}",
+    type: "{{ ansible_global_flexy_guard_admin_site_name }}",
+    location: "flexy_guard_admin",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_flexy_commission_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_flexy_commission_site_name }}",
+    type: "{{ ansible_global_flexy_commission_site_name }}",
+    location: "flexy_commission",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_flexy_commission_admin_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_flexy_commission_admin_site_name }}",
+    type: "{{ ansible_global_flexy_commission_admin_site_name }}",
+    location: "flexy_commission_admin",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_guard_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_guard_site_name }}",
+    type: "{{ ansible_global_guard_site_name }}",
+    location: "guard",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_settings_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_settings_site_name }}",
+    type: "{{ ansible_global_settings_site_name }}",
+    location: "settings",
+    config: "defaults"
+  }
+  - {
+    name: "{{ ansible_global_rate_site_name }}",
+    published: "enabled",
+    value: "wildcard",
+    prefix: "{{ ansible_global_rate_site_name }}",
+    type: "{{ ansible_global_rate_site_name }}",
+    location: "rate",
+    config: "defaults"
+  }
+
+  # - {
+  #   name: "{{ ansible_global_gitlab_site_name }}",
+  #   published: "enabled",
+  #   value: "wildcard",
+  #   prefix: "{{ ansible_global_gitlab_site_name }}",
+  #   type: "{{ ansible_global_gitlab_site_name }}",
+  #   location: "gitlab",
+  #   config: "defaults"
+  # }
+
+  # - {
+  #   name: "{{ ansible_global_gitlab_registry_site_name }}",
+  #   published: "enabled",
+  #   value: "wildcard",
+  #   prefix: "{{ ansible_global_gitlab_registry_site_name }}",
+  #   type: "{{ ansible_global_gitlab_registry_site_name }}",
+  #   location: "registry",
+  #   config: "defaults"
+  # }
+
+static_dns_mappings:
+  main:
+    website_ip:
+      - "165.22.65.40"
+      - "134.209.241.217"
+      - "134.209.249.75"
+    external_ip: 
+      - "165.22.65.40"
+      - "134.209.241.217"
+      - "134.209.249.75"
+    ids_private_vip_ip: 192.168.2.5
+
+unification_services:
+  # - {'consul': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'consul-masters', 'listen_port': "{{ consul_service_listen_port }}", 'check_type': "tcp", 'script_check': "{{ inventory_hostname }}:{{ consul_service_listen_port }}" }}
+  # - {'guard': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ guard_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ guard_service_listen_port }}' }}
+  # - {'settings': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ settings_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ settings_service_listen_port }}' }}
+  # - {'core': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ core_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ core_service_listen_port }}' }}
+  # - {'business': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ business_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ business_service_listen_port }}' }}
+    - {'settings': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'settings', 'listen_port': "{{ settings_service_listen_port }}", 'check_type': "tcp", 'script_check': "{{ inventory_hostname }}:{{ settings_service_listen_port }}" }}
+    - {'core': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ core_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ core_service_listen_port }}" }}
+    - {'business': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'business', 'listen_port': "{{ business_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ business_service_listen_port }}" }}
+    - {'guard': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'guard', 'listen_port': "{{ guard_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ guard_service_listen_port }}" }}
+    - {'demo': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}',  'target': 'demo', 'listen_port': "{{ demo_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ demo_service_listen_port }}" }}
+    - {'metabase': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'metabase', 'listen_port': "{{ metabase_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ metabase_service_listen_port }}" }}
+    - {'docs': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'docs', 'listen_port': "{{ docs_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ docs_service_listen_port }}" }}
+    - {'gitlab': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'gitlab-server', 'listen_port': "{{ git_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ git_service_listen_port }}" }}
+    - {'registry': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'gitlab-server', 'listen_port': "{{ registry_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ registry_service_listen_port }}" }}
+    - {'flexy_guard': { 'target': 'core', 'listen_port': "{{ flexy_guard_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_guard_service_listen_port }}" }}
+    - {'flexy_guard_admin': { 'target': 'core', 'listen_port': "{{ flexy_guard_admin_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_guard_admin_service_listen_port }}" }}
+    - {'flexy_commission': { 'target': 'core', 'listen_port': "{{ flexy_commission_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_commission_service_listen_port }}" }}
+    - {'flexy_commission_admin': { 'target': 'core', 'listen_port': "{{ flexy_commission_admin_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_commission_admin_service_listen_port }}" }}
+    - {'mongo_express': { 'target': 'core', 'listen_port': "{{ mongo_express_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ mongo_express_service_listen_port }}" }}
+    - {'kibana': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'logging-kibana-service', 'listen_port': "{{ logging_kibana_internal_service_listen_port }}", 'check_type': "tcp", 'script_check': "{{ inventory_hostname }}:{{ logging_kibana_internal_service_listen_port }}" }}
+    - {'elastic_hq': { 'target': 'core', 'listen_port': "{{ elastic_hq_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ elastic_hq_service_listen_port }}" }}
+    - {'rate': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ rate_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ rate_service_listen_port }}" }}
+    - {'teamcity': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'teamcity-server', 'listen_port': "{{ teamcity_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ teamcity_service_listen_port }}" }}
+    - {'tests': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ tests_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ tests_service_listen_port }}" }}
+    - {'card_storage': { 'target': 'core', 'listen_port': "{{ card_storage_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ card_storage_service_listen_port }}" }}
+    - {'files': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ files_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ files_service_listen_port }}" }}
+    - {'wallet': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ wallet_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ wallet_service_listen_port }}" }}
+    - {'w': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ wallet_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ wallet_service_listen_port }}" }}
+    - {'minio': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ minio_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ minio_service_listen_port }}" }}
+    - {'temp': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ minio_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ minio_service_listen_port }}" }}
+    - {'sms_gate': { 'target': 'core', 'listen_port': "{{ sms_gate_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ sms_gate_service_listen_port }}" }}
+    - {'grafana': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'grafana', 'listen_port': "{{ grafana_internal_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ grafana_internal_service_listen_port }}" }}
+    - {'prometheus': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'prometheus', 'listen_port': "{{ prometheus_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ prometheus_service_listen_port }}" }}
+    - {'alertmanager': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'alertmanager', 'listen_port': "{{ alert_manager_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ alert_manager_service_listen_port }}" }}
+    - {'wazuh': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'wazuh-kibana', 'listen_port': "{{ wazuh_kibana_internal_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ wazuh_kibana_internal_service_listen_port }}" }}
+    - {'www': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ www_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ www_service_listen_port }}" }}
+    - {'sentry': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ sentry_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ sentry_service_listen_port }}" }}
+
+unification_dns_primary_services:
+    - {'@': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ www_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ www_service_listen_port }}" }}
+    - {'docs.business': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'docs', 'listen_port': "{{ docs_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ docs_service_listen_port }}" }}
+    - {'flexy-guard': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'flexy_guard', 'listen_port': "{{ flexy_guard_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_guard_service_listen_port }}" }}
+    - {'flexy-guard-admin': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'flexy_guard_admin', 'listen_port': "{{ flexy_guard_admin_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_guard_admin_service_listen_port }}" }}
+    - {'flexy-commission': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'flexy_commission', 'listen_port': "{{ flexy_commission_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_commission_service_listen_port }}" }}
+    - {'flexy-commission-admin': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'flexy_commission_admin', 'listen_port': "{{ flexy_commission_admin_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ flexy_commission_admin_service_listen_port }}" }}
+    - {'mongo-express': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'mongo_express', 'listen_port': "{{ mongo_express_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ mongo_express_service_listen_port }}" }}
+    - {'elastic-hq': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ elastic_hq_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ elastic_hq_service_listen_port }}" }}
+    - {'card-storage': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ card_storage_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ card_storage_service_listen_port }}" }}
+    - {'sms-gate': { 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'core', 'listen_port': "{{ sms_gate_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ sms_gate_service_listen_port }}" }}
+    # - {'www': { 'external_ip': '{{ static_dns_mappings.main.website_ip }}', 'target': 'docs', 'listen_port': "{{ docs_service_listen_port }}", 'check_type': "http", 'script_check': "http://{{ inventory_hostname }}:{{ docs_service_listen_port }}" }}
+
+# unification_services_remapping_external_fqdn:
+#   - {'public_api': { 'dns_publish_prefix': 'api', 'upstream_prefix': 'public-api', 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ public_api_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ public_api_service_listen_port }}' }}
+#   - {'gateway_mcom': { 'dns_publish_prefix': 'gateway-mcom', 'upstream_prefix': 'gateway-mcom', 'external_ip': '{{ static_dns_mappings.main.external_ip }}', 'target': 'service_discovery', 'listen_port': '{{ public_api_service_listen_port }}', 'check_type': 'tcp', 'script_check': '{{ inventory_hostname }}:{{ public_api_service_listen_port }}' }}
+
+unification_services_for_check:
+  - {'ns': {'target': 'consul-masters', 'listen_port': "{{ dns_service_listen_port }}", 'check_type': "script", 'script_check': "dig @{{ ansible_default_ipv4['address'] }} {{ consul_domain_name }}&& echo 'success' || echo 'fail'" }}
+
+crazy_hop_consul_services:
+  - {'cloud-ns': { 'name': 'cloud-ns', 'exec': 'py', 'type': 'external_body', 'script': "nill" }}
+  - {'services': { 'name': 'services', 'exec': 'py', 'type': 'external_body', 'script': "nill" }}
+
+unificated_consul_services: "{{ unification_services }}"
+
+basic_consul_services:
+  - {'ram': {'target': 'all', 'check_type': "script", 'script_check': "intel_inside_already_we_have" }}
+  - {'cpu': {'target': 'all', 'check_type': "script", 'script_check': "intel_inside_already_we_have" }}
+  - {'disks': {'target': 'all', 'check_type': "script", 'script_check': "intel_inside_already_we_have" }}
+
+####
+
+# HTTP Only
+nginx_result: "{{ unificated_sites_http + host_default_name_site + unificated_sites_https_acme_wildcard }}"
+
+# HTTP + > HTTPS configuration
+# nginx_result: "{{ unificated_sites_https + unificated_sites_http + host_default_name_site }}"
+
+nginx_same: "{{ nginx_config_defaults |combine(nginx_config_locations_sentry,nginx_config_locations_flexy_commission_admin,nginx_config_locations_flexy_commission,nginx_config_locations_www,nginx_config_locations_grafana,nginx_config_locations_alertmanager,nginx_config_locations_prometheus,nginx_config_locations_wazuh,nginx_config_locations_sms_gate,nginx_config_locations_minio,nginx_config_locations_files,nginx_config_locations_wallet,nginx_config_locations_card_storage,nginx_config_locations_tests,nginx_config_locations_teamcity,nginx_config_locations_rate,nginx_config_locations_elastic_hq,nginx_config_locations_kibana,nginx_config_locations_mongo_express,nginx_config_locations_flexy_guard_admin,nginx_config_locations_flexy_guard,nginx_config_locations_registry,nginx_config_locations_gitlab,nginx_config_locations_docs,nginx_config_locations_consul,nginx_config_locations_demo,nginx_config_locations_metabase,nginx_config_locations_core,nginx_config_locations_settings,nginx_config_locations_business,nginx_config_locations_guard) }}"
+
+ansible_port: 22
+
+#### PORTS FOR INVENTORY
+
+### HTTP
+http_service_listen_port: 80
+https_service_listen_port: 443
+
+### GIT
+git_service_listen_port: 8022
+registry_service_listen_port: 7657
+
+git_http_container_service_listen_port: 80
+git_https_container_service_listen_port: 443
+git_ssh_container_service_listen_port: 22
+git_publish_ssh_container_service_listen_port: 14422
+publish_git_http_container_service_listen_port: 18880
+publish_registry_inside_service_listen_port: 18443
+registry_inside_service_listen_port: 5000
+nginx_8060_inside_service_listen_port: 8060
+
+# Prometheus
+prometheus_service_listen_port: 9697
+
+# Grafana
+grafana_internal_service_listen_port: 3033
+# nginx_access_whitelist: 167.71.49.132
+grafana_smtp_host: "{{ default_localhost_stmp_string }}"
+grafana_smtp_user: "{{ default_mail_username }}"
+grafana_smtp_pass: ""
+grafana_smtp_from: "{{ default_mail_username }}"
+
+# Cadvisor
+cadvisor_service_listen_port: 8080
+
+# Node exporter
+node_exporter_service_listen_port: 9174
+
+# Alert Manager
+alert_manager_notify_to:
+  - 'ros@woinc.ru'
+  - 'support@vortex.com'
+  - 'support@vortex.com'
+alert_manager_notify_host: "{{ default_mail_relay_host_port }}"
+alert_manager_notify_from: "{{ default_mail_username }}"
+alert_manager_notify_pass: "{{ default_mail_password }}"
+alert_manager_host: "185.11.24.11"
+alert_manager_service_listen_port: 9093
+
+# Wazuh
+wazuh_authd_password: TopSecretPassword1v91n24
+wazuh_manager_host: "185.11.24.11"
+wazuh_kibana_internal_service_listen_port: 5606
+wazuh_elasticsearch_listen_port: 9206
+wazuh_manager_events_listen_port: 1514
+wazuh_manager_agent_listen_port: 1515
+wazuh_manager_cluster_listen_port: 1516
+wazuh_manager_syslog_listen_port: 514
+wazuh_manager_api_listen_port: 55000
+
+wazuh_elasticsearch_web_https_service_listen_port: 13057
+wazuh_elasticsearch_web_https_service_internal_listen_port: 443
+
+wazuh_elasticsearch_web_http_service_listen_port: 13056
+wazuh_elasticsearch_web_http_service_internal_listen_port: 80
+
+wazuh_manager_web_https_service_listen_port: 13055
+wazuh_manager_web_https_service_internal_listen_port: 443
+
+wazuh_manager_web_http_service_listen_port: 13054
+wazuh_manager_web_http_service_internal_listen_port:  80
+
+wazuh_kibana_web_https_service_listen_port: 13053
+wazuh_kibana_web_https_service_internal_listen_port: 443
+
+wazuh_kibana_web_http_service_listen_port: 13052
+wazuh_kibana_web_http_service_internal_listen_port: 80
+
+# TeamCity
+teamcity_service_listen_port: 8111
+
+# Kibana
+kibana_service_listen_port: 5601
+
+# Elastic HQ
+elastic_hq_service_listen_port: 9701
+
+# RABBITMQ
+rabbitmq_service_listen_port: 15672
+
+# Percona
+percona_service_listen_port: 3306
+
+### Consul
+consul_service_listen_port: 8500
+
+# Elasticsearch port
+elasticsearch_service_listen_port: 9202
+
+# Logging ElasticSearch cluster port
+logging_elasticsearch_cluster_listen_port: "{{ elasticsearch_service_listen_port }}"
+logging_kibana_internal_service_listen_port: "{{ kibana_service_listen_port }}"
+
+# Redis port
+redis_io_cluster_enabled: "false"
+redis_username: "redis" # TODO
+redis_passowrd: "dc1d494f7915da973d6c037357c548adbaee349e35"
+redis_public_port: 6379
+redis_slave_public_port: 6380
+
+redis_service_listen_port: "{{ redis_public_port }}"
+
+#
+# Ports for all Applications
+#
+
+sms_gate_service_listen_port: 5070
+
+wallet_service_listen_port: 8801
+files_service_listen_port: 9001
+
+sentry_service_listen_port: 14231
+
+minio_service_listen_port: 9101
+www_service_listen_port: 13887
+metabase_old_service_listen_port: 9037
+business_service_listen_port: 4000
+core_service_listen_port: 3000
+rate_service_listen_port: 4040
+checkout_service_listen_port: 8002
+admin_service_listen_port: 8003
+public_api_service_listen_port: 8004
+private_api_service_listen_port: 8005
+antifraud_service_listen_port: 8007
+guard_service_listen_port: 5000
+settings_service_listen_port: 6001
+metabase_service_listen_port: 9000
+demo_service_listen_port: 8000
+docs_service_listen_port: 4001
+flexy_guard_service_listen_port: 5103
+flexy_guard_admin_service_listen_port: 5203
+flexy_commission_service_listen_port: 5143
+flexy_commission_admin_service_listen_port: 5243
+mongo_express_service_listen_port: 5303
+tests_service_listen_port: 5050
+card_storage_service_listen_port: 3255
+
+#
+# Java Applications
+#
+gate_java_service_listen_port: 11001
+frontweb_service_listen_port: 11002
+processing_sandbox_service_listen_port: 11003
+keyserver_service_listen_port: 11004
+
+### SAME CONFIGS
+
+nginx_config_defaults:
+  "{
+    '{{ nginx_configs_defaults }}':
+         {{ config_defaults | list }}
+    }"
+
+nginx_configs:
+  "{
+    '{{ nginx_configs_upstreams }}':
+         {{ unification_upstreams | list }}
+    }"
+
+### LOCATIONS CONFIGS
+# kibana
+# prometheus
+# alert_manager
+# nginx_config_locations_t+:
+#   "{
+#     '{{ nginx_configs_locations_registry }}':
+#          {{ location_registry | list }}
+#     }"
+
+nginx_config_locations_sentry:
+  "{
+    '{{ nginx_configs_locations_sentry }}':
+         {{ location_sentry | list }}
+    }"
+
+nginx_config_locations_www:
+  "{
+    '{{ nginx_configs_locations_www }}':
+         {{ location_www | list }}
+    }"
+
+nginx_config_locations_alertmanager:
+  "{
+    '{{ nginx_configs_locations_alertmanager }}':
+         {{ location_alertmanager | list }}
+    }"
+
+nginx_config_locations_prometheus:
+  "{
+    '{{ nginx_configs_locations_prometheus }}':
+         {{ location_prometheus | list }}
+    }"
+
+nginx_config_locations_grafana:
+  "{
+    '{{ nginx_configs_locations_grafana }}':
+         {{ location_grafana | list }}
+    }"
+
+nginx_config_locations_wazuh:
+  "{
+    '{{ nginx_configs_locations_wazuh }}':
+         {{ location_wazuh | list }}
+    }"
+
+
+nginx_config_locations_minio:
+  "{
+    '{{ nginx_configs_locations_minio }}':
+         {{ location_minio | list }}
+    }"
+
+nginx_config_locations_registry:
+  "{
+    '{{ nginx_configs_locations_registry }}':
+         {{ location_registry | list }}
+    }"
+
+nginx_config_locations_gitlab:
+  "{
+    '{{ nginx_configs_locations_gitlab }}':
+         {{ location_gitlab | list }}
+    }"
+
+nginx_config_locations_acme_well_known:
+  "{
+    '{{ nginx_configs_locations_acme_well_known }}':
+         {{ location_acme_well_known | list }}
+    }"
+
+nginx_config_locations_consul:
+  "{
+    '{{ nginx_configs_locations_consul }}':
+         {{ location_consul | list }}
+    }"
+
+nginx_config_locations_files:
+  "{
+    '{{ nginx_configs_locations_files }}':
+         {{ location_files | list }}
+    }"
+
+nginx_config_locations_wallet:
+  "{
+    '{{ nginx_configs_locations_wallet }}':
+         {{ location_wallet | list }}
+    }"
+
+nginx_config_locations_card_storage:
+  "{
+    '{{ nginx_configs_locations_card_storage }}':
+         {{ location_card_storage | list }}
+    }"
+
+nginx_config_locations_teamcity:
+  "{
+    '{{ nginx_configs_locations_teamcity }}':
+         {{ location_teamcity | list }}
+    }"
+
+nginx_config_locations_tests:
+  "{
+    '{{ nginx_configs_locations_tests }}':
+         {{ location_tests | list }}
+    }"
+
+nginx_config_locations_core:
+  "{
+    '{{ nginx_configs_locations_core }}':
+         {{ location_core | list }}
+    }"
+
+nginx_config_locations_settings:
+  "{
+    '{{ nginx_configs_locations_settings }}':
+         {{ location_settings | list }}
+    }"
+
+nginx_config_locations_guard:
+  "{
+    '{{ nginx_configs_locations_guard }}':
+         {{ location_guard | list }}
+    }"
+
+nginx_config_locations_business:
+  "{
+    '{{ nginx_configs_locations_business }}':
+         {{ location_business | list }}
+    }"
+
+nginx_config_locations_demo:
+  "{
+    '{{ nginx_configs_locations_demo }}':
+         {{ location_demo | list }}
+    }"
+
+nginx_config_locations_metabase:
+  "{
+    '{{ nginx_configs_locations_metabase }}':
+         {{ location_metabase | list }}
+    }"
+
+nginx_config_locations_docs:
+  "{
+    '{{ nginx_configs_locations_docs }}':
+         {{ location_docs | list }}
+    }"
+
+nginx_config_locations_mongo_express:
+  "{
+    '{{ nginx_configs_locations_mongo_express }}':
+         {{ location_mongo_express | list }}
+    }"
+
+nginx_config_locations_flexy_guard:
+  "{
+    '{{ nginx_configs_locations_flexy_guard }}':
+         {{ location_flexy_guard | list }}
+    }"
+
+nginx_config_locations_flexy_guard_admin:
+  "{
+    '{{ nginx_configs_locations_flexy_guard_admin }}':
+         {{ location_flexy_guard_admin | list }}
+    }"
+
+nginx_config_locations_flexy_commission:
+  "{
+    '{{ nginx_configs_locations_flexy_commission }}':
+         {{ location_flexy_commission | list }}
+    }"
+
+nginx_config_locations_flexy_commission_admin:
+  "{
+    '{{ nginx_configs_locations_flexy_commission_admin }}':
+         {{ location_flexy_commission_admin | list }}
+    }"
+
+nginx_config_locations_kibana:
+  "{
+    '{{ nginx_configs_locations_kibana }}':
+         {{ location_kibana | list }}
+    }"
+
+nginx_config_locations_elastic_hq:
+  "{
+    '{{ nginx_configs_locations_elastic_hq }}':
+         {{ location_elastic_hq | list }}
+    }"
+
+nginx_config_locations_rate:
+  "{
+    '{{ nginx_configs_locations_rate }}':
+         {{ location_rate | list }}
+    }"
+
+nginx_config_locations_sms_gate:
+  "{
+    '{{ nginx_configs_locations_sms_gate }}':
+         {{ location_sms_gate | list }}
+    }"
+
+##### LOCATIONS OF NGINX FRONTEND
+
+location_www:
+  - location / {
+    proxy_pass http://www_{{ ansible_environment }};
+    }
+
+location_acme_well_known:
+  - location ^~ /.well-known/acme-challenge/ {
+    alias /core_root/raw_core/opt/nginx-acme/.well-known/acme-challenge/;
+    allow all;
+    }
+
+location_acme:
+  - location / {
+    proxy_pass http://acme_{{ ansible_environment }};
+    proxy_http_version  1.1;
+    proxy_set_header    X-Forwarded-For $remote_addr;
+    proxy_set_header    Host $server_name:$server_port;
+    }
+
+location_minio:
+  - location / {
+    proxy_pass http://minio_{{ ansible_environment }};
+    }
+
+location_files:
+  - location / {
+    proxy_pass http://files_{{ ansible_environment }};
+    }
+
+location_wallet:
+  - location / {
+    proxy_pass http://wallet_{{ ansible_environment }};
+    }
+
+location_card_storage:
+  - location / {
+    proxy_pass http://card_storage_{{ ansible_environment }};
+    }
+
+location_teamcity:
+  - location / {
+    proxy_pass http://teamcity_{{ ansible_environment }};
+    }
+
+location_business:
+  - location / {
+    proxy_pass http://business_{{ ansible_environment }};
+    }
+
+location_docs:
+  - location / {
+    proxy_pass http://docs_{{ ansible_environment }};
+    }
+
+location_guard:
+  - location / {
+    proxy_pass http://guard_{{ ansible_environment }};
+    }
+
+location_core:
+  - location / {
+    proxy_pass http://core_{{ ansible_environment }};
+    }
+
+# OLD SETTINGS FOR HTTP HOOK SUPPORT
+# location_core:
+#   - location / {
+#     proxy_set_header Connection "upgrade";
+#     proxy_set_header Upgrade $http_upgrade;
+#     proxy_pass http://core_{{ ansible_environment }};
+#     }
+
+location_settings:
+  - location / {
+    proxy_pass http://settings_{{ ansible_environment }};
+    }
+
+location_demo:
+  - location / {
+    proxy_pass http://demo_{{ ansible_environment }};
+    }
+
+location_metabase:
+  - location / {
+    proxy_pass http://metabase_{{ ansible_environment }};
+    }
+
+location_consul:
+  - location / {
+    proxy_pass http://consul_{{ ansible_environment }};
+    }
+
+location_rate:
+  - location / {
+    proxy_pass http://rate_{{ ansible_environment }};
+    }
+
+location_gitlab:
+  - location / {
+    proxy_pass https://gitlab_{{ ansible_environment }};
+    }
+
+location_registry:
+  - location / {
+    proxy_pass https://registry_{{ ansible_environment }};
+    }
+
+location_flexy_guard_admin:
+  - location / {
+    proxy_pass http://flexy_guard_admin_{{ ansible_environment }};
+    }
+
+location_flexy_guard:
+  - location / {
+    proxy_pass http://flexy_guard_{{ ansible_environment }};
+    }
+
+location_flexy_commission_admin:
+  - location / {
+    proxy_pass http://flexy_commission_admin_{{ ansible_environment }};
+    }
+
+location_flexy_commission:
+  - location / {
+    proxy_pass http://flexy_commission_{{ ansible_environment }};
+    }
+
+location_mongo_express:
+  - location / {
+    proxy_pass http://mongo_express_{{ ansible_environment }};
+    }
+
+location_elastic_hq:
+  - location / {
+    proxy_pass http://elastic_hq_{{ ansible_environment }};
+    }
+
+location_kibana:
+  - location / {
+    proxy_pass http://kibana_{{ ansible_environment }};
+    }
+  
+location_tests:
+  - location / {
+    proxy_pass http://tests_{{ ansible_environment }};
+    }
+location_sms_gate:
+  - location / {
+    proxy_pass http://sms_gate_{{ ansible_environment }};
+    }
+
+location_grafana:
+  - location / {
+    proxy_pass http://grafana_{{ ansible_environment }};
+    }
+
+location_prometheus:
+  - location / {
+    proxy_pass http://prometheus_{{ ansible_environment }};
+    auth_basic "Restricted";
+    auth_basic_user_file /mnt/cloud-bind-frontend-dns-glusterfs-storage/secured/.htpasswd;
+    }
+
+location_alertmanager:
+  - location / {
+    proxy_pass http://alertmanager_{{ ansible_environment }};
+    auth_basic "Restricted";
+    auth_basic_user_file /mnt/cloud-bind-frontend-dns-glusterfs-storage/secured/.htpasswd;
+    }
+
+location_wazuh:
+  - location / {
+    proxy_pass http://wazuh_{{ ansible_environment }};
+    auth_basic "Restricted";
+    auth_basic_user_file /mnt/cloud-bind-frontend-dns-glusterfs-storage/secured/.htpasswd;
+    }
+
+location_sentry:
+  - location / {
+    proxy_pass http://sentry_{{ ansible_environment }};
+    auth_basic "Restricted";
+    auth_basic_user_file /mnt/cloud-bind-frontend-dns-glusterfs-storage/secured/.htpasswd;
+    }

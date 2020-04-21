@@ -1,0 +1,169 @@
+
+# - name: Delegate set_fact join workers token and certificate hash to localhost
+#   set_fact: 
+#     k8s_workers_ca_hash_fact: "{{ k8s_workers_ca_hash.stdout }}"
+#     k8s_workers_join_token_fact: "{{ k8s_workers_join_token.stdout }}"
+#   delegate_to: localhost 
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Setup facts to kubernetes-master servers
+#   setup:
+#   delegate_to: "{{ item }}"
+#   delegate_facts: True
+#   loop: "{{ groups['kubernetes-master'] }}"
+
+# # - name: Set token fact for all nodes
+#   # set_fact: 
+#   #   k8s_workers_ca_hash_fact: "{{ k8s_workers_ca_hash.stdout_lines }}"
+#   #   k8s_workers_join_token_fact: "{{ k8s_workers_join_token.stdout_lines }}"
+#   # delegate_to: "{{ groups['kubernetes-master'][0] }}"
+#   # when: inventory_hostname in groups['kubernetes-master'][0]
+  
+# - name: Show join workers token and certificate hash
+#   debug:
+#     msg: "{{ item }}"
+#   with_items:
+#     - "{{ k8s_workers_ca_hash_fact }}"
+#     - "{{ k8s_workers_join_token_fact }}"
+
+
+# - name: Run bootstrap on 1st Master
+#   command: "{{ item }}"
+#   with_items:
+#     - kubeadm init phase certs etcd-ca
+#     - kubeadm init phase certs etcd-server --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml 
+#     - kubeadm init phase certs etcd-peer --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#     - kubeadm init phase certs etcd-healthcheck-client --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#     - kubeadm init phase certs apiserver-etcd-client --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Copy certificates from first master
+#   synchronize:
+#     src: "{{ k8s_service_settings.directories.pki }}"
+#     dest: "{{ k8s_service_settings.directories.etc }}"
+#   delegate_to: "{{ groups['kubernetes-master'][0] }}"
+#   tags: certificates_copy
+#   when: inventory_hostname not in groups['kubernetes-master'][0] 
+
+# # BOOTSTRAP CERTIFICATE STAGE OTHER MASTERS CLUSTER CONFIGURATIONS
+
+# - name: Run bootstrap on Other Masters
+#   command: "{{ item }}"
+#   with_items:
+#     - kubeadm init phase certs etcd-server --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml 
+#     - kubeadm init phase certs etcd-peer --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#     - kubeadm init phase certs etcd-healthcheck-client --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#     - kubeadm init phase certs apiserver-etcd-client --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#     - kubeadm init phase etcd local --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#   when: inventory_hostname not in groups['kubernetes-master'][0]
+
+# # REPLACE CONFIGURATION OF ETCD WITH NEW CERTS
+
+# - name: re/Create systemd config from template for etcd
+#   template: 
+#       src: etcd-systemd.stage.service
+#       dest: "/etc/systemd/system/etcd.service"
+
+# - name: System Reread Configs for systemd
+#   systemd:
+#     daemon_reload: yes
+
+# - name: Reload etcd service
+#   systemd:
+#     state: restarted
+#     daemon_reload: yes
+#     name: etcd
+#   with_sequence: start=0 end={{ (( play_hosts | length ) * 2 ) | round (0, 'floor') | int }}
+#   loop_control:
+#     pause: 2
+#   when: "(( ansible_play_batch.index(inventory_hostname) % (( play_hosts | length ) * 2 )) | round) == (item | int)"
+#   throttle: 1
+
+# - name: Wait the etcd restart sleep 15
+#   shell: sleep 15
+
+
+
+# # CREATE CLUSTER CONFIGURATION WITH ETCD
+
+# - name: Stop before init cluster
+#   systemd:
+#     name: kubelet
+#     daemon_reload: yes
+#     state: stopped
+#     enabled: yes
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# # CREATE CLUSTER on 1st MASTER
+
+# - name: Run Cluster Init generating on 1st Masters
+#   command: "{{ item }}"
+#   with_items:
+#    - kubeadm init --ignore-preflight-errors=FileAvailable--etc-kubernetes-manifests-etcd.yaml,ExternalEtcdVersion --config /etc/kubernetes/cluster-init-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Copy certificates from first master again
+#   synchronize:
+#     src: "{{ k8s_service_settings.directories.pki }}"
+#     dest: "{{ k8s_service_settings.directories.etc }}"
+#   delegate_to: "{{ groups['kubernetes-master'][0] }}"
+#   tags: certificates_copy
+#   when: inventory_hostname not in groups['kubernetes-master'][0] 
+
+# # UPDATE CLUSTER on OTHER MASTERS
+
+# - name: Run Cluster Init generating on Other Masters
+#   command: "{{ item }}"
+#   with_items:
+#    - kubeadm init --ignore-preflight-errors=FileAvailable--etc-kubernetes-manifests-etcd.yaml,ExternalEtcdVersion --config /etc/kubernetes/cluster-init-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+#   when: inventory_hostname not in groups['kubernetes-master'][0]
+
+# # DEPLOY MASTER ROLE FOR CLUSTER MASTERS
+
+# - name: Run Master init role on Cluster generating on All Masters
+#   command: "{{ item }}"
+#   with_items:
+#     - kubeadm init --config /etc/kubernetes/master-init-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+
+# - name: Copy result config to root home dir for able to manage the cluster
+#   command: "{{ item }}"
+#   with_items:
+#     - mkdir -p /root/.kube
+#     - cp -i /etc/kubernetes/admin.conf /root/.kube/config
+
+
+
+
+---
+
+- name: Reset Kubernetes component
+  shell: "kubeadm reset --force"
+  register: reset_cluster
+
+# - name: Init Kubernetes cluster
+#   when: reset_cluster is succeeded
+#   shell: |
+#     kubeadm init --service-cidr {{ service_cidr }} \
+#                  --kubernetes-version {{ kube_version }} \
+#                  --pod-network-cidr {{ pod_network_cidr }} \
+#                  --token {{ token }} \
+#                  --apiserver-advertise-address {{ master_ip }} \
+#                  {{ kubeadm_opts }} \
+#                  {{ init_opts }}
+#   register: init_cluster
+
+# - name: Create Kubernetes config directory
+#   file:
+#     path: ".kube/"
+#     state: directory
+
+# - name: Copy admin.conf to Home directory
+#   when: init_cluster is succeeded
+#   copy:
+#     src: "{{ kubeadmin_config }}"
+#     dest: ".kube/config"
+#     owner: "{{ ansible_user | default(ansible_user_id) }}"
+#     group: "{{ ansible_user | default(ansible_user_id) }}"
+#     mode: 0755
+#     remote_src: true
+

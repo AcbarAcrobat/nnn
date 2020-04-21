@@ -1,0 +1,110 @@
+{
+    "signing": {
+        "default": {
+            "expiry": "87600h"
+        },
+        "profiles": {
+
+            "peer": {
+                "expiry": "720h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "client auth",
+                    "server auth"
+                ]
+            },
+
+            "client": {
+              "expiry": "720h",
+              "usages": [
+                "signing",
+                "key encipherment",
+                "client auth"
+              ]
+            },
+            
+            "intermediate": {
+                "expiry": "87600h",
+                "usages": [
+                    "key encipherment",
+                    "signing",
+                    "cert sign",
+                    "crl sign"
+                ],
+                "ca_constraint": {
+                "is_ca": true,
+                "max_path_len": 0,
+                "max_path_len_zero": true
+                }
+            }
+
+        }
+    }
+}
+{% raw %}{
+    "signing": {
+        "default": {
+            "expiry": "43800h"
+        },
+        "profiles": {
+            {% endraw %}{% for record in certificates_types_prefixs %}{% if record.profile == "peer" or record.profile == "kubernetes" or record.profile == "server" or record.profile == "client" or record.profile == "ca" or record.profile == "intermediate" %}{% raw %}
+            "{% endraw %}{{ record.profile }}{% raw %}": {
+                    "expiry": "8700h",
+                    "usages": [
+                            "signing",
+                    {% endraw %}{% if record.profile == "client" %}{% raw %}
+                            "client auth",
+                    {% endraw %}{% endif %}{% if record.profile == "server" %}{% raw %}
+                            "server auth",
+                    {% endraw %}{% endif %}{% if record.profile == "peer" or record.profile == "kubernetes" %}{% raw %}
+                            "server auth",
+                            "client auth",
+                    {% endraw %}{% endif %}{% raw %}
+                            "key encipherment"
+                        ]
+            }{% endraw %}{% if record.profile == "client" or record.profile == "peer" %}{% raw %},{% endraw %}{% else %}{% raw %}{% endraw %}{% endif %} 
+            {% else %}
+            {% if record.profile == "intermediate" %}"intermediate": {% raw %}{
+                "usages": [
+                    "signature",
+                    "digital-signature",
+                    "cert sign",
+                    "crl sign"
+                ],
+                "expiry": "26280h",
+                "ca_constraint": {
+                    "is_ca": true,
+                    "max_path_len": 0,
+                    "max_path_len_zero": true
+                }
+            }
+            {% endraw %}
+
+            {% endif %}
+            
+            {% if record.profile == "kubernetes" %}"kubernetes": {% raw %}{
+                "usages": [
+                    "signature",
+                    "digital-signature",
+                    "cert sign",
+                    "crl sign"
+                ],
+                "expiry": "26280h",
+                "ca_constraint": {
+                    "is_ca": true,
+                    "max_path_len": 0,
+                    "max_path_len_zero": true
+                }
+            }
+            {% endraw %}
+            {% endif %}
+
+
+            {% endif %}
+            {% endfor %}
+
+        }
+    }
+}
+

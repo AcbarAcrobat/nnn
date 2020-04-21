@@ -1,0 +1,9 @@
+
+svn+ssh://svn.tpr.ru/opt/svn/kp/trunk/KPDealerGate
+
+
+svn.tpr.ru 10.20.197.77
+
+teamcity
+
+# EXAMPLE ssh connect ssh -C -o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyChecking=no -o Port=22 -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no -o ConnectTimeout=10 -o 'ProxyCommand=ssh -W %h:%p %r@10.0.2.51' 10.30.0.10

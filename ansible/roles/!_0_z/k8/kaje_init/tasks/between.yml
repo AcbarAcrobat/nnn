@@ -1,0 +1,74 @@
+- name: Create the directories for configuration
+  file:
+    path: "{{ item.value }}"
+    state: directory
+    mode: 0750
+  with_dict: "{{ ca_service_settings.directories | default({}) }}"
+  when: inventory_hostname in groups['kubernetes-master']
+  tags: [configuration,ca]
+
+- name: STOPPING KUBELET & ETCD
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  when: inventory_hostname in groups['kubernetes-master'][0]
+  with_items:
+    - kubelet
+    - etcd
+
+- name: Template main cluster config vortex-kube-master-init.yaml.j2
+  template:
+    src: vortex-kube-master-init.yaml.j2
+    dest: /cloud/vortex-kube-master-init.yaml
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: Template cluster init cluster config vortex-kube-master-init.yaml.j2
+  template:
+    src: cluster_init.yml.j2
+    dest: /cloud/cluster_init.yml
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: INCLUDE TASKS WICH INTERNAL LOCAL NODE | internal.yml
+  include_tasks: internal.yml
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: INCLUDE TASKS WICH MASTER LOCAL NODE | master.yml
+  include_tasks: master.yml
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: Shell 500
+  shell: sleep 500
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: RUn init
+  shell: 'kubeadm init --ignore-preflight-errors=all --config=/cloud/cluster_init.yml'
+  when: inventory_hostname in groups['kubernetes-master'][0]
+  register: kube_init_result
+
+- name: kube_init_result | Show the init first master phase result
+  debug:
+    msg: "{{ kube_init_result }}"
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: Shell 500
+  shell: sleep 500
+
+- name: INFORMATION! ATTENTION!
+  vars:
+     MESSAGE_IN: "START COPY GENERATED CERTS TO KAJE TEMP DIR {{ ca_service_settings.directories.kaje_init }}"
+  debug: 
+    msg: "{{ attention_phase_1.split('\n') }}"       
+
+######## INIT PHASE ONE - COPY GENERATED CERTS TO KAJE TEMP DIR
+
+- name: COPY ALL CERTS TO OPT
+  shell: cp -r /etc/kubernetes/* {{ ca_service_settings.directories.kaje_init }}
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Copy result config to root home dir for able to manage the cluster
+#   command: "{{ item }}"
+#   with_items:
+#     - mkdir -p /root/.kube
+#     - cp -i /etc/kubernetes/admin.conf /root/.kube/config
+#   when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+#   # when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']

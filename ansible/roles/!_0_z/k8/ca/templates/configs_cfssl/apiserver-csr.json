@@ -1,0 +1,24 @@
+{% raw %}{
+    "CN": "kube-apiserver",
+    "hosts": [
+      "kube-apiserver",
+      "{% endraw %}{{ K8S_CLUSTER_ADDRESS }}{% raw %}",
+      "{% endraw %}{{ CALICO_ETCD_CLUSTER_IP }}{% raw %}",
+      "vortex",
+      "kubernetes",
+      "kubernetes.default",
+      "kubernetes.default.svc",
+      "kubernetes.default.svc.cluster",
+      "kubernetes.default.svc.cluster.local",
+      {% endraw %}{% for host in groups['kubernetes-master'] %}{% raw %}
+      "{% endraw %}{{ hostvars[host]['ansible_nodename'] }}{% raw %}",
+      "{% endraw %}{{ hostvars[host]['second_ip'] }}{% raw %}",
+      "{% endraw %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% raw %}"{% endraw %}{% if not loop.last %}{% raw %},
+      {% endraw %}{% endif %}{% endfor %}{% raw %}
+    ],
+    "key": {
+      "algo": "rsa",
+      "size": 2048
+    }
+  }
+{% endraw %}

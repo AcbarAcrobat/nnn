@@ -1,0 +1,9 @@
+# ANYCLOUD CONFIGURATIONS
+
+vswitch_name: global
+anycloud_zone: earth
+vswitch_description: vSwitch_{{ ansible_environment }}
+anycloud_region: worldwide
+vswitch_cidr: 172.16.222.0/24
+vpc_name: default
+vpc_description: VPC_{{ ansible_environment }}

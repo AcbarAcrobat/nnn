@@ -1,0 +1,6 @@
+#!/bin/bash
+
+run_req_vault_pass $vault_pass;
+run_req_registry_sitename $ansible_global_gitlab_registry_site_name;
+run_req_gitlab_project_group $gitlab_project_group;
+run_req_gitlab_project_name $gitlab_project_name;

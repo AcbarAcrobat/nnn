@@ -1,0 +1,16 @@
+
+- hosts: "{{ HOSTS | default('master-bind-master-backend') }}:all:vlan_backend_node:nginx-frontend:vlan_network_balancer:vlan_frontend"
+  gather_facts: true 
+  tasks: []
+
+- name: Setup CoreDNS backend service for run specific tasks
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+  hosts: "{{ HOSTS | default('master-bind-master-backend') }}:all"
+  roles:
+
+    - name: GET CLOUD FACTS | Load the anycloud settings from Zero Cloud Inventory
+      role: ./!_0_init/anycloud
+
+    - name: Run CoreDNS service role
+      role: ./!_bootstrap/core_dns

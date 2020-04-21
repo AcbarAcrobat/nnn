@@ -1,0 +1,70 @@
+- name: APT | Update cache and install curl
+  apt:
+    name: curl
+    update_cache: yes
+
+- name: APT | Install default packages
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - python-pip
+
+- name: SHELL | Adding the docker repository gpg public key
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+
+- name: APT | Add docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ lsb_release.stdout_lines | join }} stable"
+    state: present
+
+- name: APT | Install second stage packages
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - sshpass
+    - docker-ce 
+    - unzip
+    - mc 
+    - nano 
+    - htop 
+    - python3-pip 
+    - smartmontools 
+    - build-essential 
+    - checkinstall 
+    - libreadline-gplv2-dev 
+    - libncursesw5-dev 
+    - libssl-dev 
+    - libsqlite3-dev 
+    - tk-dev 
+    - libgdbm-dev 
+    - libc6-dev 
+    - libbz2-dev 
+    - libffi-dev
+    - python-py
+    - python-dockerpty 
+    - gnupg2
+    - pass
+    - socat
+
+- name: PIP | Get a get-pip.py
+  shell: wget https://bootstrap.pypa.io/get-pip.py > /tmp/get-pip.py
+
+- name: PIP | Run the get-pip.py
+  shell: python /tmp/get-pip.py
+
+- name: CHECK PIP | Create a symlink for pip
+  shell: "ln -s /usr/local/bin/pip /usr/bin/pip"
+  ignore_errors: true
+
+- name: PREPARE | Template pip requirements.txt
+  template:
+    src: requirements.txt.j2
+    dest: /tmp/requirements.txt
+
+- name: DEPLOYING | Install python pip requirements
+  shell: pip install -r /tmp/requirements.txt

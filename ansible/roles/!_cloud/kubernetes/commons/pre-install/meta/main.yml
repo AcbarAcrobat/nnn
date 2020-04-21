@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: ./!_cloud/k8/commons/os-checker }

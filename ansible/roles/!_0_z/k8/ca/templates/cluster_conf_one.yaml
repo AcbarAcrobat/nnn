@@ -1,0 +1,30 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.17.0
+imageRepository: k8s.gcr.io
+certificatesDir: /opt/ca/pki
+clusterName: "{{ K8S_CLUSTER_NAME }}"
+apiServer:
+  certSANs:
+  - "127.0.0.1"
+  - "votrex"
+  - "{{ K8S_CLUSTER_ADDRESS }}"{% for host in groups['kubernetes-master'] %}{% raw %}
+  - "{% endraw %}{{ hostvars[host]['second_ip'] }}{% raw %}"
+  - "{% endraw %}{{ hostvars[host]['second_ip'] }}{% raw %}"{% endraw %}{% endfor %}{% raw %}
+  timeoutForControlPlane: 4m0s
+controllerManager: {}
+dns:
+  type: CoreDNS
+etcd:
+  external:
+    endpoints:{% endraw %}{% for host in groups['kubernetes-master'] %}{% raw %}
+    - https://{% endraw %}{{ hostvars[host]['second_ip'] }}{% raw %}:{% endraw %}{{ K8S_CLUSTER_LISTEN_PORT_2379 }}{% endfor %}{% raw %}
+    caFile: /opt/ca/pki/ca.crt
+    certFile: /opt/ca/pki/server.crt
+    keyFile: /opt/ca/server.key
+networking:
+    dnsDomain: "{% endraw %}{{ public_consul_domain }}{% raw %}"
+    podSubnet: "{% endraw %}{{ POD_NETWORK_CIDR }}{% raw %}"
+    serviceSubnet: "{% endraw %}{{ hostvars[inventory_hostname]['second_network_subnet'] }}{% raw %}"
+scheduler: {}
+{% endraw %}

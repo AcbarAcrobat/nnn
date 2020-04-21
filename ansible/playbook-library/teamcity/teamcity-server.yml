@@ -1,0 +1,19 @@
+- name: PostgreSQL Server Docker Playbook step...
+  become: true
+  hosts: teamcity-server
+  vars_files:
+    - "./group_vars/all.yml"
+  roles:
+    - name: PostgreSQL Server
+      role: ./!_applications/teamcity-server/postgesql
+  tags: [teamcity-setup]
+
+- name: TeamCity Server Docker Playbook step...
+  become: true
+  hosts: teamcity-server
+  vars_files:
+    - "./group_vars/all.yml"
+  roles:
+    - name: TeamCity Server
+      role: ./!_applications/teamcity-server/teamcity
+  tags: [teamcity-setup]

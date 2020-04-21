@@ -1,0 +1,5 @@
+[old]
+172.16.31.114 ansible_ssh_user=yuldashev
+
+[new]
+172.16.21.51 ansible_ssh_user=vyuldashev ansible_become_pass=1235

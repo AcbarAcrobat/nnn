@@ -1,0 +1,5 @@
+- name: Setup netplan service for run specific tasks
+  hosts: cloud-bind-frontend-dns:all
+  roles:
+    - name: Run netplan service role
+      role: ./!_network/netplan

@@ -1,0 +1,6 @@
+cryptography
+pywinrm
+dnspython
+urllib3<1.25
+ansible
+ansible_merge_vars

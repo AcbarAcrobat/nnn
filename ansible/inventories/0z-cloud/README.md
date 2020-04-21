@@ -1,0 +1,9 @@
+# CLOUD ESXI DYNAMIC INVENTORY README
+
+- > In place readme, write me!
+
+./inventories/0z-cloud/vsphere/v.py >> ./tmp/inventory | ansible -i /tmp/inventory -m shell -a "echo 1" all
+
+- > For regenerate a dynamic part of inventory try run ``` ./cloud_regen.sh ``` from root folder of the project and enjoy!
+
+# THIS MUST TO BE WRITEN FOR UNDERSTANDING USAGE

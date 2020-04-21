@@ -1,0 +1,122 @@
+- name: Install necessary packages DNS
+  apt:
+    name: "{{ bind_cloud_settings.packages }}"
+    state: present
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Create Dir with local domain
+  file:
+    path: "{{ bind_cloud_settings.bind_etc }}/{{ bind_cloud_settings.zone_path }}/"
+    state: directory
+    mode: 0755
+    owner: bind
+  tags: configuration
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Create Dir for logging
+  file:
+    path: "{{ bind_cloud_settings.logging_path }}"
+    state: directory
+    mode: 0755
+    owner: bind
+  tags: configuration
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Copy current configuration
+  raw: cp -r /etc/bind/* {{ bind_cloud_settings.bind_etc }}/
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Chown changes to bind:bind
+  raw: chown -R bind:bind {{ bind_cloud_settings.bind_etc }}/*
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Template DNS options
+  template:
+    src: "{{ item }}.j2"
+    dest: "{{ bind_cloud_settings.bind_etc }}/{{ item }}"
+  with_items:
+    - named.conf.local
+    - named.conf.options
+    - named.conf
+    - named.conf.default-zones
+  tags: configuration
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Template etc defaults bind9 configuration startup options
+  template:
+    src: etc_default.j2
+    dest: /etc/default/bind9
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Template the domain configuration
+  template:
+    src: domain.j2
+    dest: "{{ bind_cloud_settings.bind_etc }}/{{ bind_cloud_settings.zone_path }}/{{ bind_cloud_settings.public_domain }}"
+  tags: domain
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Template special domain configuration
+  template:
+    src: special_zones.j2
+    dest: "{{ bind_cloud_settings.bind_etc }}/special_zones_{{ ansible_environment }}.conf"
+  tags: configuration
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Find special_zones files
+  find:
+    paths: "{{ bind_cloud_settings.bind_etc }}"
+    patterns: 'special_zones_*.conf'
+  register: special_zones_presented
+  tags: debug
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Debug the special_zones_presented
+  debug:
+    msg: "{{ item.value }}"
+  with_items: |
+    {% for dict_item in special_zones_presented.files %}{% for key, value in dict_item.items() %}{% if key == 'path' %}{ "value": "{{ value }}"}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}{% endfor %}
+  tags: debug
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Check and fill the other environments configurations
+  lineinfile: 
+      dest: "{{ bind_cloud_settings.bind_etc }}/named.conf.local"
+      regexp: '^include "{{ item.value }}";'
+      insertafter: '^// PLACEHOLDER'
+      line: 'include "{{ item.value }}";'
+  with_items: |
+    {% for dict_item in special_zones_presented.files %}{% for key, value in dict_item.items() %}{% if key == 'path' %}{ "value": "{{ value }}"}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}{% endfor %}
+  tags: debug
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Template new startup configuration
+  template:
+    src: bind9.j2
+    dest: "/etc/init.d/bind9"
+    mode: 0777
+  tags: configuration
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Chown changes to bind:bind
+  raw: chown -R bind:bind {{ bind_cloud_settings.bind_etc }}/*
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Configure the apparmor profile for new dirs
+  lineinfile:
+      line: '{{ bind_cloud_settings.bind_etc }}** rwm,'
+      insertbefore: '/var/cache/bind/ rw,'
+      dest: /etc/apparmor.d/usr.sbin.named
+      state: present
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Reloading apparmor 
+  service:
+    name: apparmor
+    state: reloaded
+  when: "'master-bind-master-backend' in group_names"
+
+- name: Restarting bind9
+  service:
+    name: bind9
+    state: restarted
+  when: "'master-bind-master-backend' in group_names"

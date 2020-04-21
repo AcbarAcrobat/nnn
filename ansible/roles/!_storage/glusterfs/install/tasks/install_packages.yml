@@ -1,0 +1,26 @@
+- name: Add repository key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 13e01b7b3fe869a9
+
+- name: Remove old repository PPA
+  apt_repository: 
+    repo: '{{ glusterfs_environment_past_version }}'
+    state: absent
+
+- name: Add repository PPA
+  apt_repository: 
+    repo: '{{ glusterfs_environment_new_version }}'
+    state: present
+
+- name: Purge Packages System Client
+  apt:
+    name: "{{ glusterfs_settings.packages }}"
+    state: absent
+    purge: yes
+
+- name: Install Packages System Client
+  apt:
+    name: "{{ glusterfs_settings.packages }}"
+    state: latest
+    update_cache: yes

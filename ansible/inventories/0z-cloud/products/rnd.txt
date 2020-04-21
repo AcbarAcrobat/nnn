@@ -1,0 +1,3 @@
+# Future usage inventory from consul
+
+ANSIBLE_CONSUL_URL=http://localhost:8500 ansible-playbook ...

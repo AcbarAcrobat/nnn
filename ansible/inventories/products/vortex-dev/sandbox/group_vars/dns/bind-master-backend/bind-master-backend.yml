@@ -1,0 +1,122 @@
+cloud_dir: /mnt/bind-master-glusterfs
+
+bind_cloud_settings:
+  domain: "{{ consul_merge_domain_name }}"
+  public_domain: "{{ public_consul_domain }}"
+  packages:
+    - bind9
+    - bind9utils
+    - bind9-doc
+    - bind9-host
+  zone_path: "pri"
+  bind_etc: "/cloud/local/bind/etc/bind" 
+  logging_path: "/var/log/named"
+  extra_static_with_dynamic_entries:
+  - { record: "develop                      ", value: "IN     NS ns1-sandbox.vortex.com."          }
+  - { record: "develop                      ", value: "IN     NS ns2-sandbox.vortex.com."          }
+  - { record: "develop                      ", value: "IN     NS ns3-sandbox.vortex.com."          }
+  - { record: "sandbox                      ", value: "IN     NS ns1-sandbox.vortex.com."          }
+  - { record: "sandbox                      ", value: "IN     NS ns2-sandbox.vortex.com."          }
+  - { record: "sandbox                      ", value: "IN     NS ns3-sandbox.vortex.com."          }
+  - { record: "@                            ", value: "IN      MX 1       ASPMX.L.GOOGLE.COM."          }
+  - { record: "@                            ", value: "IN      MX 5       ALT1.ASPMX.L.GOOGLE.COM."          }
+  - { record: "@                            ", value: "IN      MX 5       ALT2.ASPMX.L.GOOGLE.COM."          }
+  - { record: "@                            ", value: "IN      MX 10       ALT3.ASPMX.L.GOOGLE.COM."          }
+  - { record: "@                            ", value: "IN      MX 10       ALT4.ASPMX.L.GOOGLE.COM."          }
+  - { record: "@                            ", value: "IN      TXT       \"google-site-verification=ELPaYI4nt4L-KYIFG0eIzxELVQaDqCnjL5f6g-i6TTc\""          }
+  - { record: "@                            ", value: "IN      TXT       \"ca3-a29a1a5959f543b297adcd77a64d5183\""          }
+  - { record: "@                            ", value: "IN      TXT       \"v=spf1 include:_spf.google.com ~all\""           }
+  - { record: "@                            ", value: "IN      HINFO       \"RFC8482\" \"\" "          }
+
+  # - { record: "ns1-office                   ", value: "IN     A x.x.x.x\24"          }
+  # - { record: "ns2-office                   ", value: "IN     A x.x.x.x\24"          }
+  # - { record: "ns3-office                   ", value: "IN     A x.x.x.x\24"          }
+  # - { record: "gitlab                       ", value: "IN     A x.x.x.x\24"          }
+  # - { record: "@                            ", value: "IN      MX 15       .mx-verification.google.com."          }
+
+  mixed_static_with_dynamic_entries:
+  - { record: "mail                            ", value: "IN      A       185.111.218.63"          }
+  other_environments_subdomains:
+    develop:
+      # DC LOCATION INFO
+      dc_location: digitalocean
+      # NS SERVER PREFIX FOR LOCATION
+      dc_prefix: sandbox
+      # PUBLIC CLOUD IP OF FRONTEND
+      dns_ip_list:
+        - "46.101.244.84"
+        - "46.101.244.87"
+        - "46.101.244.49"
+    sandbox:
+      # DC LOCATION INFO
+      dc_location: digitalocean
+      # NS SERVER PREFIX FOR LOCATION
+      dc_prefix: sandbox
+      # PUBLIC CLOUD IP OF FRONTEND
+      dns_ip_list:
+        - "46.101.244.84"
+        - "46.101.244.87"
+        - "46.101.244.49"
+    stage:
+      # DC LOCATION INFO
+      dc_location: digitalocean
+      # NS SERVER PREFIX FOR LOCATION
+      dc_prefix: sandbox
+      # PUBLIC CLOUD IP OF FRONTEND
+      dns_ip_list:
+        - "46.101.244.84"
+        - "46.101.244.87"
+        - "46.101.244.49"
+    # dev:
+    #   # DC LOCATION INFO
+    #   dc_location: digitalocean
+    #   # NS SERVER PREFIX FOR LOCATION
+    #   dc_prefix: cloud
+    #   # PUBLIC CLOUD IP OF FRONTEND
+    #   dns_ip_list:
+    #     - "46.101.244.84"
+    #     - "46.101.244.87"
+    #     - "46.101.244.49"
+    # area01:
+    #   # DC LOCATION INFO
+    #   dc_location: area01
+    #   # NS SERVER PREFIX FOR LOCATION
+    #   dc_prefix: area01
+    #   # PUBLIC CLOUD IP OF FRONTEND
+    #   dns_ip_list:
+    #     - "172.16.13.18"
+    #     - "172.16.13.26"
+    #     - "172.16.13.27"
+    # area2:
+    #   # DC LOCATION INFO
+    #   dc_location: area00003
+    #   # NS SERVER PREFIX FOR LOCATION
+    #   dc_prefix: area2
+    #   # PUBLIC CLOUD IP OF FRONTEND
+    #   dns_ip_list:
+    #     - "172.16.13.18"
+    #     - "172.16.13.26"
+    #     - "172.16.13.27"
+    # area00003:
+    #   # DC LOCATION INFO
+    #   dc_location: area00003
+    #   # NS SERVER PREFIX FOR LOCATION
+    #   dc_prefix: area00003
+    #   # PUBLIC CLOUD IP OF FRONTEND
+    #   dns_ip_list:
+    #     - "172.16.13.18"
+    #     - "172.16.13.26"
+    #     - "172.16.13.27"
+
+core_dns_cloud_settings:
+  ports:
+    dns: 53
+    web: 9153
+  directories:
+    configuration: "/cloud/local/opt/coredns"
+  cert_cloud:
+    letsencrypt: "{{ cloud_dir }}/ca_root/letsencrypt"
+    ca_root: "{{ cloud_dir }}/ca_root"
+    deploy: "{{ cloud_dir }}/ca_root/letsencrypt/deploy"
+    dnsapi: "{{ cloud_dir }}/ca_root/letsencrypt/dnsapi"
+    cert_root: "{{ cloud_dir }}/ca_root/cert_root"

@@ -1,0 +1,11 @@
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: {{ K8S_CLUSTER_ADDRESS }}
+  bindPort: {{ K8S_CLUSTER_LISTEN_PORT }}
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: {{ hostvars[inventory_hostname].ansible_nodename }}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+---

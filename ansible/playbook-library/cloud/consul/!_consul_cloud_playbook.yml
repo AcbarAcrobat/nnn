@@ -1,0 +1,13 @@
+---
+- name: Fact gathering
+  hosts: all:swarm-cluster:consul-cluster
+  tasks: []
+  tags: [get-facts, always]
+
+- name: Consul magic step... Unix
+  become: true
+  hosts: consul-cluster
+  roles:
+    - name: Consul magic do...
+      role: ./!_cloud/consul/consul-service
+  tags: [consul-setup]

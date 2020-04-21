@@ -1,0 +1,47 @@
+---
+
+- name: Get join token for workers nodes
+  shell: "kubeadm --kubeconfig /etc/kubernetes/admin.conf token list | tail -n -1 | awk '{print $1}'"
+  register: k8s_workers_join_token
+
+- name: Set result k8s_workers_join_token
+  set_fact:
+    k8s_workers_join_token_result: "{{ k8s_workers_join_token.stdout }}"
+
+- name: Register ClusterIP
+  shell: kubectl get all --kubeconfig /etc/kubernetes/admin.conf | awk '{print $3}' | tail -n -1
+  register: clusterip_raw
+
+- name: Set ClusterIP as fact
+  set_fact:
+    k8s_cluster_ip_inside: "{{ clusterip_raw.stdout_lines }}"
+
+- name: Show ClusterIP getted value
+  debug:
+    msg: "{{ k8s_cluster_ip_inside }}"
+
+- name: Create Kubernetes addon directory
+  file:
+    path: "{{ network_dir }}"
+    state: directory
+
+- name: "Copy {{ network }} YAML files"
+  template:
+    src: "{{ item }}"
+    dest: "{{ network_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
+  with_fileglob:
+    - ../templates/{{ network }}*.j2
+
+- name: "Check {{ network }} daemonset is working"
+  shell: kubectl --kubeconfig={{ kubeadmin_config }} get ds --all-namespaces | grep {{ network }}
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  run_once: true
+  register: check_net
+  ignore_errors: true
+  changed_when: false
+
+- name: "Create {{ network }} network daemonset"
+  when: check_net is failed or calico_redeploy is defined
+  command: kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ network_dir }}/
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  run_once: true

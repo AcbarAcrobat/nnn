@@ -1,0 +1,25 @@
+
+- name: Stop kubelet
+  systemd: 
+    name: "{{ item }}"
+    state: stopped 
+  with_items:
+    - kubelet
+    - etcd
+
+- name: Reset Kubernetes component
+  shell: "kubeadm reset --force --cri-socket /var/run/dockershim.sock"
+  ignore_errors: true
+
+- name: Remove all kaje configurations the directories for configuration
+  shell: "rm -rf {{ item.value }}"
+  with_dict: "{{ etcd_service_settings.directories | default({}) }}"
+  tags: [configuration,bootstrap]
+
+- name: Create back etcd the directories for configuration
+  file:
+    path: "{{ item.value }}"
+    state: directory
+    mode: 0750
+  with_dict: "{{ etcd_service_settings.directories | default({}) }}"
+  tags: [configuration,bootstrap]

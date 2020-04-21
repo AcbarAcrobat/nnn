@@ -1,0 +1,428 @@
+#ubuntu_default_image_name: "ubuntu_18_04_64_20G_alibase_20181212.vhd"
+ansible_environment: production
+ansible_product: reactivepay
+count: 1
+allocate_public_ip: yes
+
+#####
+
+cloud_bootstrap:
+
+  basic_roles:
+
+    - '!_bootstrap/update-dns-config'
+    - '!_bootstrap/ntp-client'
+    - '!_bootstrap/local-repository'
+    - auditd
+    - rsyslog
+    - ossim-agent
+
+  services:
+    inventory_groups_vars:
+        test-sentry-redis-io-cluster:
+                redis_public_port: 6379
+                redis_slave_public_port: 6380
+                redis_username: redis
+                redis_passowrd: dc1d494f7915dbaee349e35a973d6c037357c548ad
+
+  switches:
+    vswitch_01:
+        vswitch_name: "{{ vswitch_name }}"
+        alicloud_zone: "{{ alicloud_zone }}"
+        vswitch_description: "vSwitch_production"
+        alicloud_region: "{{ alicloud_region }}"
+        vswitch_cidr: '{{ vswitch_cidr }}'
+        vswitch_id: "REPLACED"
+
+  vpc_zones:
+    vpc_0001:
+        vpc_name: "{{ vpc_name }}"
+        alicloud_region: "{{ alicloud_region }}"
+        vpc_description: "{{ vpc_description }}"
+        cidr_block: "{{ vpc_cidr }}"
+
+  security_zones:
+    sg_zone_0001:
+        sg_group_id: "REPLACED"
+
+  servers:
+
+
+# ## Configure 'ip' variable to bind kubernetes services on a
+# ## different ip than the default iface
+
+    reactivepay_kube_04:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "185.40.28.115"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "payapp-04"
+        alicloud_vm_configuration: "{{ extended_instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+        # MAIN
+            - vlan_all
+            - vlan_network_balancer
+        # LOCAL REPO
+            - clamav-repository-mirror
+            - apt-repository-mirror
+            - build-repository-mirror
+            - python-repository-mirror
+            - linux-repository-mirror
+        # MONITORING
+            - cadvisor
+            - node-exporter
+        # SECURITY
+            - wazuh-agent
+            - wazuh-manager
+        # STORAGE
+            - master-bind-master-backend
+            - bind-master-glusterfs
+            - wazuh-elasticsearch
+        # LOGGING WEB VIEW
+            - logging-kibana-service
+        # NETWORK
+            - network-balancer-stack
+        # PLACEHOLDERS GROUPS
+            - gitlab-server
+            - teamcity-server
+        # MONITORING
+            - grafana
+            - prometheus
+            - alertmanager
+            - wazuh-kibana
+        # KUBERNETES CLUSTER
+            - k8s-cluster
+            - kubernetes-cluster
+            - kubernetes-worker
+            - controller-node
+            - compute-node
+            - kube-node
+        #####
+        # DISABLED
+        #####
+            # - vlan_all
+            # - kubernetes-cluster
+            # - kubernetes-master
+            # - consul-cluster
+            # - consul-clients
+            # - master-bind-master-backend
+            # - bind-master-glusterfs
+            # - gitlab-runners
+            # - teamcity-server
+            # - teamcity-agent
+        ansible_inventory_vars:
+            node_labels: '{"openstack-control-plane":"enabled", "openvswitch":"enabled"}'
+            node_labels: '{"openstack-compute-node":"enabled", "openvswitch":"enabled"}'
+            public_nat_ip: "REPLACED"
+            swarm_node_type: "client"
+            consul_type: "client"
+            kubernetes_type: "master"
+            second_network: "REPLACED"
+            second_ip: "172.16.100.4"
+            second_iface: "enp0s8"
+            second_network_subnet: "172.16.100.0/24"
+            ansible_python_interpreter: "/usr/bin/python3"
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            clamav_mirror_update_hour: "2"
+            clamav_mirror_update_minutes: "30"
+            apt_mirror_startup_minutes: "05"
+            apt_mirror_startup_hour: "3"
+    
+    # reactivepay_kube_05:
+    #     # Replaced after VMs bootstrapped in alicloud
+    #     network: "REPLACED"
+    #     ip: ""
+    #     gw: "REPLACED"
+    #     #
+    #     template_image_name: "{{ ubuntu_default_image_name }}"
+    #     name: "payapp-node-05-production"
+    #     alicloud_vm_configuration: "{{ extended_instance_type }}"
+    #     initial_only_dns_servers:
+    #         - "8.8.8.8"
+    #     ansible_inventory_groups:
+    #         - vlan_all
+    #         - kubernetes-cluster
+    #         - kubernetes-master
+    #         - consul-cluster
+    #         - consul-clients
+    #         - master-bind-master-backend
+    #         - bind-master-glusterfs
+    #         - gitlab-runners
+    #         - teamcity-agent
+    #     ansible_inventory_vars:
+    #         swarm_node_type: "client"
+    #         consul_type: "client"
+    #         kubernetes_type: "master"
+    #         second_network: "REPLACED"
+    #         second_ip: "192.168.93.104"
+
+    reactivepay_kube_03:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "185.40.28.91"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "payapp-03"
+        alicloud_vm_configuration: "{{ extended_instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+        # MAIN
+            - vlan_all
+            - vlan_frontend
+        # DATABASE
+            - postgres-pgpool-cluster
+            - postgres-pgcontrol-cluster
+        # MONITORING
+            - cadvisor
+            - node-exporter
+        # SECURITY
+            - wazuh-agent
+        # STORAGE
+            - cloud-bind-frontend-dns
+            - cloud-bind-frontend-dns-glusterfs-storage
+        # LOGGING CLUSTER
+            - logging-elasticsearch-cluster
+        # CLUSTER SERVICE
+            - swarm-cluster
+        # WEB
+            - nginx-frontend
+        # SERVICES
+            - settings
+            - core
+            - business
+            - guard
+            - demo
+            - metabase
+            - docs
+        # SERVICE DISCOVERY
+            - consul-masters
+        # ACCESS SERVICES
+            - pritunl-stack
+        # KUBERNETES CLUSTER
+            - k8s-cluster
+            - kubernetes-cluster
+            - kubernetes-master
+            - kube-master
+            - etcd
+        ansible_inventory_vars:
+            public_nat_ip: "REPLACED"
+            # PGCLUSTER
+            pgcluster_node_index: "2"
+            pgcluster_node_name: pg03
+            psql_init_node_type: slave
+            psql_init_node_id: "3"
+            pg_node_master_name: pg01
+            #
+            glusterfs_replica_count: "3"
+            cloud_ns_name: "ns3-cloud"
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_network_type: "dmz"
+            second_network_zone: "cluster"
+            second_network_cluster_group: "nginx-frontend"
+            second_ip: "172.16.100.3"
+            second_iface: "enp0s8"
+            second_network_subnet: "172.16.100.0/24"
+            ansible_python_interpreter: "/usr/bin/python3"
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            clamav_mirror_update_hour: "2"
+            clamav_mirror_update_minutes: "30"
+            apt_mirror_startup_minutes: "05"
+            apt_mirror_startup_hour: "3"
+
+    reactivepay_kube_02:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "185.40.28.92"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "payapp-02"
+        alicloud_vm_configuration: "{{ extended_instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+        # MAIN
+            - vlan_all
+            - vlan_frontend
+        # DATABASE
+            - postgres-pgpool-cluster
+            - postgres-pgcontrol-cluster
+        # MONITORING
+            - cadvisor
+            - node-exporter
+        # SECURITY
+            - wazuh-agent
+        # STORAGE
+            - cloud-bind-frontend-dns
+            - cloud-bind-frontend-dns-glusterfs-storage
+        # LOGGING CLUSTER
+            - logging-elasticsearch-cluster
+        # CLUSTER SERVICE
+            - swarm-cluster
+        # WEB
+            - nginx-frontend
+        # SERVICES
+            - settings
+            - core
+            - business
+            - guard
+            - demo
+            - metabase
+            - docs
+        # SERVICE DISCOVERY
+            - consul-masters
+        # ACCESS SERVICES
+            - pritunl-stack
+        # KUBERNETES CLUSTER
+            - k8s-cluster
+            - kubernetes-cluster
+            - kubernetes-master
+            - kube-master
+            - etcd
+        ansible_inventory_vars:
+            public_nat_ip: "REPLACED"
+            # PGCLUSTER
+            pgcluster_node_index: "1"
+            pgcluster_node_name: pg02
+            psql_init_node_type: slave
+            psql_init_node_id: "2"
+            pg_node_master_name: pg01
+            #
+            glusterfs_replica_count: "3"
+            cloud_ns_name: "ns2-cloud"
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_network_type: "dmz"
+            second_network_zone: "cluster"
+            second_network_cluster_group: "nginx-frontend"
+            second_ip: "172.16.100.2"
+            second_iface: "enp0s8"
+            second_network_subnet: "172.16.100.0/24"
+            ansible_python_interpreter: "/usr/bin/python3"
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            clamav_mirror_update_hour: "2"
+            clamav_mirror_update_minutes: "30"
+            apt_mirror_startup_minutes: "05"
+            apt_mirror_startup_hour: "3"
+
+    reactivepay_kube_01:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "185.40.28.93"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "payapp-01"
+        alicloud_vm_configuration: "{{ extended_instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+        # MAIN
+            - vlan_all
+            - vlan_frontend
+        # DATABASE
+            - postgres-pgpool-cluster
+            - postgres-pgmanager-cluster
+            - postgres-pgcontrol-cluster
+        # MONITORING
+            - cadvisor
+            - node-exporter
+        # SECURITY
+            - wazuh-agent
+        # STORAGE
+            - cloud-bind-frontend-dns
+            - cloud-bind-frontend-dns-glusterfs-storage
+        # LOGGING CLUSTER
+            - logging-elasticsearch-cluster
+        # CLUSTER SERVICE
+            - swarm-cluster
+        # WEB
+            - nginx-frontend
+        # SERVICES
+            - settings
+            - core
+            - business
+            - guard
+            - demo
+            - metabase
+            - docs
+        # SERVICE DISCOVERY
+            - consul-masters
+        # ACCESS SERVICES
+            - pritunl-stack
+        # KUBERNETES CLUSTER
+            - k8s-cluster
+            - kubernetes-cluster
+            - kubernetes-master
+            - kube-master
+            - etcd
+        ansible_inventory_vars:
+            public_nat_ip: "REPLACED"
+            # PGCLUSTER
+            pgcluster_node_index: "0"
+            pgcluster_node_name: pg01
+            psql_init_node_type: master
+            psql_init_node_id: "1"
+            pg_node_master_name: pg01
+            #
+            glusterfs_replica_count: "3"
+            cloud_ns_name: "ns1-cloud"
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_network_type: "dmz"
+            second_network_zone: "cluster"
+            second_network_cluster_group: "nginx-frontend"
+            second_ip: "172.16.100.1"
+            second_iface: "enp0s8"
+            second_network_subnet: "172.16.100.0/24"
+            ansible_python_interpreter: "/usr/bin/python3"
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            clamav_mirror_update_hour: "2"
+            clamav_mirror_update_minutes: "30"
+            apt_mirror_startup_minutes: "05"
+            apt_mirror_startup_hour: "3"
+
+ssh_connect_type_self: ""
+ssh_connect_type_via: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+
+alicloud_template_name: "reactivepay-preprod-template-02"
+
+alicloud_domain: "reactivepay.com"
+
+#CURRENTLY ONLY CAN BE USED TEMPLATE DATASTORAGE FOR INITIAL CREATION VMs FROM TEMPLATE
+#-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>
+
+alicloud_dc: "Linx-MSK-M8-6-16"
+
+dns_servers:
+   - 8.8.8.8
+   - 1.1.1.1
+
+
+# :
+# #     - reactivepay-db-01
+# #     - reactivepay-cache-01
+# #     - reactivepay-web-01
+# #     - reactivepay-nginx-01
+
+# #     reactivepay_
+
+
+# 0z-cloud/group_vars/products/

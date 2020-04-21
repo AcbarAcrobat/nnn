@@ -1,0 +1,13 @@
+
+
+# Install prerequisites
+apt-get update
+apt-get install -y software-properties-common
+
+add-apt-repository ppa:projectatomic/ppa
+apt-get update
+
+# Install CRI-O
+apt-get install -y cri-o-1.15
+systemctl daemon-reload
+systemctl start crio

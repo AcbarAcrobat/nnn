@@ -1,0 +1,112 @@
+
+- name: Create the directories for configuration each worker
+  file:
+    path: "{{ item.value }}"
+    state: directory
+    mode: 0750
+  with_dict: "{{ k8s_service_settings.directories | default({}) }}"
+  tags: [configuration,join]
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+
+- name: Get join token for workers nodes
+  shell: "kubeadm --kubeconfig /etc/kubernetes/admin.conf token list | tail -n -1 | awk '{print $1}'"
+  register: k8s_workers_join_token
+  delegate_to: "{{ item }}"
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+  with_items: "{{ groups['kubernetes-master'][0] }}"
+
+# GET TOKEN
+# kubeadm token create --print-join-command --kubeconfig /etc/kubernetes/admin.conf -v=5
+
+- name: Get ca.crt hash for join workers nodes
+  shell: "openssl x509 -in /opt/ca/pki/ca.crt -noout -pubkey | openssl rsa -pubin -outform DER 2>/dev/null | sha256sum | cut -d' ' -f1"
+  register: k8s_workers_ca_hash
+  delegate_to: "{{ item }}"
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+  with_items: "{{ groups['kubernetes-master'][0] }}"
+
+- name: Set result k8s_workers_ca_hash
+  set_fact:
+    k8s_workers_ca_hash_result: "{{ item.stdout }}"
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+  with_items: "{{ k8s_workers_ca_hash.results }}"
+
+- name: Set result k8s_workers_join_token
+  set_fact:
+    k8s_workers_join_token_result: "{{ item.stdout }}"
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+  with_items: "{{ k8s_workers_join_token.results }}"
+
+- name: Show join workers token and certificate hash on workers
+  debug:
+    msg: "{{ item }}"
+  with_items:
+    - "{{ k8s_workers_ca_hash_result }}"
+    - "{{ k8s_workers_join_token_result }}"
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster'] and debug_playbook is defined
+
+- name: Template 10-kubeadm.conf run daemon extension config
+  template:
+    src: 10-kubeadm.conf
+    dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    mode: 0755
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+- name: Template kubeadm conf to drop-in directory
+  template: 
+    src: 20-extra-args.conf.j2 
+    dest: /etc/systemd/system/kubelet.service.d/20-extra-args.conf
+    mode: 0755
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+- name: System Reread Configs for systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Reload kubelet service
+  systemd:
+    state: restarted
+    name: kubelet
+
+- name: Join workers nodes for current cluster
+  command: kubeadm join {{ LOAD_BALANCER_DNS }}:{{ K8S_CLUSTER_LISTEN_PORT }} --token {{ k8s_workers_join_token_result }} --discovery-token-ca-cert-hash sha256:{{ k8s_workers_ca_hash_result }} --ignore-preflight-errors=all
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-cluster']
+
+- name: Copy admin.conf from first master after cluster init phase 4 workers
+  synchronize:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/etc/kubernetes/"
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  tags: config_copy
+  with_items: |
+    {% set hostslist = [] %}
+    {% for host in groups['kubernetes-cluster'] %}
+    {% if host not in groups['kubernetes-master'] %}
+    {% set hostslist2 = hostslist.append(hostvars[host]['ansible_nodename']) %}
+    {% endif %}
+    {% endfor %}
+    {{ hostslist }}
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+- name: Copy ca.crt certificates from first master after cluster init phase 4 workers
+  synchronize:
+    src: "/etc/kubernetes/admin.conf"
+    dest: "/etc/kubernetes/"
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  tags: config_copy
+  with_items: |
+    {% set hostslist = [] %}
+    {% for host in groups['kubernetes-cluster'] %}
+    {% if host not in groups['kubernetes-master'] %}
+    {% set hostslist2 = hostslist.append(hostvars[host]['ansible_nodename']) %}
+    {% endif %}
+    {% endfor %}
+    {{ hostslist }}
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+- name: Copy result config to root home dir for able to manage the cluster
+  command: "{{ item }}"
+  with_items:
+    - mkdir -p /root/.kube
+    - cp -i /etc/kubernetes/admin.conf /root/.kube/config
+  when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']

@@ -1,0 +1,44 @@
+### vortex PCI PRODUCTION GROUP VARIABLES
+### FOR ALL HOSTS AND GROUPS  
+
+ansible_environment: "0z-cloud"
+ansible_product: "vortex"
+
+ansible_internal_subnet_for_all: "10.0.0.0/8"
+
+ansible_tomcat_webapps_symlinked: true
+
+GITLAB_IP: 172.16.31.110
+
+java_system_main_settings_array:
+    java_webapps_default_directory: "/var/lib/tomcat7/webapps/"
+    meta_inf_context: "META-INF/context.xml"
+    context: "context.xml"
+
+ansible_telegram_bot:
+    token: 460942177:AAHV0be08OZmRqhG0dXEabviEdB6WFDKYlc
+    link: t.me/vortex_ansible_bot
+    
+ossec_server_name: vortex-ossec-server
+ossec_server_fqdn: "10.10.10.5"
+
+users_to_delete:
+  - pentester
+
+ids_ntp_servers:
+  - ncc-2.macomnet.net
+  - ncc-3.macomnet.net
+  
+# - ip-time-1.cern.ch
+# - 0.ubuntu.pool.ntp.org
+# - ip-time-2.cern.ch
+#  - 3.ubuntu.pool.ntp.org
+  
+nagios_client_packages:
+  - libnagios-plugin-perl
+  - nagios-plugins
+  - nagios-plugins-basic
+  - nagios-plugins-common
+  - nagios-plugins-contrib
+  - nagios-plugins-extra
+  - nagios-plugins-standard

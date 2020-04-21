@@ -1,0 +1,122 @@
+# ## INIT
+
+- name: Check load average
+  shell: uptime | awk '{print $10,$11,$12}'
+  register: load_average
+
+- name: Check count of cpu 
+  shell: cat /proc/cpuinfo | grep 'cpu MHz' | wc -l
+  register: cpu_count
+
+- name: INFORMATION! ATTENTION!
+  vars:
+     MESSAGE_IN: "CPU COUNT: {{ cpu_count.stdout_lines | join }} LA: {{ load_average.stdout_lines | join }}"
+  debug: 
+    msg: "{{ attention_phase_1.split('\n') }}"      
+
+# RESET ALL CLUSTER
+- name: Conditional role reset
+  include_role:
+    name: ./!_0_z/k8/reset
+  # when: reset_cluster is defined
+  when: reset_cluster is defined and inventory_hostname in groups['kubernetes-master']
+
+# INSTLALL AND CHECK ALL SOFTWARE ON CLUSTER
+- name: Conditional install soft when reset
+  include_role:
+    name: ./!_0_z/k8/install_soft
+  when: reset_cluster is defined
+
+# INIT CA MASTER
+- name: Conditional ca init
+  include_role:
+    name: ./!_0_z/k8/ca
+  when: reset_cluster is defined
+
+# SETUP WORKERS
+- name: Conditional role worker
+  include_role:
+    name: ./!_0_z/k8/node/worker
+  # when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+
+  # when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker'] and reset_cluster is defined
+## DEBUG MODE ON ->
+## DEBUG
+
+# # INSTLALL AND CHECK ALL SOFTWARE ON CLUSTER
+# - name: Conditional role reset
+#   include_role:
+#     name: ./!_0_z/k8/install_soft
+# ### DEBUG MODE ON ->
+#   when: reset_cluster is defined and inventory_hostname in groups['kubernetes-master']
+# ### DEBUG
+
+# # GENERATE INIT THE CA CHAIN 
+# - name: Conditional role kaje_init
+#   include_role:
+#     name: ./!_0_z/k8/kaje_init
+#   when: reset_cluster is defined and inventory_hostname in groups['kubernetes-master']
+
+# # INIT CA MASTER
+# # - name: Conditional ca init
+# #   include_role:
+# #     name: ./!_0_z/k8/ca
+# #   when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker'] and reset_cluster is defined
+# # ## DEBUG MODE ON ->
+# #   when: reset_cluster is defined and inventory_hostname in groups['kubernetes-master']
+# # ## DEBUG
+
+# # INIT ETCD CLUSTER
+# # - name: Conditional role etcd
+# #   include_role:
+# #     name: ./!_0_z/k8/etcd
+# #   when: inventory_hostname in groups['kubernetes-master'] and reset_cluster is defined
+
+# # INSTALL AND UPDATE NECESSARY SOFTWARE
+# - name: Conditional role install
+#   include_role:
+#     name: ./!_cloud/kubernetes/node/install
+
+
+
+# # SETUP MASTERS
+# - name: Conditional role init kubernetes masters
+#   include_role:
+#     name: ./!_cloud/kubernetes/node/master
+#   when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+# # SETUP WORKERS
+# - name: Conditional role worker
+#   include_role:
+#     name: ./!_cloud/kubernetes/node/worker
+#   when: inventory_hostname not in groups['kubernetes-master'] and inventory_hostname in groups['kubernetes-worker']
+
+# # SETUP CNI
+# - name: Conditional role cni
+#   include_role:
+#     name: ./!_cloud/kubernetes/cni
+#   when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+# # SETUP HELM
+# - name: Conditional role helm
+#   include_role:
+#     name: ./!_cloud/kubernetes/helm
+#   when: inventory_hostname in groups['kubernetes-master']
+
+# # SETUP DASHBOARD
+# - name: DASHBOARD | Include dashboard init role
+#   include_role:
+#     name: ./!_cloud/kubernetes/dashboard
+
+# # SETUP METALB
+# - name: Conditional role metalb
+#   include_role:
+#     name: ./!_cloud/k8/metalb
+#   when: inventory_hostname in groups['kubernetes-master']
+
+# # SETUP HEALTHCHECK
+# - name: Conditional role healthcheck
+#   include_role:
+#     name: ./!_cloud/k8/healthcheck
+#   when: inventory_hostname in groups['kubernetes-master']

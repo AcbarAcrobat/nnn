@@ -1,0 +1,14 @@
+- name: Docker Swarm Cluster Setup
+  become: true
+  hosts: "{{ SWARM_MASTERS | default([]) }}:{{ SWARM_CLIENTS | default([]) }}"
+
+  tasks:
+
+    - name: Setup Swarm Cluster Service for Masters & Clients
+      include_role:
+        name: "./!_cloud/swarm/cluster"
+      vars:
+        swarm_cluster_name: "{{ SWARM_MASTERS | default([]) }}"
+        swarm_clients_name: "{{ SWARM_CLIENTS | default([]) }}"
+
+  tags: [swarm-setup]

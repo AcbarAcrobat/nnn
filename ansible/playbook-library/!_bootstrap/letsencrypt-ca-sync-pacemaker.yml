@@ -1,0 +1,27 @@
+# Sync all ca_certificates from local issue center
+
+- name: SYNC | Sync abtained letsencrypt certificates from backend service to nginx frontend
+  vars_files:
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+  vars:
+     destination_dict: "{{ lookup('file','{{ inventory_dir }}/group_vars/dns/cloud-bind-frontend-dns/cloud-bind-frontend-dns.yml') | from_yaml }}"
+  hosts: "master-bind-master-backend:nginx-frontend"
+  become: true
+  tasks:
+
+    - name: DEBUG | Fill the destination_dict
+      debug:
+        msg: "{{ inventory_hostname }}: {{ destination_dict.core_dns_cloud_settings.cert_cloud.certificate_sync_onboard_fullpath }} {{ core_dns_cloud_settings.cert_cloud.ca_root }}"
+      when: inventory_hostname == groups['cloud-bind-frontend-dns'][0]
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups['master-bind-master-backend'][0] }}"
+
+    - name:  EXTRA | SYNC THE CA_ROOT | Fetching the obtained certificates from backend to nginx-frontend
+      command: rsync -r {{ core_dns_cloud_settings.cert_cloud.ca_root }} root@{{ hostvars[item]['ansible_default_ipv4']['address'] | safe }}:{{ destination_dict.core_dns_cloud_settings.cert_cloud.certificate_sync_onboard_fullpath }}
+      become: true 
+      become_user: root
+
+      when: inventory_hostname == groups['master-bind-master-backend'][0]
+      with_items: "{{ groups['cloud-bind-frontend-dns'][0] }}"
+
+  tags: sync

@@ -1,0 +1,81 @@
+{% if hostvars[inventory_hostname]['main_other_consul_domain'] is not defined %}
+{{ public_consul_domain }} {
+    acl {
+        allow net 0.0.0.0/0
+    }
+    forward . {% for host in groups['master-bind-master-backend']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:53 {% endfor %}
+
+    log
+}
+{% endif %}
+
+cloud.{{ public_consul_domain }} {
+    acl {
+        allow net 0.0.0.0/0
+    }
+    forward . {% for host in groups['consul-masters']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:{{ consul_dns_service_listne_port }} {% endfor %}{% raw %}
+    log
+}
+{% endraw %}
+
+{% if INSIDE_K8_LOAD_BALANCER_DNS is defined %}
+{{ k8_cloud_domain_name }} {
+    acl {
+            allow net 0.0.0.0/0
+        }
+    forward . {% for host in groups['kubernetes-master']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:{{ k8s_cluster_dns_port_outside }} {% endfor %}{% raw %}
+    log
+}
+{% endraw %}
+{% endif %}
+
+{% if bind_cloud_settings.other_environments_subdomains is defined %}{% for item, children in bind_cloud_settings.other_environments_subdomains.items() %}{% set self_checking_domain_for_prevent_duplicate = item + '.' + production_public_domain %}{% set self_checking_domain_for_prevent_duplicate_matcher_primary = item + '.' + production_public_domain %}{% if self_checking_domain_for_prevent_duplicate == primary_parent_shared_inventory_domain %}
+# PRIMARY IN DATACENTER DOMAIN, NO ADD: {{ self_checking_domain_for_prevent_duplicate }}
+{% else %}
+
+{% if INSIDE_K8_LOAD_BALANCER_DNS is defined %}
+# CHILD CLOUD SERVICE DISCOVERY IN OTHER DATACENTER K8 DOMAIN: {{ k8_cloud_domain_name_public_prefix }}.{{ item }}.{{ public_consul_domain }}
+{% if main_other_consul_domain is defined %}
+{{ k8_cloud_domain_name_public_prefix }}.{{ item }}.{{ main_other_consul_domain }} {% else %}{% if production_public_domain != public_consul_domain %}{{ k8_cloud_domain_name_public_prefix }}.{{ item }}.{{ production_public_domain }} {% else %}{{ k8_cloud_domain_name_public_prefix }}.{{ item }}.{{ public_consul_domain }} {% endif %}{% endif %}{
+    acl {
+            allow net 0.0.0.0/0
+        }
+    forward . {% for host in groups['kubernetes-master']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:{{ k8s_cluster_dns_port_outside }} {% endfor %}{% raw %}
+    log
+}
+{% endraw %}
+{% endif %}
+
+{% if public_consul_domain is defined %}
+# CHILD CLOUD SERVICE DISCOVERY IN OTHER DATACENTER CONSUL DOMAIN: {{ consul_cloud_domain_name_public_prefix }}.{{ item }}.{{ public_consul_domain }}
+{% if main_other_consul_domain is defined %}
+{{ consul_cloud_domain_name_public_prefix }}.{{ item }}.{{ main_other_consul_domain }} {% else %}{% if production_public_domain != public_consul_domain %}{{ consul_cloud_domain_name_public_prefix }}.{{ item }}.{{ production_public_domain }} {% else %}{{ consul_cloud_domain_name_public_prefix }}.{{ item }}.{{ public_consul_domain }} {% endif %}{% endif %}{
+    acl {
+        allow net 0.0.0.0/0
+    }
+    forward . {% for host in groups['consul-masters']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:{{ consul_dns_service_listne_port }} {% endfor %}{% raw %}
+    log
+}
+{% endraw %}
+{% endif %}
+
+# CHILD IN DATACENTER DOMAIN: {{ self_checking_domain_for_prevent_duplicate }}
+{% if main_other_consul_domain is defined %}
+{{ item }}.{{ main_other_consul_domain }} {% else %}{% if production_public_domain != public_consul_domain %}{{ item }}.{{ production_public_domain }} {% else %}{{ item }}.{{ public_consul_domain }} {% endif %}{% endif %}{
+    acl {
+        allow net 0.0.0.0/0
+    }
+    forward . {% for host in groups['master-bind-master-backend']%}{% if hostvars[host]['second_ip'] is defined %}{{ hostvars[host]['second_ip'] }}{% else %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endif %}:53 {% endfor %}{% raw %}
+    log
+}
+{% endraw %}{% endif %}{% endfor %}{% endif %}
+
+.:53 {
+    acl {
+
+        allow net {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}/32 {% if docker_networks.stdout != "" %}{% for item in docker_networks_subnets.results %}{{ item.stdout }} {% endfor %}{% endif %}
+
+        block
+    }
+    forward . 8.8.8.8
+}

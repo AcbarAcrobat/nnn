@@ -1,0 +1,34 @@
+[Unit]
+Description=Etcd Server
+After=network.target
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/coreos
+
+[Service]
+Type=notify
+WorkingDirectory=/var/lib/etcd/
+ExecStart=/usr/local/bin/etcd \
+  --name {{ hostvars[inventory_hostname]['ansible_nodename'] }} \
+  --cert-file=/etc/kubernetes/pki/etcd/server.crt \
+  --key-file=/etc/kubernetes/pki/etcd/server.key \
+  --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt \
+  --peer-key-file=/etc/kubernetes/pki/etcd/peer.key \
+  --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt \
+  --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt \
+  --peer-client-cert-auth \
+  --client-cert-auth \
+  --initial-advertise-peer-urls=https://{{ hostvars[inventory_hostname]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2380 }} \
+  --listen-peer-urls=https://{{ hostvars[inventory_hostname]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2380 }} \
+  --listen-client-urls=https://{{ hostvars[inventory_hostname]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2379 }},http://127.0.0.1:{{ K8S_CLUSTER_LISTEN_PORT_2379 }} \
+  --advertise-client-urls=https://{{ hostvars[inventory_hostname]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2379 }} \
+  --initial-cluster-token=etcd-cluster-0 \
+  --initial-cluster={% for host in groups['kubernetes-master'] %}{{ hostvars[host]['ansible_nodename'] }}=https://{{ hostvars[host]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2380 }}{% if not loop.last %},{% endif %}{% endfor %} \
+  --initial-cluster-state new \
+  --logger=zap \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+[Install]
+WantedBy=multi-user.target

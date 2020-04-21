@@ -1,0 +1,30 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: stable
+clusterName: "{{ K8S_CLUSTER_NAME }}"
+certificatesDir: /etc/kubernetes/
+apiServer:
+  certSANs:
+  - "127.0.0.1"
+  - "{{ K8S_CLUSTER_ADDRESS }}"{% for host in groups['kubernetes-master'] %}{% raw %}
+  - "{% endraw %}{{ hostvars[host]['second_ip'] }}"{% raw %}
+  - "{% endraw %}{{ hostvars[host].ansible_nodename }}"{% endfor %}{% raw %}
+  - "{% endraw %}{{ ansible_global_kubernetes_site_name }}"
+controlPlaneEndpoint: "{{ K8S_CLUSTER_ADDRESS }}:{{ K8S_CLUSTER_LISTEN_PORT }}"
+etcd:
+  external:
+    endpoints:{% for host in groups['kubernetes-master'] %}{% raw %}
+    - https://{% endraw %}{{ hostvars[host]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2379 }}{% endfor %}{% raw %}
+    caFile: {% endraw %}/opt/ca/{{ ansible_product }}_{{ ansible_environment }}/ca.crt
+    certFile: /opt/ca/{{ ansible_product }}_{{ ansible_environment }}/kubernetes.crt
+    keyFile: /opt/ca/{{ ansible_product }}_{{ ansible_environment }}/kubernetes.key
+networking:
+    dnsDomain: "{{ public_consul_domain }}"
+    podSubnet: "{{ POD_NETWORK_CIDR }}"
+    serviceSubnet: "{{ hostvars[inventory_hostname]['second_network_subnet'] }}"
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes

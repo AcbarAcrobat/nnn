@@ -1,0 +1,11 @@
+
+- name: Shell install and upgrade Kubernetes packages
+  shell: |
+      apt-get update -y -qq && apt-get install -y -qq apt-transport-https curl
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+      cat <<EOF | tee /etc/apt/sources.list.d/kubernetes.list
+      deb https://apt.kubernetes.io/ kubernetes-{{ ansible_lsb.codename }} main
+      EOF
+      apt-get update -y -qq
+      apt-get install -y -qq kubelet kubeadm kubectl
+      apt-mark hold kubelet kubeadm kubectl

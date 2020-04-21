@@ -1,0 +1,87 @@
+---
+
+# Settings which getted from alicloud web console for your account
+initial_shared_runners_registration_token: "your deploy key in your brain memory is secret for decrypt you own wallet with shared password"
+initial_shared_runners_registration_username: "root"
+
+alicloud_access_key: "vortex"
+alicloud_secret_key: "vortex"
+alicloud_vm_access_pass: 1235
+
+# create ECS instance parameters
+image_id: "ubuntu_18_04_64_20G_alibase_20181212.vhd"
+# instance_name: "Instance_From_Ansible"
+instance_description: "Description - vortex host {{ ansible_environment }}"
+# host_name: "my-instance-from-ansible"
+password: "Test12345"
+instance_type: "ecs.c5.large"
+
+# common parameters
+alicloud_region: "eu-west-1"
+alicloud_zone: "eu-west-1a"
+
+# create vpc parameters
+vpc_cidr: "172.16.0.0/12"
+vpc_name: "VPC_{{ ansible_environment }}"
+vpc_description: "Create a new VPC resource {{ ansible_environment }}"
+
+# create vswitch parameters
+vswitch_cidr: '172.16.0.0/24'
+vswitch_name: "vSwitch_{{ ansible_environment }}"
+vswitch_description: "Virtual AliCloud vSwitch for {{ ansible_environment }}"
+
+sg_name: "SG_{{ ansible_environment }}"
+
+# create security parameters
+group_name: "Security_Group_{{ ansible_environment }}"
+group_description: "Create a new security group resource {{ ansible_environment }}"
+group_inboundRules:
+  - ip_protocol: tcp
+    port_range: 22/22
+    source_cidr_ip: 0.0.0.0/0
+    priority: 1
+  - ip_protocol: tcp
+    port_range: 53/53
+    source_cidr_ip: 0.0.0.0/0
+    priority: 1
+  - ip_protocol: udp
+    port_range: 53/53
+    source_cidr_ip: 0.0.0.0/0
+    priority: 1
+  - ip_protocol: tcp
+    port_range: 80/80
+    source_cidr_ip: 0.0.0.0/0
+    priority: 1
+  - ip_protocol: tcp
+    port_range: 443/443
+    source_cidr_ip: 0.0.0.0/0
+    priority: 1
+group_outboundRules:
+  - ip_protocol: tcp
+    port_range: 80/80
+    dest_cidr_ip: 0.0.0.0/0
+    priority: 1
+  - ip_protocol: tcp
+    port_range: 443/443
+    dest_cidr_ip: 10.0.0.0/0
+    priority: 1
+
+
+allocate_public_ip: True
+internet_charge_type: "PayByBandwidth"
+max_bandwidth_in: 200
+max_bandwidth_out: 50
+instance_tags: {created_by: "vortex-cloud-{{ ansible_environment }}",created_from: "vortex-ecs-vpc-{{ ansible_environment }}"}
+
+system_disk_category: "cloud_ssd"
+system_disk_size: 50
+
+number_of_instances: 2
+
+# create ECS disk parameters
+disk_name: "cloud_disk"
+disk_category: "cloud_ssd"
+disk_description: "Description - vortex host {{ ansible_environment }}"
+data_disk_size: 80
+disk_tags: [{tag_key: "created_by", tag_value: "vortex-cloud-{{ ansible_environment }}"}, {tag_key: "created_from", tag_value: "vortex-ecs-vpc-{{ ansible_environment }}"}]
+delete_with_instance: False

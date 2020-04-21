@@ -1,0 +1,204 @@
+# - name: Regenerate root-ca-csr 
+#   shell: cfssl genkey -initca /opt/ca/pki/root-ca-csr.json | cfssljson -bare /opt/ca/pki/ca
+#   when: inventory_hostname in groups['kubernetes-master'][0] 
+
+# - name: Make CA CSR & SIGN
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json | cfssljson -bare ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/ca.csr | cfssljson -bare ca
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+# - name: Make kubernetes-ca-csr
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/etcd-ca-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.csr | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca
+#     cfssl print-defaults config {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+# - name: Make kubernetes-ca-csr
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.csr | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca
+#     cfssl print-defaults config {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make kubernetes-front-proxy-ca
+#   shell: |   
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.csr | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca
+#     cfssl print-defaults config {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca-config.json
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make ROOT CA CSR & SIGN
+#   shell: |
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/root-ca-config.json -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/ca.csr | cfssljson -bare root-ca
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make ETCD CA CSR & SIGN
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/etcd-ca-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/etcd-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/root-ca-config.json" -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/etcd-ca.csr | cfssljson -bare etcd-ca
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make KUBE CA CSR & SIGN
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/root-ca-config.json" -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/etcd-ca.csr | cfssljson -bare kubernetes-ca
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make FRONTPROXY CA CSR & SIGN
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.pem | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/root-ca-config.json" -profile="intermediate" {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.csr | cfssljson -bare kubernetes-front-proxy-ca
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make apiserver-kubelet-client-csr by kubernetes-ca
+#   shell: |
+#     cat /opt/ca/pki/apiserver-etcd-client-csr.json | cfssl genkey -
+#     cat /opt/ca/pki/admin-csr.json | cfssl genkey -
+#     cat /opt/ca/pki/apiserver.json | cfssl genkey - 
+#     cat /opt/ca/pki/etcd-healthcheck-client-csr.json | cfssl genkey - 
+#     cat /opt/ca/pki/apiserver-etcd-client-csr.json | cfssl genkey -ca {{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -profile="client" - > {{ ca_service_settings.directories.ca }}/pki/apiserver-etcd-client.csr
+#     cat /opt/ca/pki/admin-csr.json | cfssl genkey - > {{ ca_service_settings.directories.ca }}/pki/admin.csr
+#     cat /opt/ca/pki/apiserver.json | cfssl genkey - > {{ ca_service_settings.directories.ca }}/pki/apiserver.csr
+#     cat /opt/ca/pki/etcd-healthcheck-client-csr.json | cfssl genkey - > {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.csr
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+#   register: new_csr_create_result
+
+# - name: Debug
+#   debug:
+#     msg: "{{ new_csr_create_result.stdout_lines }}"
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: etcd-healthcheck-client
+#   shell: |
+#     cfssl genkey -ca="/opt/ca/pki/etcd-ca.pem" -ca-key="/opt/ca/pki/etcd-ca-key.pem" -config="/opt/ca/pki/etcd-ca-config.json" -profile="client etcd-healthcheck-client" | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca
+#     cfssl sign -ca="{{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem" -ca-key="{{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem" -config="{{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.json" -profile="client" {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.csr | cfssljson -bare etcd-healthcheck-client
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: SMELO 1 apiserver-kubelet-client-csr by etcd-healthcheck-client
+#   shell: |
+#     cat {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.json | cfssl genkey - -initca=false -ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem 
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make etcd-healthcheck-client by kubernetes-ca  
+#   shell: |
+#     cfssl genkey -ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.json" -profile="client" {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client | cfssljson -bare etcd-healthcheck-client
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make sign by kubernetes-ca  
+#   shell: |    
+#     cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.json" -profile="client" {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client.csr | cfssljson -bare etcd-healthcheck-client
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make apiserver by kubernetes-ca  
+#   shell: |
+#     cfssl genkey -ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/apiserver.json" -profile="peer" {{ ca_service_settings.directories.ca }}/pki/apiserver-csr.json | cfssljson -bare apiserver
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+# - name: Make admin by kubernetes-ca  
+#   shell: |      
+#     cfssl genkey -ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/admin.json" -profile="client" {{ ca_service_settings.directories.ca }}/pki/admin-csr.json | cfssljson -bare admin
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+# cfssl genkey -ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=client etcd-healthcheck-client-csr | cfssljson -bare etcd-healthcheck-client
+
+    # cfssl gencert -ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config="{{ ca_service_settings.directories.ca }}/pki/apiserver-etcd-client-csr.json" -profile="client" apiserver-etcd-client-csr.json | cfssljson -bare apiserver-etcd-client
+
+
+# cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client-csr.csr | cfssljson -bare etcd-healthcheck-client
+
+# - name: Make CHILDRENS CA CSR & SIGN
+#   shell: |
+#     cfssl genkey -initca {{ ca_service_settings.directories.ca }}/pki/{{ item }}.pem | cfssljson -bare {{ item }}
+# #cfssl sign -ca {{ ca_service_settings.directories.ca }}/pki/{{ item }}-ca.pem -ca-key {{ ca_service_settings.directories.ca }}/pki/{{ item }}-ca-key.pem -config {{ ca_service_settings.directories.ca }}/pki/{{ item }}-config.json -profile client {{ ca_service_settings.directories.ca }}/pki/{{ item }}.csr | cfssljson -bare {{ item }}
+#   with_items:
+#     - apiserver-kubelet-client-csr
+#     - apiserver
+#     - apiserver-etcd-client
+#     - admin
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+
+
+
+# kubernetes-ca
+
+    # cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config=kubernetes-{{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json -profile=server apiserver-csr.json | cfssljson -bare apiserver
+
+
+#  cfssl gencert -ca=etcd-ca/etcd-ca.pem -ca-key=etcd-ca/etcd-ca-key.pem -config=etcd-ca/etcd-ca-config.json -profile=client etcd-healthcheck-client-csr.json | cfssljson -bare etcd-healthcheck-client
+#  cfssl gencert -ca=kubernetes-ca/kubernetes-ca.pem -ca-key=kubernetes-ca/kubernetes-ca-key.pem -config=kubernetes-ca/kubernetes-ca-config.json -profile=www apiserver-csr.json | cfssljson -bare apiserver
+
+
+
+
+- name: Make APISERVER & ETCD-PEER/SERVER/HEALTHCHECK CSR & SIGN
+  shell: |
+    cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/kubernetes-front-proxy-ca-key.pem -config={{ ca_service_settings.directories.ca }}/kubernetes-front-proxy-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/front-proxy-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/front-proxy-client
+    cfssl 
+    cfssl sign -ca --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/kubernetes-front-proxy-ca-key.pem -config={{ ca_service_settings.directories.ca }}/kubernetes-front-proxy-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/front-proxy-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/front-proxy-client
+
+    cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client
+    cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=server {{ ca_service_settings.directories.ca }}/pki/etcd-server-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/server
+    cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=peer {{ ca_service_settings.directories.ca }}/pki/etcd-server-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/peer
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json -profile=www {{ ca_service_settings.directories.ca }}/pki/apiserver-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/apiserver
+
+- name: Copy to extansions crt & key
+  shell: |
+    cp -r {{ ca_service_settings.directories.ca }}/pki/{{ item }}-key.pem {{ ca_service_settings.directories.ca }}/pki/{{ item }}.key 
+    cp -r {{ ca_service_settings.directories.ca }}/pki/{{ item }}.pem {{ ca_service_settings.directories.ca }}/pki/{{ item }}.crt
+  with_items:
+    - kubernetes-front-proxy-ca
+    - kubernetes-ca
+    - etcd-ca
+    - root-ca
+    - ca
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+- name: Copy to extansions crt & key
+  shell: |
+    cp -r {{ ca_service_settings.directories.ca }}/pki/{{ item }}-key.pem {{ ca_service_settings.directories.ca }}/pki/{{ item }}.key 
+    cp -r {{ ca_service_settings.directories.ca }}/pki/{{ item }}.pem {{ ca_service_settings.directories.ca }}/pki/{{ item }}.crt
+  with_items:
+    - kubernetes-front-proxy-ca
+    - kubernetes-ca
+    - etcd-ca
+    - root-ca
+    - ca
+  when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+
+# - name: Copy to primary names generated configs and keys
+#   shell: |
+#   with_items: 
+
+
+# kubernetes-ca-csr.json
+    # cfssl genkey -initca /opt/ca/pki/etcd-ca-csr.json | cfssljson -bare /opt/ca/pki/etcd-ca/ ca
+# - name: Make etcd-server-csr
+#   shell: |
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=server {{ ca_service_settings.directories.ca }}/pki/etcd-server-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/etcd-server
+    
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=peer {{ ca_service_settings.directories.ca }}/pki/etcd-peer-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/etcd-peer
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/etcd-healthcheck-client
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json -profile=www {{ ca_service_settings.directories.ca }}/pki/apiserver-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/apiserver
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/apiserver-kubelet-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/apiserver-kubelet-client
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/kubernetes-front-proxy-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/front-proxy-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/front-proxy-client
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/etcd-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/etcd-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/etcd-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/apiserver-etcd-client-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/apiserver-etcd-client
+#     cfssl gencert --ca={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca.pem -ca-key={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-key.pem -config={{ ca_service_settings.directories.ca }}/pki/kubernetes-ca-config.json -profile=client {{ ca_service_settings.directories.ca }}/pki/admin-csr.json | cfssljson -bare {{ ca_service_settings.directories.ca }}/pki/admin
+#   when: inventory_hostname in groups['kubernetes-master'][0]
+
+
+
+# KUBECONFIG=admin.conf kubectl config set-cluster default-cluster --server=https://192.168.121.230:6443 --certificate-authority kubernetes-ca/kubernetes-ca.pem --embed-certs
+# KUBECONFIG=admin.conf kubectl config set-credentials default-admin --client-key admin-key.pem --client-certificate admin.pem --embed-certs
+# KUBECONFIG=admin.conf kubectl config set-context default-system --cluster default-cluster --user default-admin
+# KUBECONFIG=admin.conf kubectl config use-context default-system

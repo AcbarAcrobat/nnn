@@ -1,0 +1,26 @@
+{
+    "CN": "kube-etcd-peer",
+    "hosts": [
+        "ubuntu",
+        "{{ K8S_CLUSTER_ADDRESS }}",
+        "{{ CALICO_ETCD_CLUSTER_IP }}",
+        "vortex",
+        "kubernetes",
+        "{{ public_consul_domain }}",
+        "vortex.{{ public_consul_domain }}",
+        "kubernetes.default",
+        "kubernetes.default.svc",
+        "kubernetes.default.svc.cluster",
+        "kubernetes.default.svc.cluster.local",
+        {% for host in groups['kubernetes-master'] %}
+        "{{ hostvars[host]['ansible_nodename'] }}",
+        "{{ hostvars[host]['second_ip'] }}",
+        "{{ hostvars[host]['ansible_default_ipv4']['address'] }}"{% if not loop.last %},
+        {% endif %}
+        {% endfor %}
+      ],
+    "key": {
+      "algo": "rsa",
+      "size": 2048
+    }
+  }

@@ -1,0 +1,8 @@
+- name: Template apt sources.list
+  template:
+    src: sources.list.j2
+    dest: /etc/apt/sources.list
+
+# - name: Apt update cache
+#   apt:
+#     update_cache: true

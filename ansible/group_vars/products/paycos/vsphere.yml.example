@@ -1,0 +1,7 @@
+# Settings which getted from your vsphere web console for your account
+
+vsphere_ip: "10.0.0.100"
+vsphere_fqdn: "vortex-vcsa-01.vortex.co"
+vsphere_login: "administrator@vsphere.local"
+vsphere_esxi_login: "root"
+vsphere_pass: "vortex"

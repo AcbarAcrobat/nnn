@@ -1,0 +1,16 @@
+- name: Fact Gathering
+  hosts: all
+  tasks: []
+  tags: [get_facts, always]
+
+- name: Nginx-Frontend Install & Configure
+  become: true
+  hosts: "{{ HOSTS }}"
+  vars_files:
+    - "group_vars/nginx-frontend/specific-target-group/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+    - "{{ inventory_dir }}/group_vars/dns/{{ HOSTS | default('master-bind-master-backend') }}/{{ HOSTS | default('master-bind-master-backend') }}.yml"
+    - "group_vars/nginx-frontend/all.yml"
+    - "group_vars/all/all.yml"
+  roles:
+   - name: Running the nginx-frontend role
+     role: ./!_cloud/nginx/ng

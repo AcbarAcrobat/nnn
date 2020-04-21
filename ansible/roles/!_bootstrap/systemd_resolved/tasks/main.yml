@@ -1,0 +1,18 @@
+
+- name: Place to / /etc/systemd/resolved.conf
+  template:
+    src: resolved.conf.j2
+    dest: /etc/systemd/resolved.conf
+    mode: 0666
+
+- name: Raw apply systemd-resolved
+  raw: systemctl restart systemd-resolved
+
+- name: Make netplan great again
+  template:
+    src: netplan.conf.j2
+    dest: /etc/netplan/99-netcfg-cloud.yaml
+  tags: netplan
+
+- name: Apply new netplan configuration
+  shell: netplan apply

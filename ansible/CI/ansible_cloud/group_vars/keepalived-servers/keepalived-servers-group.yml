@@ -1,0 +1,343 @@
+unificated_keepalive_services:
+  shared_settings:
+    notification_email: "admin@ifsholding.com"
+    notification_email_from: "keepalived@ifsholding.com"
+    smtp_server: "10.10.0.50"
+    smtp_connect_timeout: 30
+    router_id: "{{ inventory_hostname }}"
+  vrrp_sync_group:
+    name: 
+      IFS:
+        vrrp_group: "IFS-web"
+        instance: "keepalived-servers-web"
+        name: "IFS-web"
+        auth_pass: "31337PASS1"
+        virtual_ipaddress:
+            - 10.1.0.21
+            - 10.1.0.22
+            - 10.1.0.23
+            - 10.1.0.24
+            - 10.1.0.25
+            - 10.1.0.27
+            - 10.1.0.28
+            - 10.1.0.19
+        interface: "eth0"
+        priority: 150
+        virtual_router_id: 50
+    name: 
+      PROC:
+        vrrp_group: "vortex-proc"
+        instance: "keepalived-servers-proc"
+        name: "vortex-proc"
+        auth_pass: "31337PASS1"
+        virtual_ipaddress:
+            - 10.1.0.30
+        interface: "eth0"
+        priority: 150
+        virtual_router_id: 60
+  backend_services:
+    gateway-web:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      smtp_alert: true
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 900
+      virtual_server: 
+        ip: 10.1.0.23
+        check: TCP_CHECK
+        port: 443
+        weight: 100
+      backend_server: 
+        group: "gateway-servers"
+        connect_port: "443"
+        connect_timeout: 5
+        ip: default
+      comment: "https://gateway.vortex.com"
+    messanger-web:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 900
+      virtual_server: 
+        ip: 10.1.0.25
+        check: TCP_CHECK
+        port: 443
+        weight: 100
+      backend_server: 
+        group: "gateway-servers"
+        connect_port: "443"
+        connect_timeout: 5
+        ip: messanger
+      comment: "https://messenger.vortex.com"
+    secureweb-web-https:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: false
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 900
+      virtual_server:
+        ip: 10.1.0.21
+        check: TCP_CHECK
+        port: 443
+        weight: 100
+      backend_server: 
+        group: "secureweb-servers"
+        connect_port: "443"
+        connect_timeout: 5
+        ip: default
+      comment: "https://secure.vortex.com"
+    secureweb-web-http:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 900
+      virtual_server: 
+        ip: 10.1.0.21
+        check: TCP_CHECK
+        port: 80
+        weight: 100
+      backend_server:
+        group: "secureweb-servers"
+        connect_port: "80"
+        connect_timeout: 5
+        ip: default
+      comment: "https://secure.vortex.com"
+    admin-web-https:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 900
+      virtual_server: 
+        ip: 10.1.0.22
+        check: TCP_CHECK
+        port: 443
+        weight: 100
+      backend_server: 
+        group: "adminweb-servers"
+        connect_port: "443"
+        connect_timeout: 5
+        ip: default
+      comment: "https://admin.vortex.com"
+    admin-web-http:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 900
+      virtual_server: 
+          ip: 10.1.0.22
+          check: TCP_CHECK
+          port: 80
+          weight: 100
+      backend_server:
+          group: "adminweb-servers"
+          connect_port: "80"
+          connect_timeout: 5
+          ip: default
+      comment: "https://admin.vortex.com"
+    client-web-https:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 900
+      virtual_server: 
+          ip: 10.1.0.24
+          check: TCP_CHECK
+          port: 443
+          weight: 100
+      backend_server:
+          group: "clientweb-servers"
+          connect_port: "443"
+          connect_timeout: 5
+          ip: default
+      comment: "https://client.vortex.com"
+    client-web-http:
+      protocol: "TCP"
+      vrrp_sync_group: IFS
+      delay_loop: 
+        enabled: true
+        delay_loop: 6
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 900
+      virtual_server: 
+          ip: 10.1.0.24
+          check: TCP_CHECK
+          port: 443
+          weight: 100
+      backend_server:
+          group: "clientweb-servers"
+          connect_port: "443"
+          connect_timeout: 5
+          ip: default
+      comment: "https://client.vortex.com"
+    core-web-http:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 900
+      virtual_server: 
+          ip: 10.1.0.30
+          check: TCP_CHECK
+          port: 8080
+          weight: 100
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8080"
+          connect_timeout: 15
+          ip: default
+      comment: "https://core.vortex.com"
+    pos-tcp-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 180
+      virtual_server: 
+          ip: 10.1.0.30
+          check: TCP_CHECK
+          port: 8083
+          weight: 100
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8083"
+          connect_timeout: 5
+          ip: default
+      comment: "POS balancing main"
+    bm-http-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 20
+      virtual_server: 
+          ip: 10.1.0.30
+          check: HTTP_GET
+          url_extends_by: "front_web/gate?opcode=ping"
+          digest: f0121aca65ba8c60738f9dfda0f2c084
+          port: 8089
+          weight_pointer: "{{ BM_HTTP_ENDPOINT_WEIGHT }}"
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8080"
+          connect_timeout: 5
+          ip: default
+      comment: "front_web balancing for BM"
+    mts-http-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: true
+        persistence_timeout: 20
+      virtual_server: 
+          ip: 10.1.0.30
+          check: HTTP_GET
+          url_extends_by: "front_web/gate?opcode=ping"
+          digest: f0121aca65ba8c60738f9dfda0f2c084
+          port: 8090
+          weight_pointer: "{{ MTS_HTTP_ENDPOINT_WEIGHT }}"
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8080"
+          connect_timeout: 5
+          ip: default
+      comment: "front_web balancing for MTS"
+    payme-http-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 180
+      virtual_server: 
+          ip: 10.1.0.30
+          check: TCP_CHECK
+          port: 8091
+          weight: 100
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8083"
+          connect_timeout: 5
+          ip: default
+      comment: "PAYME balancing main"
+    rnkb-http-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 180
+      virtual_server: 
+          ip: 10.1.0.30
+          check: TCP_CHECK
+          port: 8092
+          weight: 100
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8084"
+          connect_timeout: 5
+          ip: default
+      comment: "RNKB balancing main"
+    newsymbol-http-endpoint:
+      protocol: "TCP"
+      vrrp_sync_group: PROC
+      delay_loop: 
+        enabled: true
+        delay_loop: 10
+      persistence_timeout: 
+        enabled: false
+        persistence_timeout: 180
+      virtual_server: 
+          ip: 10.1.0.30
+          check: TCP_CHECK
+          port: 8093
+          weight: 100
+      backend_server:
+          group: "tomcat-servers"
+          connect_port: "8085"
+          connect_timeout: 5
+          ip: default
+      comment: "NewSymbol balancing main"

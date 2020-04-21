@@ -1,0 +1,22 @@
+
+- name: INCLUDE TASKS WICH RESET LOCAL NODE | RESET ONE
+  include_tasks: reset_kaje.yml
+  when: inventory_hostname in groups['kubernetes-master']
+
+- name: INCLUDE TASKS WICH BETWEEN LOCAL NODE | between.yml
+  include_tasks: between.yml
+  when: inventory_hostname in groups['kubernetes-master']
+
+# - name: INCLUDE TASKS WICH RESET LOCAL NODE | RESET LAST
+#   include_tasks: reset_kaje.yml
+#   when: inventory_hostname in groups['kubernetes-master']
+
+- name: INFORMATION! ATTENTION!
+  vars:
+     MESSAGE_IN: "START COPY FROM KAJE TO MAIN DIR /opt/ca/"
+  debug: 
+    msg: "{{ attention_phase_1.split('\n') }}"       
+
+- name: COPY FROM KAJE TO MAIN DIR
+  shell: cp -R {{ ca_service_settings.directories.kaje_init }}/pki {{ ca_service_settings.directories.ca }}
+  when: inventory_hostname in groups['kubernetes-master'][0]

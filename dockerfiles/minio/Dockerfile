@@ -1,0 +1,1 @@
+FROM minio/minio:RELEASE.2019-06-04T01-15-58Z

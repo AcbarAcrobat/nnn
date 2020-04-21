@@ -1,0 +1,6 @@
+- name: Running afterinstall cleaning playbook
+  hosts: all
+  become: true
+  roles:
+    - name: Call afterinstall cleaning role
+      role: "./!_0_init/afterinstall"

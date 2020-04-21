@@ -1,0 +1,9 @@
+- name: APT UPDATE ALL REPOS | apt update
+  apt:
+    update_cache: yes
+
+- name: APT INSTALL ALL REQUIRED PACKAGES | apt install 
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ required_packages }}"

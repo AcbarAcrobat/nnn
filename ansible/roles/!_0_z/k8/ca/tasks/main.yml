@@ -1,0 +1,214 @@
+
+# # DOWNLOAD CFSSL
+# - name: CFSSL | Include download init tasks
+#   include_tasks: download.yml
+#   when: reset_cluster is defined
+
+- name: Create CA directories for configuration 
+  file:
+    path: "{{ item.value }}"
+    state: directory
+    mode: 0750
+  with_dict: "{{ ca_service_settings.directories | default({}) }}"
+  tags: [configuration,ca]
+
+- name: Create Etcd directories for configuration 
+  file:
+    path: "{{ item.value }}"
+    state: directory
+    mode: 0750
+  with_dict: "{{ etcd_service_settings.directories | default({}) }}"
+  tags: [configuration,etcd]
+
+- name: Template the configs
+  template:
+    src: "{{ item }}"
+    dest: /opt/ca/templates/{{ item }}
+  with_items:
+    - ca-csr-master.json
+    - ca-config.json
+    - kubernetes-csr.json
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD DEBUG | Gen CA primary certificate
+  shell: cfssl gencert -initca /opt/ca/templates/ca-csr-master.json | cfssljson -bare /opt/ca/etcd/ca
+  register: ca_primary_gen
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD DEBUG | Show result of generating CA root certificate
+  debug:
+    msg: "{{ ca_primary_gen.stderr_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD GENERATE CERT | Generate Kubernetes Certificate
+  shell: |
+    cfssl gencert \
+    -ca=/opt/ca/etcd/ca.pem \
+    -ca-key=/opt/ca/etcd/ca-key.pem \
+    -config=/opt/ca/templates/ca-config.json \
+    -hostname={{ K8S_CLUSTER_ADDRESS }},{{ CALICO_ETCD_CLUSTER_IP }},127.0.0.1,kubernetes.default,{% for host in groups['kubernetes-master'] %}{{ hostvars[host]['second_ip'] | join }}{% if not loop.last %},{% endif %}{% endfor %} -profile=kubernetes /opt/ca/templates/kubernetes-csr.json | cfssljson -bare /opt/ca/etcd/kubernetes
+  register: kubernetes_cert_primary_gen
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD DEBUG | Show result of generating Kubernetes primary certificate
+  debug:
+    msg: "{{ kubernetes_cert_primary_gen.stderr_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+# ######## INIT PHASE SECOND - SYNC FROM FIRST MASTER
+
+- name: ETCD SYNC BETWEEN HOSTS | Copy new certificates from first master to all nodes
+  synchronize:
+    src: "{{ ca_service_settings.directories.ca }}/etcd"
+    dest: "{{ ca_service_settings.directories.ca }}"
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  tags: certificates_copy
+
+- name: ETCD STATUS | Register result of phase 1
+  shell: ls -la {{ ca_service_settings.directories.ca }}/etcd/
+  register: result_opt_ca_kaje_init
+
+- name: ETCD DEBUG | Show Result /opt/ca/pki directory
+  debug:
+    msg: "{{ result_opt_ca_kaje_init.stdout_lines }}"
+  when: debug_playbook_stdout is defined
+
+- name: ETCD COPY | Moving certificates to /etc/etcd
+  shell: cp {{ ca_service_settings.directories.ca }}/etcd/ca.pem {{ ca_service_settings.directories.ca }}/etcd/kubernetes.pem {{ ca_service_settings.directories.ca }}/etcd/kubernetes-key.pem /etc/etcd/
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD CERTS | Register result of /etc/etcd
+  shell: ls -la /etc/etcd/
+  register: result_etcd_ca_kaje_init
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD DEBUG | Show Result /etc/etcd/ directory
+  debug:
+    msg: "{{ result_etcd_ca_kaje_init.stdout_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD CONF | Tempalte Etcd configuration
+  template: 
+    src: etcd.service
+    dest: /etc/systemd/system/etcd.service
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD RESTART | Shell reload and restart etcd
+  shell: "{{ item }}"
+  with_items:
+    - systemctl daemon-reload
+    - systemctl enable etcd
+    - systemctl restart etcd
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: ETCD STATUS | Register status of etcd cluster
+  shell: ETCDCTL_API=3 etcdctl member list
+  register: result_etcd_ca_kaje_init_restart
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Show status of etcd cluster
+  debug:
+    msg: "{{ result_etcd_ca_kaje_init_restart.stdout_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Tempalte Cluster Init configuration
+  template: 
+    src: cluster_init.yaml
+    dest: /opt/ca/kube/cluster_init.yaml
+  when: inventory_hostname in groups['kubernetes-master'] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: STOPPING KUBELET on first master
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  when: inventory_hostname in groups['kubernetes-master']
+  with_items:
+    - kubelet
+
+- name: Init first master
+  shell: kubeadm init --config=/opt/ca/kube/cluster_init.yaml
+  register: get_init_master_result
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Show status of init first master
+  debug:
+    msg: "{{ get_init_master_result.stdout_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Get /etc/kubernetes/pki contents
+  shell: ls -la /etc/kubernetes/pki/
+  register: get_etc_kubernetes_pki
+  when: inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Show status of get /etc/kubernetes/pki contents
+  debug:
+    msg: "{{ get_etc_kubernetes_pki.stdout_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Copy /etc/kubernetes/pki certificates from first master to other masters
+  synchronize:
+    src: "/etc/kubernetes/pki"
+    dest: "/etc/kubernetes/"
+  delegate_to: "{{ groups['kubernetes-master'][0] }}"
+  when: inventory_hostname not in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+  tags: certificates_copy
+
+- name: Remove needed apiserver certs
+  shell: rm /etc/kubernetes/pki/apiserver.*
+  when: inventory_hostname not in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: STOPPING KUBELET on other masters
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  when: inventory_hostname not in groups['kubernetes-master'][0]
+  with_items:
+    - kubelet
+
+- name: Init other masters
+  shell: kubeadm init --config=/opt/ca/kube/cluster_init.yaml
+  register: get_init_other_masters_result
+  when: inventory_hostname not in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+- name: Show status of init other masters
+  debug:
+    msg: "{{ get_init_other_masters_result.stdout_lines }}"
+  when: debug_playbook_stdout is defined and inventory_hostname not in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+# # REPLACE BAD CERTS
+# - name: REPLACE CERTS | Include replace bad certs tasks
+#   include_tasks: replace_bad.yml
+#   when: reset_cluster is defined
+
+# ######## INIT PHASE SECOND - SYNC FROM FIRST MASTER
+
+# - name: Copy certificates from first master
+#   synchronize:
+#     src: "{{ ca_service_settings.directories.kaje_init }}"
+#     dest: "{{ ca_service_settings.directories.ca }}"
+#   delegate_to: "{{ groups['kubernetes-master'][0] }}"
+#   tags: certificates_copy
+#   when: inventory_hostname not in groups['kubernetes-master'][0] and inventory_hostname not in groups['kubernetes-worker']
+
+# - name: Register result of phase 2
+#   shell: ls -la {{ ca_service_settings.directories.kaje_init }}/
+#   register: result_opt_ca_kaje_init
+
+# - name: Shore Result /opt/ca/kaje_init directory
+#   debug:
+#     msg: "{{ result_opt_ca_kaje_init.stdout_lines }}"
+
+# ######## INIT PHASE THIRD - COPY GENERATED CERTS TO KAJE TEMP DIR
+
+# - name: COPY ALL CERTS TO KUBE BACK 
+#   shell: cp -R {{ ca_service_settings.directories.kaje_init }}/pki {{ ca_service_settings.directories.ca }}/
+#   when: inventory_hostname in groups['kubernetes-master']
+#   async: 1000
+#   poll: 0
+
+# - name: COPY ALL FROM OPT PKI TO ETC KUBERNETES
+#   shell: cp -r cp -R {{ ca_service_settings.directories.kaje_init }}/pki /etc/kubernetes/
+#   when: inventory_hostname in groups['kubernetes-master']
+#   async: 1000
+#   poll: 0
+

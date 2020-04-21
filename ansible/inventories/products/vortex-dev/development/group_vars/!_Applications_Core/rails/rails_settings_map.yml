@@ -1,0 +1,127 @@
+ansible_rails_environment: production
+
+all_services_settings_map:
+    settings: |
+      {{ shared_env_variables_service_settings_ }}
+    guard:
+      - "PORT: 5000"
+      - "SETTINGS_SERVICE_URL: https://settings.{{ public_consul_domain }}/settings"
+      - "APP_IPINFO_URL: http://ipinfo.io"
+      - "IPSTACK_API_KEY: 09fcc6a688b3df121dd31e391ba3be77"
+    demo:
+      - "BUSINESS_APP_URL: https://business.{{ public_consul_domain }}"
+      - "BUSINESS_APP_PRIVATE_TOKEN: 846033ed8492b96ca457"
+    core: |
+      {{ shared_env_variables_service_core_ }}
+    business: |
+      {{ shared_env_variables_service_business_ }}
+    business_setup: |
+      {{ shared_env_variables_service_business_ }}
+    core_setup: |
+      {{ shared_env_variables_service_core_ }}
+    postgres:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    redis:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    metabase:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+      - "MB_DB_TYPE: postgres"
+      - "MB_DB_PORT: 5432"
+      - "MB_DB_USER: postgres"
+      - "MB_DB_HOST: postgres"
+      - "MB_DB_DBNAME: metabase_{{ ansible_environment }}"
+    business_docs:
+      - "RAILS_LOG_TO_STDOUT: \"true\""
+    business_sidekiq: |
+      {{ shared_env_variables_service_business_ }}
+    business_whenever: |
+      {{ shared_env_variables_service_business_ }}
+    business_default: |
+      {{ shared_env_variables_service_business_ }}
+    core_sidekiq: |
+      {{ shared_env_variables_service_core_ }}
+    settings_setup: |
+      {{ shared_env_variables_service_settings_ }}
+    flexy_guard:
+      - "SERVER_HOST: 0.0.0.0"
+      - "SERVER_PORT: 5000"
+      - "SERVER_DEBUG: \"true\""
+    flexy_guard_admin:
+      - "SERVER_HOST: 0.0.0.0"
+      - "SERVER_PORT: 5000"
+      - "SERVER_DEBUG: \"true\""
+    mongo:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    mongo_express:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    mongo_setup:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    elasticsearch:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    elastic_hq:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+    kibana:
+      - "DOCKER_ENV: {{ ansible_environment }}"
+      - "ELASTICSEARCH_START: 0"
+      - "LOGSTASH_START: 0"
+
+shared_env_variables_service_business_:
+      - "RAILS_ENV: {{ ansible_rails_environment }}"
+      - "APP_URL_HOST: https://business.{{ public_consul_domain }}"
+      - "APP_CORE_HOST_URL: https://core.{{ public_consul_domain }}"
+      - "ANTIFRAUD_SERVICE_URL: https://flexy-guard.{{ public_consul_domain }}"
+      - "APP_SETTINGS_HOST_URL: https://settings.{{ public_consul_domain }}/settings"
+      - "APP_IPINFO_URL: http://ipinfo.io"
+      - "IPSTACK_API_KEY: 09fcc6a688b3df121dd31e391ba3be77"
+      # - "APP_WALLET_URL: "
+      - "APP_CORE_TOKEN: business"
+      - "APP_SECRET_KEY_BASE: cc8309fcc8309fdecc8309fcc83be6ba216ba21778dd3a69118b3df1"
+      # - "vortex_APPS_MERCHANT_PRIVATE_KEY: "
+      - "APP_DB_NAME_ENV: vortex_business_{{ ansible_environment }}"
+      - "APP_DB_HOST_ENV: postgres"
+      - "APP_DB_USERNAME_ENV: postgres"
+      - "APP_MILLIKART_PAYMENT_BASE_URL: https://pay.millikart.az/gateway/payment/"
+
+shared_env_variables_service_core_:
+      - "RAILS_ENV: {{ ansible_rails_environment }}"
+      - "APP_URL_HOST: https://core.{{ public_consul_domain }}"
+      - "APP_BISINESS_HOST_URL: https://business.{{ public_consul_domain }}"
+      - "APP_SETTINGS_HOST_URL: https://settings.{{ public_consul_domain }}/settings"
+      # - "APP_WALLET_URL: "
+      # - "APP_MAILER_PASSWORD: "
+      - "APP_MAILER_USER: support@{{ public_consul_domain }}"
+      - "APP_SECRET_KEY_BASE: cc8309fcc8309fdecc8309fcc83be6ba216ba21778dd3a69118b3df1"
+      # - "APP_SMS_GATEWAY_KEY: "
+      # - "APP_SMS_NEXMO_KEY: "
+      # - "APP_SMS_NEXMO_SECRET: "
+      # - "APP_SPARKPOST_KEY: "
+      - "APP_PUSH_APNS_ENV: {{ ansible_environment }}"
+      # - "APP_PUSH_APNS_PASS: "
+      # - "APP_PUSH_GCM_KEY: "
+      - "APP_AWS_ACCESS_KEY_ID: a123a"
+      - "APP_AWS_SECRET_ACCESS_KEY: a123a"
+      - "APP_AWS_HOST: core.{{ public_consul_domain }}"
+      - "APP_AWS_ENDPOINT: http://core.{{ public_consul_domain }}:9000"
+      - "APP_AWS_DIRECTORY: core-prod"
+      - "APP_MRZ_VERIFICATION_HOST_URL: https://api.idcheck.io/rest"
+      # - "APP_MRZ_IDCHECKIO_TOKEN: "
+      # - "SMS_API_ONES2U_USERNAME: "
+      # - "SMS_API_ONES2U_PASSWORD: "
+      - "APP_DB_HOST_ENV: postgres"
+      - "APP_DB_USERNAME_ENV: postgres"
+      - "APP_DB_NAME_ENV: vortex_core_{{ ansible_environment }}"
+
+shared_env_variables_service_settings_:
+      - "RAILS_ENV: {{ ansible_rails_environment }}"
+      - "APP_DB_NAME_ENV: vortex_settings_{{ ansible_environment }}"
+      - "APP_SECRET_KEY_BASE: cc8309fcc8309fdecc8309fcc83be6ba216ba21778dd3a69118b3df1"
+      - "APP_DB_HOST_ENV: postgres"
+      - "APP_DB_USERNAME_ENV: postgres"
+
+all_services_location_map:
+  directories:
+    root: "{{ cloud_dir }}/{{ ansible_environment }}"
+    database: "{{ cloud_dir }}/{{ ansible_environment }}/{{ ansible_environment }}_database"
+    stack: "{{ cloud_dir }}/{{ ansible_environment }}/stack"
+    mongo: "{{ cloud_dir }}/{{ ansible_environment }}/{{ ansible_environment }}_mongo"
+    elasticsearch: "{{ cloud_dir }}/{{ ansible_environment }}/{{ ansible_environment }}_elasticsearch"

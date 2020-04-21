@@ -1,0 +1,48 @@
+kubeadm init --config=/etc/kubernetes/admin.conf --kubeconfig=/etc/kubernetes/config.yaml
+kubeadm config --kubeconfig=/etc/kubernetes/config.yaml
+kubeadm init phase preflight --ignore-preflight-errors=all
+kubeadm init phase certs all
+kubeadm init phase certs etcd-ca
+kubeadm init phase kubelet-start
+kubeadm init phase kubeconfig kubelet
+kubeadm init phase etcd local
+kubeadm init phase kubeconfig admin
+kubeadm 
+systemctl start kubelet
+
+
+kubeadm init phase certs all
+kubeadm init phase certs etcd-ca
+kubeadm init phase kubelet-start
+kubeadm init phase kubeconfig kubelet
+kubeadm init phase etcd local
+kubeadm init phase kubeconfig admin
+
+
+kubeadm init phase certs etcd-server --config=/etc/kubernetes/cluster-bootstrap-{{ hostvars[inventory_hostname]['ansible_nodename'] }}.yaml
+kubeadm init phase certs etcd-server --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+
+kubeadm init phase certs etcd-peer --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+kubeadm init phase certs etcd-healthcheck-client --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+kubeadm init phase certs apiserver-etcd-client --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+
+
+
+
+kubeadm init phase certs apiserver-etcd-client --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+kubeadm init phase etcd local --config=/etc/kubernetes/cluster-bootstrap-vortex-node-05-production.yaml
+service kubelet stop
+kubeadm init --config /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml
+kubeadm init --config /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml
+kubeadm init --config /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml --v=5
+cat /etc/kubernetes/manifests/etcd.yaml
+rm /etc/kubernetes/manifests/etcd.yaml
+kubeadm init --config /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml --v=5
+
+
+
+  349  cat /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml
+  351  cat /etc/kubernetes/cluster-master-init-vortex-node-05-production.yaml
+  352  cat /etc/kubernetes/admin.conf
+  354  tail -n 2000 -f /var/log/syslog | grep kubelet
+  355  kubectl get all --kubeconfig /etc/kubernetes/admin.conf

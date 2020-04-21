@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="161ad0ef-5bf7-467d-9e22-59a7e4a33de9" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2018.1/project-config.xsd">
+  <name>1: INIT | Prepare CI</name>
+  <description />
+  <settings>
+    <options>
+      <option name="allowExternalStatus" value="true" />
+      <option name="allowPersonalBuildTriggering" value="false" />
+      <option name="artifactRules" value="./pass.yml =&gt; ansible_prepare_result.zip&#xA;./vault_pass.yml =&gt; ansible_prepare_result.zip&#xA;./ci_vault.sh =&gt; ansible_prepare_result.zip" />
+      <option name="showDependenciesChanges" value="true" />
+    </options>
+    <parameters>
+      <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+      <param name="ANSIBLE_BUILD_ID" value="" />
+      <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+      <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+      <param name="ANSIBLE_CLOUD_TYPE" value="" />
+      <param name="ANSIBLE_COMMIT_SHA" value="" />
+      <param name="ANSIBLE_DEPLOY_USERNAME" value="" />
+      <param name="ANSIBLE_ENVIRONMENT" value="" />
+      <param name="ANSIBLE_PRODUCT_NAME" value="" />
+      <param name="ANSIBLE_REGISTRY_URL" value="" />
+      <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+      <param name="ANSIBLE_RUN_TYPE" value="" />
+      <param name="ANSIBLE_VERSION" value="" />
+      <param name="A_DEPLOY_PASSWORD" value="" />
+      <param name="A_ENV_SECURITY" value="" />
+      <param name="A_VAULT_PASSWORD" value="" />
+      <param name="MAIN_ANSIBLE_BUILD_ID" value="" />
+      <param name="NG_DEPLOY_PASSWORD" value="" />
+      <param name="RunningOfferForBuild" value="" />
+      <param name="RunningOfferForPublish" value="" />
+      <param name="RunningOnlyQA" value="" />
+      <param name="env.reverse.dep.env.vortexEngine_Infrastructure.A_DEPLOY_PASSWORD" value="%A_DEPLOY_PASSWORD%" />
+      <param name="env.reverse.dep.env.vortexEngine_Infrastructure.A_VAULT_PASSWORD" value="%A_VAULT_PASSWORD%" />
+      <param name="env.reverse.dep.env.vortex_Main.A_DEPLOY_PASSWORD" value="%A_DEPLOY_PASSWORD%" />
+      <param name="env.reverse.dep.env.vortex_Main.A_VAULT_PASSWORD" value="%A_VAULT_PASSWORD%" />
+      <param name="message" value="" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_1" name="Prepare CI" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[echo %RunningOnlyQA%
+echo %NG_DEPLOY_PASSWORD%
+echo %message%
+echo "Root project password: %% secure:NG_DEPLOY_PASSWORD"
+echo "Root project password: %NG_DEPLOY_PASSWORD%"
+echo "%% secure:teamcity.password.{NG_DEPLOY_PASSWORD}"
+echo "%% secure:teamcity.password.NG_DEPLOY_PASSWORD"
+echo "init pass:%% secure:teamcity.password.NG_DEPLOY_PASSWORD"
+
+echo %% credentialsJSON:NG_DEPLOY_PASSWORD
+
+RUNNING_ONLY_QA="%RunningOnlyQA%"
+
+echo "RUNNING_ONLY_QA is $RUNNING_ONLY_QA"
+if [ "$RUNNING_ONLY_QA" = true ]; then
+  echo "RUNNING_ONLY_QA is true"
+else
+  echo "RUNNING_ONLY_QA is false"
+fi
+
+ls -la ./
+
+bash -x
+
+rm -rf ./pass.yml
+rm -rf ./vault_pass.yml
+rm -rf ./ci_vault.sh
+
+echo "##teamcity[setParameter name='dep.vortex_Main.A_DEPLOY_PASSWORD' value='%A_DEPLOY_PASSWORD%'"
+echo "##teamcity[setParameter name='dep.vortex_Main.A_VAULT_PASSWORD' value='%A_VAULT_PASSWORD%'"
+echo "##teamcity[setParameter name='dep.vortex_Main.A_ENV_SECURITY' value='%A_ENV_SECURITY%'"
+
+echo "##teamcity[setParameter name='dep.vortex_Main.env.A_DEPLOY_PASSWORD' value='%A_DEPLOY_PASSWORD%'"
+echo "##teamcity[setParameter name='dep.vortex_Main.env.A_VAULT_PASSWORD' value='%A_VAULT_PASSWORD%'"
+echo "##teamcity[setParameter name='dep.vortex_Main.env.A_ENV_SECURITY' value='%A_ENV_SECURITY%'"
+
+A_DEPLOY_PASSWORD="%A_DEPLOY_PASSWORD%"
+A_VAULT_PASSWORD="%A_VAULT_PASSWORD%"
+A_ENV_SECURITY="%A_ENV_SECURITY%"
+
+A_DEPLOY_PASSWORD_DEC="%A_DEPLOY_PASSWORD%"
+A_VAULT_PASSWORD_DEC="%A_VAULT_PASSWORD%"
+A_ENV_SECURITY_DEC="%A_ENV_SECURITY%"
+
+echo "A_DEPLOY_PASSWORD_DEC: $A_DEPLOY_PASSWORD_DEC"
+echo "A_DEPLOY_PASSWORD: $A_DEPLOY_PASSWORD"
+
+echo "A_VAULT_PASSWORD_DEC: $A_VAULT_PASSWORD_DEC"
+echo "A_VAULT_PASSWORD: $A_VAULT_PASSWORD"
+echo "A_ENV_SECURITY: $A_ENV_SECURITY"
+
+echo "%A_DEPLOY_PASSWORD%" >> ./pass.yml
+echo "%A_VAULT_PASSWORD%" >> ./vault_pass.yml
+echo "A_DEPLOY_PASSWORD=%A_DEPLOY_PASSWORD%" >> ./ci_vault.sh
+echo "A_VAULT_PASSWORD=%A_VAULT_PASSWORD%" >> ./ci_vault.sh
+echo "A_ENV_SECURITY=%A_ENV_SECURITY%" >> ./ci_vault.sh
+echo "%message%" >> ./message.yml
+echo "%secure:message%" >> ./super_message.yml
+echo "%secure:teamcity.password.NG_DEPLOY_PASSWORD%" >> ./NG_DEPLOY_PASSWORD.yml 
+
+chmod +x ./ci_vault.sh
+ls -la ./]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="HttpsGitlabvortexComvortexngEnginevortex" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <cleanup />
+  </settings>
+</build-type>
+

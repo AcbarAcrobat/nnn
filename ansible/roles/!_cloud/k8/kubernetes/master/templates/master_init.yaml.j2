@@ -1,0 +1,19 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: {{ hostvars[inventory_hostname]['second_ip'] }}
+etcd:
+  endpoints:
+{% for host in groups['kubernetes-master'] %}{% raw %}
+  - {% endraw %}https://{{ hostvars[host]['second_ip'] }}:{{ K8S_CLUSTER_LISTEN_PORT_2379 }}{% endfor %}{% raw %}
+  caFile: /opt/ca/{% endraw %}{{ ansible_product }}_{{ ansible_environment }}{% raw %}/ca.crt
+  certFile: /opt/ca/{% endraw %}{{ ansible_product }}_{{ ansible_environment }}{% raw %}/kubernetes.crt
+  keyFile: /opt/ca/{% endraw %}{{ ansible_product }}_{{ ansible_environment }}{% raw %}/kubernetes.key
+{% endraw %}networking:
+  podSubnet: {{ POD_NETWORK_CIDR }}
+apiServerCertSANs:
+{% for host in groups['kubernetes-master'] %}{% raw %}
+- {% endraw %}{{ hostvars[host]['second_ip'] }}{% endfor %}{% raw %}
+- {% endraw %}{{ K8S_CLUSTER_ADDRESS }}
+apiServerExtraArgs:
+  endpoint-reconciler-type: lease

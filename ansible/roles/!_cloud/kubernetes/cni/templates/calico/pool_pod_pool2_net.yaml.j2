@@ -1,0 +1,10 @@
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: pool2
+spec:
+  cidr: {{ CALICO_POOL_2_CIDR }}
+  ipipMode: Never
+  natOutgoing: true
+  disabled: true
+  nodeSelector: all()
