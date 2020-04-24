@@ -4,7 +4,7 @@ Primary Ansible code base
 
   What it is:
 
-  * Terraform-free ansible realization of Dynamic Infrastructure deployment/management/deployment with full IaC support via Ansible Cloud API modules.
+  * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment with full IaC support via Ansible Cloud API modules.
   * Ready to use, just add your services and declare infrastructure.
   * Simple to understand.
   * Multimple ways to use a many roles, zones, clusters, networks
