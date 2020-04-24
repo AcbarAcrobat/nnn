@@ -150,7 +150,7 @@ Necessary input values to select your way to create a new environment, product, 
 
           - inventory start point of your cloud - very simple way to work
           - inventory - cloud bootstrap and check or validate your cloud infrastructure.
-          - availiable in two types of run - api or baremethal. 
+          - availiable in two types of run - api or baremetal. 
           - contain dict and variables which you wants about infrastructure
 
       II. Target Inventory after ```bootstrap inventory``` which contains settings needed after bootstrap the instances - 
