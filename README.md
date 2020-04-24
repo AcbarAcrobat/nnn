@@ -2,6 +2,16 @@
 
 Primary Ansible code base
 
+  What it is:
+
+  * Terraform-free ansible realization of Dynamic Infrastructure deployment/management/deployment with full IaC support via Ansible Cloud API modules.
+  * Ready to use, just add your services and declare infrastructure.
+  * Simple to understand.
+  * Multimple ways to use a many roles, zones, clusters, networks
+  * K8 & Docker Swarm support - you can have a multiple clusters in one environment or have multiple virtual environments on one virtual cloud placement.
+  * Easy template for build, bootstrap, develop, deploy and test your infrastructure.
+  * Have a TeamCity ready to import configuration with full process with simple CI/CD/QA pipeline.
+
 ## Principial workflow
 
 - DIRECTORY STRUCTURE FOR DYNAMIC INVENTORIES, DESCRIBES BASICAL CALL FLOW 
