@@ -43,15 +43,40 @@ Primary Ansible code base
     * Deploy pipeline - 
     
     ```
-        1. Prepare CI
-      
+        1. Prepare CI 
+    ```
+    
+    ```
         2. Build and Push Docker images - Build your software and necessary backend/database/services images for able to work your own software.
-      
-        3. Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
-      
-        4. Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
+        
+           ./\!_all_services_builder.sh
         
     ```
+    
+    ```
+        3. Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
+           
+           ./\!_all_services_deployer.sh
+           
+    ```
+    
+    ```
+        4. Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
+        
+        
+           ./\!_all_services_internal.sh
+        
+    ```
+    
+    ```
+        5. Run the QA part of pipeline - running your custom QA test suites. You must enable that part of pipeline by itself because default state of feature is disabled.
+        
+        
+           ./\!_0z-quality_assurance.sh
+        
+    ```
+    
+    
   * You can customize each part of pipeline, playbooks and roles.
 
 ## Principial workflow
