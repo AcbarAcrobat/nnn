@@ -40,41 +40,37 @@ Primary Ansible code base
     
     * Build and validate infrastructure - only if you use a api cloud adapter for support full dynamic environment way. If  use the baremetal adapter you must to create infrastructure itself and declare necessary nodes information to static template.
     
-    * Deploy pipeline - 
+    * Deploy pipeline:
     
-    ```
-        1. Prepare CI 
-    ```
+        * Prepare CI 
+     
+        * Build and Push Docker images - Build your software and necessary backend/database/services images for able to work your own software.
     
-    ```
-        2. Build and Push Docker images - Build your software and necessary backend/database/services images for able to work your own software.
-        
+           ```
            ./\!_all_services_builder.sh
         
-    ```
-    
-    ```
-        3. Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
+           ```
            
+        * Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
+
+           ```
            ./\!_all_services_deployer.sh
            
-    ```
-    
-    ```
-        4. Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
+           ```
+          
+        * Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
         
-        
+           ```
            ./\!_all_services_internal.sh
         
-    ```
+           ```
     
-    ```
-        5. Run the QA part of pipeline - running your custom QA test suites. You must enable that part of pipeline by itself because default state of feature is disabled.
+        * Run the QA part of pipeline - running your custom QA test suites. You must enable that part of pipeline by itself because default state of feature is disabled.
         
-        
+           ```
            ./\!_0z-quality_assurance.sh
         
-    ```
+           ```
     
     
   * You can customize each part of pipeline, playbooks and roles.
