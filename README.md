@@ -22,34 +22,36 @@ Primary Ansible code base
 
   * Basicly, we have a three types of environments except localhost development type - standalone, minimal and pci. You can create you special one and select your options for you time. Firstaful, we create and bootstrap environment, wrappers for that you can find in https://github.com/westsouthnight/vortex/tree/master/ansible/scripts/wrappers/init
   
-    1. Go to ansible folder in cloned repository, -
+    * Go to ansible folder in cloned repository, -
     
     ```
       cd ./ansible
     ```
     
-    2. Try run the wrapper as example, -
+    * Try run the wrapper as example, -
     
     ```
       ./scripts/wrappers/init/\!_stand-pci.sh
     ```
     
-    3. TeamCity or other CI/CD/QA running tool just run wrappers to execute a some step of pipeline with ```type_of_run``` equals ```true```, for local runing/debugging/understanding you can run each wrapper with value ```print_only``` in  ```type_of_run``` parameter.
+    * TeamCity or other CI/CD/QA running tool just run wrappers to execute a some step of pipeline with ```type_of_run``` equals ```true```, for local runing/debugging/understanding you can run each wrapper with value ```print_only``` in  ```type_of_run``` parameter.
   
   * We split processes for managing your bussines product lifecycle to two steps - 
     
-    1. Build and validate infrastructure - only if you use a api cloud adapter for support full dynamic environment way. If  use the baremetal adapter you must to create infrastructure itself and declare necessary nodes information to static template.
+    * Build and validate infrastructure - only if you use a api cloud adapter for support full dynamic environment way. If  use the baremetal adapter you must to create infrastructure itself and declare necessary nodes information to static template.
     
-    2. Deploy pipeline - 
+    * Deploy pipeline - 
     
-      I.   Prepare CI
+    ```
+        1. Prepare CI
       
-      II.  Build and Push Docker images - Build your software and necessary backend/database/services images for able to work your own software.
+        2. Build and Push Docker images - Build your software and necessary backend/database/services images for able to work your own software.
       
-      III. Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
+        3. Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
       
-      IV.  Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
+        4. Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
         
+    ```
   * You can customize each part of pipeline, playbooks and roles.
 
 ## Principial workflow
