@@ -77,48 +77,9 @@ Primary Ansible code base
 
 ## Principial workflow
 
-- DIRECTORY STRUCTURE FOR DYNAMIC INVENTORIES, DESCRIBES BASICAL CALL FLOW 
+### Directory structure for dynamic inventories, describes basical call flow
 
-  ````
-     ./root_dir/-----------------------------------------------------------|--------------------------------------------------------------|   
-               |      DIRECTORY STRUCTURE FOR DYNAMIC INVENTORIES          |                                                              |   
-               |___________________________________________________________|                                                              |   
-               |          ###################                                                                                             |                              
-           |---|    # API INVENTORY   |> 0z-cloud/ -|                                                                                     |   
-           |                          |             |> products/\!_{{ cloud_type }}/{{ ansible_product }}/{{ ansible_environment }}       |   
-      |----|                          |                                                                                                   |   
-      |----> ansible/inventories/ -|> *                                                                                                   |   
-      |-------|                       |             |> {{ ansible_product }}/{{ ansible_environment }}                                    |   
-              |     # GET INVENTORY   |> products/ -|                                                                                     |   
-              |-----|     ###################                                                                                             |   
-                    |    |                                                                                                                |                                          
-                    |    |-||----------------||------------------------||---------------------------||------------------------------------|   
-                    |     |-|   INVENTORIES   | 1. Declare product as: |  2. Select Cloud Type       |  3. Select the inventory           |              
-                    |      \|                 |                        |                             |                                    |   
-                    |       [-----------------]     ansible_product    |     aws/azure/do/ali        |  production / develop / stage      |   
-                    |       |_________________|                        |     vsphere/bare/vbox       |                                    |   
-                    |        \_______________/-------------------------|-----------------------------|------------------------------------/                                
-                    |______                                                               
-                        |  \.services         # Folder contains child folders with Dockerfiles your private services, which develop there.                                                                                    
-                        |__                                                     
-                        |  \.docs             # Folder for placing Dockerfiles services with you documentation - api, etc.                                                
-                        |__    
-                        |  \.dockerfiles      # Folder with Dockerfiles for backends and frontends, like DBs, Webservers, other stuff.
-                        |__   
-                        |  \.git              # Git history.
-                        |__   
-                        |  \.local            # Local exchange folder for some tasks, store crypted creds and other runtime data.
-                        |__   
-                        |  \.teamcity         # CI/CD Implementation with already tuned pipelines and settings, just change and start.
-                        |__   
-                        |  \.PythonQA         # Example automation testing suite, which you can place tests for you services on CI/CD.
-                        |__
-                        |  \Dockerfile        # Ansible service Dockerfile if you want use docker for run ansible.
-                        |__
-                        |  \mk_new_env.sh     # Helper for create new enviroments, products from presented configuration. 
-                        |__
-                           \docker.sh         # Local development environment builder and runner.
-
+![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_work_map.png)
 
 - ZeroCloud configuration flow inside and only on ansible calls
 ```
