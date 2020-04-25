@@ -16,23 +16,24 @@
   * Firewall zero-in inside based on Shorewall.
   * Many other stuff like rabbitmq/tarantool/redis/etc clusters.
   * GlusterFS as NFS shared storage.
-  
   ```
+
 ## We have two basical types of inventories - 
 
-### Dynamic Inventory 0z-cloud its ```bootstrap inventory```(API INVENTORY), prefilled for create the instances
-   
-   #### 0z-cloud it:
-   
+Dynamic Inventory (API INVENTORY), called 0z-cloud:
+
      - Zero Inventory start point of your cloud - very simple way to work.
      - Zero Inventory - cloud bootstrap and check or validate your cloud infrastructure.
+     - Contain prefilled/prepared template for create the instances.
      - Availiable in two types of run - api or baremetal. 
      - Contains dict and variables which you wants about infrastructure.
      - In API type used as template.
+     
+Target Inventory (GET INVENTORY), resulting inventory: 
 
-### Target Inventory after ```bootstrap inventory```(GET INVENTORY), which contains settings needed after bootstrap the instances - 
-
-        inventories/products/{{ ansible_product }}/{{ ansible_environment }}
+     - Result of generation the API INVENTORY, contains all needed for ansible works.
+     - Placed in inventories/products/{{ ansible_product }}/{{ ansible_environment }}
+     - No stored in repository.
 
 ## Working with virtual and cloud environments, bootstraping and managing
 
