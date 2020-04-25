@@ -103,8 +103,7 @@ Target Inventory (GET INVENTORY), resulting inventory:
            ./\!_0z-quality_assurance.sh
         
            ```
-    
-    
+
   * You can customize each part of pipeline, playbooks and roles.
 
 ## Examples of usage the inventories childs - 
@@ -128,10 +127,10 @@ Target Inventory (GET INVENTORY), resulting inventory:
 
    * Create symlinks from parent primary cloud dynamic environment to his new childs -
 
-            mkdir ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-            cd ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-            ln -s stage/v.py ./production/v.py 
-            ln -s stage/bootstrap_vms ./production/bootstrap_vms 
+            mkdir ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/
+            cd ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/
+            ln -s ../production/v.py 
+            ln -s ../production/bootstrap_vms 
 
    * Copy the target inventory from parent to new, firstaful create a target inventories localtions -
             
