@@ -83,9 +83,7 @@ if [ "$inventory" != "production" ] && [ "$inventory" != "alpha" ] && [ "$invent
     if [ -L ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py ]; then
       
       echo -e "         ${GREEN}Current vortex script is a symlink ${NC}";
-
-      before_inventory_parent=$(ls -la ./inventories/0z-cloud/products/types/!_${typeofcloud}/${product}/${inventory}/v.py | awk '{print $NF}' | sed 's/\/v.py//' | sed 's/..\///')
-
+      before_inventory_parent=$(readlink ./inventories/0z-cloud/products/types/!_${typeofcloud}/${product}/${inventory}/v.py | sed 's/\/v.py//' | sed 's/..\///')
       echo -e "         ${GREEN}Before ${NC}cloud inventory: ${RED}${before_inventory_parent}${NC}";
 
     else
@@ -96,9 +94,7 @@ if [ "$inventory" != "production" ] && [ "$inventory" != "alpha" ] && [ "$invent
     fi
 
     check_target_inventory_dir;
-
     echo -e "         ${GREEN}Current ${NC}cloud inventory: ${RED}${inventory}${NC}"
-
     rm -rf ./inventories/products/$product/$inventory/inventory
     ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
 
@@ -123,7 +119,7 @@ else
     rm -rf ./inventories/products/$product/$inventory/inventory
     ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
     
-    echo "./inventories/0z-cloud/products/types/\!_${typeofcloud}/$product/$inventory/${connection_type} --connection_type >> ./inventories/products/$product/$inventory/inventory"
+    # echo "./inventories/0z-cloud/products/types/\!_${typeofcloud}/$product/$inventory/${connection_type} --connection_type >> ./inventories/products/$product/$inventory/inventory"
 
     echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
 

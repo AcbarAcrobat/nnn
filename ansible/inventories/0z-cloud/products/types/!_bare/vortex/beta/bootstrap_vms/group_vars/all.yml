@@ -219,7 +219,7 @@ cloud_bootstrap:
         # SERVICES
             - metabase
         # SERVICE DISCOVERY
-            - consul-client
+            - consul-clients
             - consul-cluster
         # ACCESS SERVICES
             - pritunl-stack
@@ -295,7 +295,7 @@ cloud_bootstrap:
         # SERVICES
             - metabase
         # SERVICE DISCOVERY
-            - consul-client
+            - consul-clients
             - consul-cluster
         # ACCESS SERVICES
             - pritunl-stack
@@ -369,7 +369,7 @@ cloud_bootstrap:
         # SERVICES
             - metabase
         # SERVICE DISCOVERY
-            - consul-client
+            - consul-clients
             - consul-cluster
         # ACCESS SERVICES
             - pritunl-stack

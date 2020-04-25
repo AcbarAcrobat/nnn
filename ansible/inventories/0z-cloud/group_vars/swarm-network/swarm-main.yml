@@ -1,8 +1,0 @@
-swarm_masters:
-    docker_settings:
-       docker_api_port: 4000
-    overlay_network:
-       network_name: swarm_ng_overlay
-       network_subnet: 10.100.0.0/16
-       subnet_only: 10.100.0.0
-       gateway: 10.100.0.1
