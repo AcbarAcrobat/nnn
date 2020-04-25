@@ -85,96 +85,44 @@ Primary Ansible code base
 
 ![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_api_generate_flow.png)
 
-```
+## Examples of usage the inventories childs - 
 
-    |        | # As examples -
-    |        | # 
-    |        | # 1. One to multiple as parent:
-    |        | # 
-    |        | #    We have a one primary inventory, on some product, some cloud type provider as total, - 
-    |        | # 
-    |        | #    one compute environment, - {{ ansible_environment }} == 'production'
-    |        | # 
-    |        | #    But wants to placement multiple virtual environments on same Datacenter to same VMs environment
-    |        | # 
-    |        | #    All linked environments, which we wants to add as childs like virtual, looks and works by the symlinks way.
-    |        | # 
-    |        | #    Lets do like for example, two childs of primary - developemnt and stage environments, 
-    |        | # 
-    |        | #    1.1 Create the new folders in api cloud inventory - 
-    |        | #
-    |        | #     /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/developemnt/ 
-    |        | #     /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-    |        | # 
-    |        | #    1.2 Create symlinks from parent primary cloud dynamic environment to his new childs -
-    |        | # 
-    |        | #        1.2.0  mkdir /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-    |        | #        1.2.1  cd ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-    |        | #        1.2.2  ln -s stage/v.py ./production/r.py 
-    |        | #        1.2.3  ln -s stage/bootstrap_vms ./production/bootstrap_vms 
-    |        | #            
-    |        | #    1.3 Copy the target inventory from parent to new, firstaful create a target inventories localtions -
-    |        | #            
-    |        | #        1.3.0  mkdir ./products/{{ ansible_product }}/stage 
-    |        | #        1.3.1  cp -R ./products/{{ ansible_product }}/production/* ./products/{{ ansible_product }}/{{ new_environment }}/ 
-    |        | # 
-    |        | #    1.4 Done, now change the domain names and ports settings on your new cloud target childs from production environments, and deploy!
-    |        | #
+### One to multiple, where one as a parent:
 
+    We have a one primary inventory, on some product, some cloud type provider as total, - 
 
-# USAGE DYNAMIC CLOUD INVENTORIES
+    ```
+        one compute environment, - {{ ansible_environment }} == 'production'
+    ```
 
-  * Making new inventories from scratch, with examples and describsions about why we need that and for what
+    But wants to placement multiple virtual environments on same Datacenter to same VMs environment
 
-  
-  ./\!_mk_new_env.sh production vortex bare symlink bare setta vortex
-  
-Necessary input values to select your way to create a new environment, product, scale, or during some migrate or update to your infrastracure.
+    All linked environments, which we wants to add as childs like virtual, looks and works by the symlinks way.
 
-  - (1) inventory:    Parent inventory is must to be a specified, which be a donor for new inventory
+    Lets do like for example, two childs of primary - developemnt and stage environments, 
 
-  - (2) product:      Parent product is must to be a specified, which be a donor for new cloud config
+    * Create the new folders in api cloud inventory - 
 
-  - (3) type cloud:   Parent cloud type is must to be a specified, like { vsphere / alicloud / bare / etc }
+        ```
+            /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/developemnt/ 
+            /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
+        ```
 
-  - (4) run type:     Type of spawning the scratcher, from other repo, ways for choice { clone / symlink }
+    * Create symlinks from parent primary cloud dynamic environment to his new childs -
 
-  - (5) type cloud:   Target cloud type is must to be a specified, like { vsphere / alicloud / bare / etc }
+        ```
+            mkdir /0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
+            cd ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
+            ln -s stage/v.py ./production/v.py 
+            ln -s stage/bootstrap_vms ./production/bootstrap_vms 
+        ```
 
-  - (6) inventory:    Target inventory is must to be a specified, which be a result of new inventory for cloud location
+    * Copy the target inventory from parent to new, firstaful create a target inventories localtions -
+            
+        ```
+            mkdir ./products/{{ ansible_product }}/stage 
+            cp -R ./products/{{ ansible_product }}/production/* ./products/{{ ansible_product }}/{{ new_environment }}/ 
+        ```
 
-  - (7) product:      Target product is must to be a specified, which be a result for new cloud location
-
-  - (!) INFO JUST FOR READ IMPORTANT AGAIN:
-
-    We have two basical types of inventories - 
-
-      I. Dynamic ```bootstrap inventory``` prefilled for create the instances - 
-
-        ```inventories/0z-cloud/products```.
-       
-        0z-cloud:
-
-          - inventory start point of your cloud - very simple way to work
-          - inventory - cloud bootstrap and check or validate your cloud infrastructure.
-          - availiable in two types of run - api or baremetal. 
-          - contain dict and variables which you wants about infrastructure
-
-      II. Target Inventory after ```bootstrap inventory``` which contains settings needed after bootstrap the instances - 
-
-        ```inventories/products``` + {{ ansible_product }} + {{ ansible_environment }}
-
-        basic concept:
-
-          - {{ ansible_product }} firsteful created like abstract to follow in repository, like distributed float availiability zone.
-          - As single point of improve, start the abstract, which communicate all different solutions by one way. 
-          - can be a template or like a mixed point off decision, where we have a completely data to manage our business processes.
-          - For every day progress, - import from zero to excellent. 
-          - Total completely the tasks for developing, building, testing, merge and deploying your perfect software CI/CD/QA process.
-          - Use a conception to distribute or realocate / replicate / add, or chage a parts of your local or multi-dc configuration
-          - Part new or full new, ansible_product, and be a child or be a parent. 
-          - We can mix on flyed local metric reasons some configurations and deployments, and also not presented and fully like RnD.
-          - Possibled usage path, can give go you understand, presented in few magic examples, so, i very happy you at here. 
-          - lest go.
-
+    * Done, now change the domain names and ports settings on your new cloud target childs from production environments, and deploy!
 
