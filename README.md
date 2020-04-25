@@ -16,6 +16,8 @@
   * Firewall zero-in inside based on Shorewall.
   * Many other stuff like rabbitmq/tarantool/redis/etc clusters.
   * GlusterFS as NFS shared storage.
+  * Provides single point in development process.
+  * All configurations fully generated - for local development and environments
   ```
 
 ## We have two basical types of inventories - 
