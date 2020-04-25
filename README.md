@@ -82,27 +82,31 @@ Target Inventory (GET INVENTORY), resulting inventory:
            ./\!_all_services_builder.sh
         
            ```
-           
+      ![services_builder.png](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/services_builder.png)
+    
         * Validate Deployment and Deploy - Deploy to Docker Swarm / K8 / Standalone updated manifests, perform DB migrations.
 
            ```
            ./\!_all_services_deployer.sh
            
            ```
-          
+      ![services_deployer.png](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/services_deployer.png)
+
         * Update the Backend DNS & Web-Server (nginx) configurations - update DNS & webserver configurations and check some list of backend services like monitoring, ntp, etc.
         
            ```
            ./\!_all_services_internal.sh
         
            ```
-    
+      ![services_internal.png](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/services_internal.png)
+
         * Run the QA part of pipeline - running your custom QA test suites. You must enable that part of pipeline by itself because default state of feature is disabled.
         
            ```
            ./\!_0z-quality_assurance.sh
         
            ```
+      ![services_qa.png](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/services_qa.png)
 
   * You can customize each part of pipeline, playbooks and roles.
 

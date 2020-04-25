@@ -1,9 +1,9 @@
      if [[ $check_service_result -eq 1 ]]; then
 
             echo "              MAIN IF CHECKS check_service_result & check_service_result"
-            echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
+            echo -e "     ${GREEN}|>..........................................................................................................................................................................................<|${NC}"
             echo -e "         ${GREEN}Because have changes, start rebuild${NC} app: ${RED}${item}${NC}";
-            echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
+            echo -e "     ${GREEN}|>..........................................................................................................................................................................................<|${NC}"
             cd ${root_dir}/${containers_root}/${item}
             docker build -q -f Dockerfile -t ${ansible_global_gitlab_registry_site_name}/${gitlab_project_group}/${gitlab_project_name}/${item} ./ 
             docker build -q -f Dockerfile -t ${ansible_global_gitlab_registry_site_name}/${gitlab_project_group}/${gitlab_project_name}/${item}:$version_ansible_build_id ./ 
