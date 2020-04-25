@@ -5,7 +5,7 @@
   * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment 
   * Full IaC support via Ansible Cloud API modules.
   * Ready to use, just add your services and declare infrastructure.
-  * Simple to understand.
+  * Simple to understand solution template provides complete CI/CD/QA.
   * Multimple ways to use a many roles, zones, clusters, networks.
   * K8 & Docker Swarm support - you can have a multiple clusters in one environment.
   * You can have multiple virtual environments on one virtual cloud infrastructure placement.
