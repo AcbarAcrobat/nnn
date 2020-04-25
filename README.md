@@ -81,39 +81,12 @@ Primary Ansible code base
 
 ![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_work_map.png)
 
-- ZeroCloud configuration flow inside and only on ansible calls
+### ZeroCloud configuration flow inside and only on ansible calls
+
+![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_api_generate_flow.png)
+
 ```
-    |-# ##############################################################################################################
-    /0z-cloud/ 
-            |
-            |-/products/ 
-                    | 
-                    |-/\!_{{ cloud_type }}/ 
-                                          |
-                                          |-/{{ ansible_product }}/{{ ansible_environment }}/
-                                                                                            |                       
-    |---------------------------------------------------------------------------------------|
-    |
-    |-/bootstrap_vms/
-    |           |-# Inventory used for cloud bootstrap usage from localhost: 
-    |           |
-    |           |   calling to cloud providers for check, create,      
-    |           |   modify nodes and get facts from hosts by api    
-    |           |
-    |           |-/inventory
-    |           |
-    |               ###############################################################################################
-    |           |
-    |           |
-    |           |-/group_vars
-    |               
-    |-#############################################################################################################
-    |        |      
-    |-/v.py  |-# Script v.py used as Dynamic Inventory driver as default for all calls from external tasks.               
-    |        |
-    |        |             
-    |-/r.py  |-# Script r.py used as Dynamic Inventory driver as extra type for all calls from external tasks.           
-    |        | # 
+
     |        | # As examples -
     |        | # 
     |        | # 1. One to multiple as parent:
