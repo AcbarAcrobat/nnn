@@ -1,6 +1,6 @@
 # Welcome, to Vortex
 
-## What it is:
+## Repository statements:
   ```
   * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment 
   * Full IaC support via Ansible Cloud API modules.
@@ -22,7 +22,7 @@
   * Storing builded docker images possible to different registries - gitlab, registryv2, nexus, etc.
   ```
 
-## We have two basical types of inventories - 
+## Two basical types of inventories
 
 Dynamic Inventory (API INVENTORY), called 0z-cloud:
 
