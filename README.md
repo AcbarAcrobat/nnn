@@ -21,6 +21,10 @@
   * You can use different CI/CD tools for use, - TeamCity, Jenkins, Gitlab-CI, etc.
   * Storing builded docker images possible to different registries - gitlab, registryv2, nexus, etc.
   ```
+## Readme's links:
+
+- [Ansible](ansible/README.md)
+- [Roles](ansible/roles/README.md)
 
 ## Two basical types of inventories
 
