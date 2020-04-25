@@ -118,3 +118,24 @@ Primary Ansible code base
 
    * Done, now change the domain names and ports settings on your new cloud target childs from production environments, and deploy!
 
+### Create new environment (api and target) by cloning some as parent:
+
+  * Makes new inventories from scratch, with examples and describsions about why we need that and for what
+        
+         ./\!_mk_new_env.sh production vortex bare symlink bare setta vortex
+
+  * Necessary input values to select your way to create a new environment, product, scale, or during some migrate or update to your infrastracure.
+
+        1. inventory:    Parent inventory is must to be a specified, which be a donor for new inventory
+
+        2. product:      Parent product is must to be a specified, which be a donor for new cloud config
+
+        3. type cloud:   Parent cloud type is must to be a specified, like { vsphere / alicloud / bare / etc }
+
+        4. run type:     Type of spawning the scratcher, from other repo, ways for choice { clone / symlink }
+
+        5. type cloud:   Target cloud type is must to be a specified, like { vsphere / alicloud / bare / etc }
+
+        6. inventory:    Target inventory is must to be a specified, which be a result of new inventory for cloud location
+
+        7. product:      Target product is must to be a specified, which be a result for new cloud location
