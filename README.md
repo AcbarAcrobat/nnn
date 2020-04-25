@@ -30,7 +30,7 @@
 
 ### Target Inventory after ```bootstrap inventory```(GET INVENTORY), which contains settings needed after bootstrap the instances - 
 
-        inventories/products + {{ ansible_product }} + {{ ansible_environment }}
+        inventories/products/{{ ansible_product }}/{{ ansible_environment }}
 
 ## Working with virtual and cloud environments, bootstraping and managing.
 
