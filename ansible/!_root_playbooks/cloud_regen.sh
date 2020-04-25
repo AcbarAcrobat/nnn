@@ -63,24 +63,51 @@ else
     fi
 fi
 
+function check_target_inventory_dir(){
+
+  if [ ! -d "./inventories/products/$product/$inventory/" ]; then 
+      echo -e "     ${RED}|>.......................................................................................................................................................<|${NC}"
+      echo -e "         ${RED}Destination target inventory is not exists, exit 1${NC}";
+      echo -e "         ${RED}FATAL: Please check or create destination target environment directory${NC}";
+      echo -e "     ${RED}|>.......................................................................................................................................................<|${NC}"
+      exit 1
+  fi
+
+}
+
 if [ "$inventory" != "production" ] && [ "$inventory" != "alpha" ] && [ "$inventory" != "beta" ]; then
-
-    before_inventory_parent=`ls -la ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py | awk '{print $NF}' | sed 's/\/r.py//' | sed 's/..\///'`
-
-    echo "before_inventory_parent: $before_inventory_parent"
 
     echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
     echo -e "         ${GREEN}Detected ${NC}cloud inventory: ${RED}NON PRODUCTION INVENTORY ${NC}";
-    echo -e "         ${GREEN}Before ${NC}cloud inventory: ${RED}${before_inventory_parent}${NC}";
-    echo -e "         ${GREEN}Current ${NC}cloud inventory: ${RED}${inventory}${NC}";
 
+    if [ -L ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py ]; then
+      
+      echo -e "         ${GREEN}Current vortex script is a symlink ${NC}";
 
+      before_inventory_parent=$(ls -la ./inventories/0z-cloud/products/types/!_${typeofcloud}/${product}/${inventory}/v.py | awk '{print $NF}' | sed 's/\/v.py//' | sed 's/..\///')
+
+      echo -e "         ${GREEN}Before ${NC}cloud inventory: ${RED}${before_inventory_parent}${NC}";
+
+    else
+      
+      echo -e "         ${RED}Current vortex script is not a symlink ${NC}";
+      before_inventory_parent=""
+
+    fi
+
+    check_target_inventory_dir;
+
+    echo -e "         ${GREEN}Current ${NC}cloud inventory: ${RED}${inventory}${NC}"
 
     rm -rf ./inventories/products/$product/$inventory/inventory
+    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
 
-    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type $connection_type >> ./inventories/products/$product/$inventory/inventory
-    sed "s/$before_inventory_parent/$inventory/g" ./inventories/products/${product}/${inventory}/inventory >> ./inventories/products/${product}/${inventory}/inventory.new
-    mv ./inventories/products/${product}/${inventory}/inventory.new ./inventories/products/${product}/${inventory}/inventory
+    if [[ ! -z "$before_inventory_parent" ]]; then
+    
+      sed "s/$before_inventory_parent/$inventory/g" ./inventories/products/${product}/${inventory}/inventory >> ./inventories/products/${product}/${inventory}/inventory.new
+      mv ./inventories/products/${product}/${inventory}/inventory.new ./inventories/products/${product}/${inventory}/inventory
+    
+    fi
 
     echo -e "         ${GREEN}Converting ${NC}cloud inventory: ${RED}DONE ${NC}";
     echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
@@ -90,6 +117,8 @@ else
     echo -e "     ${GREEN}|>.......................................................................................................................................................<|${NC}"
     echo -e "         ${GREEN}Detected ${NC}cloud inventory: ${RED}PRODUCTION INVENTORY ${NC}";
     echo -e "         ${GREEN}Current ${NC}cloud inventory: ${RED}${inventory}${NC}";
+
+    check_target_inventory_dir;
 
     rm -rf ./inventories/products/$product/$inventory/inventory
     ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
