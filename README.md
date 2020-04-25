@@ -35,6 +35,17 @@ Target Inventory (GET INVENTORY), resulting inventory:
      - Placed in inventories/products/{{ ansible_product }}/{{ ansible_environment }}
      - No stored in repository.
 
+## Principial workflow
+
+### Directory structure for dynamic inventories, describes basical call flow
+
+![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_work_map.png)
+
+### ZeroCloud configuration flow inside and only on ansible calls
+
+![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_api_generate_flow.png)
+
+
 ## Working with virtual and cloud environments, bootstraping and managing
 
   * Basicly, we have a three types of environments except localhost development type - standalone, minimal and pci. You can create you special one and select your options for you time. Firstaful, we create and bootstrap environment, wrappers for that you can find in https://github.com/westsouthnight/vortex/tree/master/ansible/scripts/wrappers/init
@@ -91,16 +102,6 @@ Target Inventory (GET INVENTORY), resulting inventory:
     
     
   * You can customize each part of pipeline, playbooks and roles.
-
-## Principial workflow
-
-### Directory structure for dynamic inventories, describes basical call flow
-
-![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_work_map.png)
-
-### ZeroCloud configuration flow inside and only on ansible calls
-
-![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_api_generate_flow.png)
 
 ## Examples of usage the inventories childs - 
 
