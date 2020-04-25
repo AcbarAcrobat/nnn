@@ -25,6 +25,10 @@
 
 - [Ansible](ansible/README.md)
 - [Roles](ansible/roles/README.md)
+- [Inventories](ansible/inventories/README.md)
+- [CI/CD PCI DSS Usage](ansible/CI/documentation/README.md)
+- [How to add a New Service](ansible/CI/documentation/NEW_SERVICE.md)
+- [Network Maps](ansible/CI/documentation/PCI/network_maps/)
 
 ## Two basical types of inventories
 
