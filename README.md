@@ -41,11 +41,11 @@ Target Inventory (GET INVENTORY), resulting inventory:
 
 ### Directory structure for dynamic inventories, describes basical call flow
 
-![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_work_map.png)
+![Directory_structure](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/vortex_work_map.png)
 
 ### ZeroCloud configuration flow inside and only on ansible calls
 
-![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/vortex_api_generate_flow.png)
+![Api_flow_dynamic_inventories](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/vortex_api_generate_flow.png)
 
 
 ## Working with virtual and cloud environments, bootstraping and managing
@@ -63,9 +63,11 @@ Target Inventory (GET INVENTORY), resulting inventory:
     ```
       ./scripts/wrappers/init/\!_stand-pci.sh
     ```
+
+    ![stand_pci.sh](https://github.com/westsouthnight/vortex/blob/master/ansible/CI/repo_images/stand_pci.png)
     
-    * TeamCity or other CI/CD/QA running tool just run wrappers to execute a some step of pipeline with ```type_of_run``` equals ```true```, for local runing/debugging/understanding you can run each wrapper with value ```print_only``` in  ```type_of_run``` parameter.
-  
+    * TeamCity or other CI/CD/QA running tool just run wrappers to execute a some step of pipeline with ```type_of_run``` equals ```true```, for local runing/debugging/understanding you can run each wrapper with value ```print_only``` in  ```type_of_run``` parameter. Please read the configuration in folder ```.teamcity``` for more understud.
+
   * We split processes for managing your bussines product lifecycle to two steps - 
     
     * Build and validate infrastructure - only if you use a api cloud adapter for support full dynamic environment way. If  use the baremetal adapter you must to create infrastructure itself and declare necessary nodes information to static template.
