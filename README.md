@@ -91,9 +91,7 @@ Primary Ansible code base
 
    We have a one primary inventory, on some product, some cloud type provider as total, - 
 
-        ```
             one compute environment, - {{ ansible_environment }} == 'production'
-        ```
 
    But wants to placement multiple virtual environments on same Datacenter to same VMs environment
 
@@ -103,25 +101,20 @@ Primary Ansible code base
 
    * Create the new folders in api cloud inventory - 
 
-        ```
             ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/developemnt/ 
             ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
-        ```
 
    * Create symlinks from parent primary cloud dynamic environment to his new childs -
 
-        ```
             mkdir ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
             cd ./0z-cloud/products/\!_{{ cloud_type }}/{{ ansible_product }}/stage/ 
             ln -s stage/v.py ./production/v.py 
             ln -s stage/bootstrap_vms ./production/bootstrap_vms 
-        ```
 
    * Copy the target inventory from parent to new, firstaful create a target inventories localtions -
             
-        ```
             mkdir ./products/{{ ansible_product }}/stage 
             cp -R ./products/{{ ansible_product }}/production/* ./products/{{ ansible_product }}/{{ new_environment }}/ 
-        ```
 
    * Done, now change the domain names and ports settings on your new cloud target childs from production environments, and deploy!
+
