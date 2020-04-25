@@ -1,21 +1,15 @@
 # Welcome, to Vortex
 
 ## What it is:
-
+  ```
   * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment with full IaC support via Ansible Cloud API modules.
-  
   * Ready to use, just add your services and declare infrastructure.
-  
   * Simple to understand.
-  
   * Multimple ways to use a many roles, zones, clusters, networks.
-  
   * K8 & Docker Swarm support - you can have a multiple clusters in one environment or have multiple virtual environments on one virtual cloud placement.
-  
   * Easy template for build, bootstrap, develop, deploy and test your infrastructure.
-  
   * Have a TeamCity ready to import configuration with full process with simple CI/CD/QA pipeline.
-
+  ```
 ## We have two basical types of inventories - 
 
 ### Dynamic Inventory 0z-cloud its ```bootstrap inventory```(API INVENTORY), prefilled for create the instances
@@ -32,7 +26,7 @@
 
         inventories/products/{{ ansible_product }}/{{ ansible_environment }}
 
-## Working with virtual and cloud environments, bootstraping and managing.
+## Working with virtual and cloud environments, bootstraping and managing
 
   * Basicly, we have a three types of environments except localhost development type - standalone, minimal and pci. You can create you special one and select your options for you time. Firstaful, we create and bootstrap environment, wrappers for that you can find in https://github.com/westsouthnight/vortex/tree/master/ansible/scripts/wrappers/init
   
