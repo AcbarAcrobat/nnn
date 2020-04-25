@@ -18,6 +18,8 @@
   * GlusterFS as NFS shared storage.
   * Provides single point in development process.
   * All configurations fully generated - for local development and environments.
+  * You can use different CI/CD tools for use, - TeamCity, Jenkins, Gitlab-CI, etc.
+  * Storing builded docker images possible to different registries - gitlab, registryv2, nexus, etc.
   ```
 
 ## We have two basical types of inventories - 
