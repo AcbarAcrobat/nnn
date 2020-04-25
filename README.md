@@ -2,13 +2,21 @@
 
 ## What it is:
   ```
-  * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment with full IaC support via Ansible Cloud API modules.
+  * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment 
+  * Full IaC support via Ansible Cloud API modules.
   * Ready to use, just add your services and declare infrastructure.
   * Simple to understand.
   * Multimple ways to use a many roles, zones, clusters, networks.
-  * K8 & Docker Swarm support - you can have a multiple clusters in one environment or have multiple virtual environments on one virtual cloud placement.
+  * K8 & Docker Swarm support - you can have a multiple clusters in one environment.
+  * You can have multiple virtual environments on one virtual cloud infrastructure placement.
   * Easy template for build, bootstrap, develop, deploy and test your infrastructure.
   * Have a TeamCity ready to import configuration with full process with simple CI/CD/QA pipeline.
+  * Network balancer included - keepalived.
+  * PCI DSS Compliance initial support modules.
+  * Firewall zero-in inside based on Shorewall.
+  * Many other stuff like rabbitmq/tarantool/redis/etc clusters.
+  * GlusterFS as NFS shared storage.
+  
   ```
 ## We have two basical types of inventories - 
 
