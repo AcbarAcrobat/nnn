@@ -5,9 +5,13 @@
   * Be better, every day, by follow the that - simple guide ;)
   * Like example if you -
   
-    :IPSP - core, payment, gateway, api, admin
-    :DEAL - web, api, admin, market
-    :VEND - download, www, stock, backoffice,
-    :4RnD - billing, portal, public-api, namespaces, security, etc
-    :SocN - users, messanger, frontend, backend, etc
+    IPSP - core, payment, gateway, api, admin
+    
+    DEAL - web, api, admin, market
+    
+    VEND - download, www, stock, backoffice,
+    
+    4RnD - billing, portal, public-api, namespaces, security, etc
+    
+    SocN - users, messanger, frontend, backend, etc
     
