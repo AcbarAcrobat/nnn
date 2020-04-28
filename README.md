@@ -30,6 +30,10 @@
 - [How to add a New Service](ansible/CI/documentation/NEW_SERVICE.md)
 - [Network Maps](ansible/CI/documentation/PCI/network_maps/)
 
+## Folders info must to read
+
+- [Dockerfiles](dockerfiles/README.md)
+
 ## Two basical types of inventories
 
 Dynamic Inventory (API INVENTORY), called 0z-cloud:
