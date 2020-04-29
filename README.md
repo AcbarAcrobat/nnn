@@ -33,6 +33,7 @@
 ## Folders info must to read
 
 - [Dockerfiles](dockerfiles/README.md)
+- [Services](services/README.md)
 
 ## Two basical types of inventories
 
