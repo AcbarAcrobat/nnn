@@ -33,6 +33,12 @@
 - [API Inventory Ansible Adapters](ansible/!_root_playbooks/)
 - [In-Repository Vault Storage](ansible/.files/)
 
+## QA Suites for templating own QA solution 
+
+- [QA Example 1 - Payment](PythonQA/history_facts/v.test.selenium.example.payment/)
+- [QA Example 2 - Voting](PythonQA/history_facts/v.test.selenium.example.voting/)
+- [(WIP) Warrior Way - Guidline](PythonQA/)
+
 ## Folders info must to read
 
 - [Dockerfiles](dockerfiles/README.md)
