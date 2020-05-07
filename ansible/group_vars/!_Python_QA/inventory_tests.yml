@@ -11,7 +11,7 @@ python_qa_settings_map:
       - "METABASE_PASSWORD=\"_PXUlN1lQlg9PY\""
       - "METABASE_PING=\"https://metabase.{{ public_consul_domain }}\""
       - "PROXY=\"https://wc-proxy.{{ public_consul_domain }}\""
-      - "CARD_HOLDER=\"Wire Test\""
+      - "CARD_HOLDER=\"Vortex Test\""
       - "CARD_EMAIL=\"test@test.ru\""
       - "CARD_ADDRESS=\"Russia\""
       - "CARD_NUMBER=4724921511478434"
@@ -65,5 +65,3 @@ python_qa_settings_map:
       - "INBOX_SMS_URL=\"https://sms-gate.develop.vortex.com\""
       - "BEARER=846033ed8492b96ca457"
       - "QIWI_SECRET=jhgHs78kjdHbh64fNaAd867"
-
-

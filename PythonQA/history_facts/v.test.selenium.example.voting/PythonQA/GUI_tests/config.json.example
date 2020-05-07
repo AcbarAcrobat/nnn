@@ -1,0 +1,7 @@
+{
+    "base_url": "http://dev.vortex.work:8080",
+    "api_url": "http://host2.api.dev.vortex.work:8080/rest/api/v1/",
+    "content_manager_email": "dev@vortex.com",
+    "content_manager_password": "C0mplexPwd",
+    "third_party_url": "http://3rd-party.vortex.work:8080/"
+}

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="77ac46a2-8226-4196-8c67-70ce3a098ef5" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2018.1/project-config.xsd">
+  <name>PCI_One_pipeline</name>
+  <description />
+  <settings>
+    <options>
+      <option name="allowExternalStatus" value="true" />
+      <option name="allowPersonalBuildTriggering" value="false" />
+      <option name="artifactRules" value="ansible_build_result.zip!** =&gt; ./" />
+      <option name="maximumNumberOfBuilds" value="1" />
+      <option name="showDependenciesChanges" value="true" />
+    </options>
+    <parameters>
+      <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+      <param name="ANSIBLE_BUILD_ID" value="" />
+      <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+      <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+      <param name="ANSIBLE_CLOUD_TYPE" value="" />
+      <param name="ANSIBLE_COMMIT_SHA" value="" />
+      <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+      <param name="ANSIBLE_ENVIRONMENT" value="" />
+      <param name="ANSIBLE_PRODUCT_NAME" value="" />
+      <param name="ANSIBLE_REGISTRY_URL" value="" />
+      <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+      <param name="ANSIBLE_RUN_TYPE" value="" />
+      <param name="ANSIBLE_TRIGGER_TOKEN" value="" spec="text validationMode='any' display='normal'" />
+      <param name="ANSIBLE_VERSION" value="" />
+      <param name="A_DEPLOY_PASSWORD" value="credentialsJSON:b2bc6c27-ec64-413a-b27c-8a32e5628dd9" spec="password display='prompt'" />
+      <param name="A_VAULT_PASSWORD" value="credentialsJSON:b2bc6c27-ec64-413a-b27c-8a32e5628dd9" spec="password display='prompt'" />
+      <param name="env.ANSIBLE_ENVIRONMENT" value="%ANSIBLE_ENVIRONMENT%" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_4" name="Prepare CI" type="TemplateEngine_BuildChain_1initPrepareCi">
+        <parameters>
+          <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+          <param name="ANSIBLE_BUILD_ID" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+          <param name="ANSIBLE_CLOUD_TYPE" value="" />
+          <param name="ANSIBLE_COMMIT_SHA" value="" />
+          <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+          <param name="ANSIBLE_ENVIRONMENT" value="" />
+          <param name="ANSIBLE_PRODUCT_NAME" value="" />
+          <param name="ANSIBLE_REGISTRY_URL" value="" />
+          <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+          <param name="ANSIBLE_RUN_TYPE" value="" />
+          <param name="ANSIBLE_VERSION" value="" />
+          <param name="A_ENV_SECURITY" value="" />
+          <param name="INIT_PASS" value="zxx175d32bfa837dc7e" />
+          <param name="MAIN_ANSIBLE_BUILD_ID" value="" />
+          <param name="NG_DEPLOY_PASSWORD" value="zxx175d32bfa837dc7e" />
+          <param name="RunningOfferForBuild" value="" />
+          <param name="RunningOfferForPublish" value="" />
+          <param name="RunningOnlyQA" value="" />
+          <param name="env.reverse.dep.env.TemplateEngine_Infrastructure.A_DEPLOY_PASSWORD" value="%A_DEPLOY_PASSWORD%" />
+          <param name="env.reverse.dep.env.TemplateEngine_Infrastructure.A_VAULT_PASSWORD" value="%A_VAULT_PASSWORD%" />
+          <param name="env.reverse.dep.env.Template_Main.A_DEPLOY_PASSWORD" value="%A_DEPLOY_PASSWORD%" />
+          <param name="env.reverse.dep.env.Template_Main.A_VAULT_PASSWORD" value="%A_VAULT_PASSWORD%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_5" name="Build" type="TemplateEngine_BuildChain_2buildBuildAndPushDockerImages">
+        <parameters>
+          <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+          <param name="ANSIBLE_CI_VERSION" value="" />
+          <param name="ANSIBLE_CLOUD_TYPE" value="" />
+          <param name="ANSIBLE_COMMIT_SHA" value="%system.build.vcs.number%" />
+          <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+          <param name="ANSIBLE_DEPLOY_VAULT_PASSWORD" value="" />
+          <param name="ANSIBLE_ENVIRONMENT" value="" />
+          <param name="ANSIBLE_PRODUCT_NAME" value="" />
+          <param name="ANSIBLE_REGISTRY_URL" value="" />
+          <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+          <param name="ANSIBLE_RUN_TYPE" value="" />
+          <param name="ANSIBLE_TRIGGER_TOKEN" value="" />
+          <param name="ANSIBLE_VERSION" value="" />
+          <param name="A_DEPLOY_PASSWORD" value="" />
+          <param name="A_ENV_SECURITY" value="" />
+          <param name="A_VAULT_PASSWORD" value="" />
+          <param name="MAIN_ANSIBLE_BUILD_ID" value="%env.BUILD_NUMBER%" />
+          <param name="NG_DEPLOY_PASSWORD" value="zxx175d32bfa837dc7e" />
+          <param name="RunningOfferForBuild" value="" />
+          <param name="RunningOfferForPublish" value="" />
+          <param name="RunningOnlyQA" value="" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_6" name="Deploy" type="TemplateEngine_BuildChain_3deployPublicationToInfrastructure">
+        <parameters>
+          <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+          <param name="ANSIBLE_BUILD_ID" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+          <param name="ANSIBLE_CLOUD_TYPE" value="" />
+          <param name="ANSIBLE_COMMIT_SHA" value="" />
+          <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+          <param name="ANSIBLE_ENVIRONMENT" value="" />
+          <param name="ANSIBLE_PRODUCT_NAME" value="" />
+          <param name="ANSIBLE_REGISTRY_URL" value="" />
+          <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+          <param name="ANSIBLE_RUN_TYPE" value="" />
+          <param name="ANSIBLE_TRIGGER_TOKEN" value="" />
+          <param name="ANSIBLE_VERSION" value="" />
+          <param name="NG_DEPLOY_PASSWORD" value="zxx175d32bfa837dc7e" />
+          <param name="RunningOfferForPublish" value="" />
+          <param name="RunningOnlyQA" value="" />
+          <param name="env.ANSIBLE_ENVIRONMENT" value="%ANSIBLE_ENVIRONMENT%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_7" name="Front" type="TemplateEngine_BuildChain_4frontUpdateNginxFrontendDnsBackend">
+        <parameters>
+          <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+          <param name="ANSIBLE_CI_VERSION" value="" />
+          <param name="ANSIBLE_CLOUD_TYPE" value="" />
+          <param name="ANSIBLE_COMMIT_SHA" value="%system.build.vcs.number%" />
+          <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+          <param name="ANSIBLE_DEPLOY_VAULT_PASSWORD" value="" />
+          <param name="ANSIBLE_ENVIRONMENT" value="" />
+          <param name="ANSIBLE_PRODUCT_NAME" value="" />
+          <param name="ANSIBLE_REGISTRY_URL" value="" />
+          <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+          <param name="ANSIBLE_RUN_TYPE" value="" />
+          <param name="ANSIBLE_TRIGGER_TOKEN" value="" />
+          <param name="ANSIBLE_VERSION" value="" />
+          <param name="A_DEPLOY_PASSWORD" value="" />
+          <param name="A_VAULT_PASSWORD" value="" />
+          <param name="MAIN_ANSIBLE_BUILD_ID" value="%env.BUILD_NUMBER%" />
+          <param name="NG_DEPLOY_PASSWORD" value="zxx175d32bfa837dc7e" />
+          <param name="RunningOnlyQA" value="" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_8" name="QA" type="TemplateEngine_BuildChain_5qaRunningTestSuiteFromPythonQA">
+        <parameters>
+          <param name="ANSIBLE_APPLICATION_TYPE" value="" />
+          <param name="ANSIBLE_BUILD_ID" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAME" value="" />
+          <param name="ANSIBLE_CI_PROJECT_NAMESPACE" value="" />
+          <param name="ANSIBLE_CLOUD_TYPE" value="" />
+          <param name="ANSIBLE_COMMIT_SHA" value="" />
+          <param name="ANSIBLE_DEPLOY_USERNAME" value="test_user" />
+          <param name="ANSIBLE_ENVIRONMENT" value="" />
+          <param name="ANSIBLE_PRODUCT_NAME" value="" />
+          <param name="ANSIBLE_REGISTRY_URL" value="" />
+          <param name="ANSIBLE_REGISTRY_USERNAME" value="" />
+          <param name="ANSIBLE_RUN_TYPE" value="" />
+          <param name="ANSIBLE_TRIGGER_TOKEN" value="" />
+          <param name="ANSIBLE_VERSION" value="" />
+          <param name="NG_DEPLOY_PASSWORD" value="zxx175d32bfa837dc7e" />
+          <param name="env.ANSIBLE_ENVIRONMENT" value="%ANSIBLE_ENVIRONMENT%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Teamcity" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers />
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Template_Main" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="ansible_docker_build_result.zip!** =&gt; ./" />
+      </dependency>
+    </artifact-dependencies>
+    <dependencies>
+      <depend-on sourceBuildTypeId="Template_Main">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+

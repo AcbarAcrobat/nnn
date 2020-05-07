@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="09cd3795-8fba-47ef-9803-6d4f73657dd5" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2018.1/project-config.xsd">
+  <name>Template Engine</name>
+  <parameters>
+    <param name="A_DEPLOY_PASSWORD" value="credentialsJSON:642ba901-84a0-4009-8583-3f0a5550736d" spec="password display='normal' description='A_DEPLOY_PASSWORD' label='A_DEPLOY_PASSWORD'" />
+    <param name="A_VAULT_PASSWORD" value="credentialsJSON:b466982c-c83e-455e-a6ba-4399fcc1858e" spec="password display='normal' description='A_VAULT_PASSWORD' label='A_VAULT_PASSWORD'" />
+    <param name="dp" value="credentialsJSON:f9795113-8a2f-4fbd-a3a3-0901244648b9" spec="password description='Deploy Password' label='Deploy Password' display='normal'" />
+    <param name="message" value="credentialsJSON:510be2f1-e618-4826-b698-2b3fa6fd7f4c" spec="password description='Encrypted rest of SHA message to this commit' label='message' display='normal'" />
+  </parameters>
+  <project-extensions>
+    <extension id="PROJECT_EXT_3" type="OAuthProvider">
+      <parameters>
+        <param name="clientId" value="8770154a210ba08b50834dc0fcd3eed8f8c67ced6fe1422d61e34d138cc2ade9" />
+        <param name="displayName" value="GitLab CE/EE" />
+        <param name="gitLabUrl" value="https://gitlab.vortex.com" />
+        <param name="providerType" value="GitLabCEorEE" />
+        <param name="secure:clientSecret" value="credentialsJSON:96fceb62-1654-4f68-844c-42cd67742b56" />
+      </parameters>
+    </extension>
+  </project-extensions>
+  <cleanup />
+</project>
+

@@ -1,0 +1,13 @@
+selenium
+pytest
+configparser
+webdriver_manager
+requests
+pytest-html
+flask
+pyyaml
+pycryptodomex
+pysocks
+PyTelegramBotAPI
+pycryptodomex
+teamcity-messages

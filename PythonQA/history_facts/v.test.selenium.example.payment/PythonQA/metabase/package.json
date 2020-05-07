@@ -1,0 +1,216 @@
+{ "business": [
+    {
+      "name": "test_last_card",
+      "dataset_query": {
+        "database": 2,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"bank_cards\".\"id\" AS \"id\", \"public\".\"bank_cards\".\"created_at\" AS \"created_at\", \"public\".\"bank_cards\".\"deleted_at\" AS \"deleted_at\", \"public\".\"bank_cards\".\"gateway_token\" AS \"gateway_token\", \"public\".\"bank_cards\".\"holder\" AS \"holder\", \"public\".\"bank_cards\".\"is_valid\" AS \"is_valid\", \"public\".\"bank_cards\".\"mask\" AS \"mask\", \"public\".\"bank_cards\".\"number\" AS \"number\", \"public\".\"bank_cards\".\"recurring_id\" AS \"recurring_id\", \"public\".\"bank_cards\".\"recurring_ids\" AS \"recurring_ids\", \"public\".\"bank_cards\".\"token\" AS \"token\", \"public\".\"bank_cards\".\"updated_at\" AS \"updated_at\", \"public\".\"bank_cards\".\"user_id\" AS \"user_id\"\nFROM \"public\".\"bank_cards\"\norder by created_at desc\nLIMIT 1"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_transaction",
+      "dataset_query": {
+        "database": 2,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"payments\".\"id\" AS \"id\", \"public\".\"payments\".\"amount\" AS \"amount\", \"public\".\"payments\".\"bank_card_id\" AS \"bank_card_id\", \"public\".\"payments\".\"browser_info\" AS \"browser_info\", \"public\".\"payments\".\"business_account_legal_name\" AS \"business_account_legal_name\", \"public\".\"payments\".\"business_account_profileID\" AS \"business_account_profileID\", \"public\".\"payments\".\"callback_url\" AS \"callback_url\", \"public\".\"payments\".\"card_masked_number\" AS \"card_masked_number\", \"public\".\"payments\".\"cardpass_through\" AS \"cardpass_through\", \"public\".\"payments\".\"charge_request_id\" AS \"charge_request_id\", \"public\".\"payments\".\"cleared\" AS \"cleared\", \"public\".\"payments\".\"country_code_by_BIN\" AS \"country_code_by_BIN\", \"public\".\"payments\".\"country_code_by_IP\" AS \"country_code_by_IP\", \"public\".\"payments\".\"country_code_by_phone\" AS \"country_code_by_phone\", \"public\".\"payments\".\"created_at\" AS \"created_at\", \"public\".\"payments\".\"currency\" AS \"currency\", \"public\".\"payments\".\"declination_reason\" AS \"declination_reason\", \"public\".\"payments\".\"device_token\" AS \"device_token\", \"public\".\"payments\".\"extra_return_param\" AS \"extra_return_param\", \"public\".\"payments\".\"gateway_details\" AS \"gateway_details\", \"public\".\"payments\".\"gatewayable_id\" AS \"gatewayable_id\", \"public\".\"payments\".\"gatewayable_type\" AS \"gatewayable_type\", \"public\".\"payments\".\"ip\" AS \"ip\", \"public\".\"payments\".\"kind\" AS \"kind\", \"public\".\"payments\".\"lead_id\" AS \"lead_id\", \"public\".\"payments\".\"merchant_private_key\" AS \"merchant_private_key\", \"public\".\"payments\".\"notified\" AS \"notified\", \"public\".\"payments\".\"operation_type\" AS \"operation_type\", \"public\".\"payments\".\"order_number\" AS \"order_number\", \"public\".\"payments\".\"platform\" AS \"platform\", \"public\".\"payments\".\"product\" AS \"product\", \"public\".\"payments\".\"redirect_fail_url\" AS \"redirect_fail_url\", \"public\".\"payments\".\"redirect_request\" AS \"redirect_request\", \"public\".\"payments\".\"redirect_success_url\" AS \"redirect_success_url\", \"public\".\"payments\".\"refund_id\" AS \"refund_id\", \"public\".\"payments\".\"scoring_remark\" AS \"scoring_remark\", \"public\".\"payments\".\"status\" AS \"status\", \"public\".\"payments\".\"token\" AS \"token\", \"public\".\"payments\".\"updated_at\" AS \"updated_at\", \"public\".\"payments\".\"wallet_token\" AS \"wallet_token\"\nFROM \"public\".\"payments\"\norder by created_at desc\nLIMIT 2"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_logs",
+        "dataset_query": {
+          "database": 2,
+          "type": "native",
+          "native": {
+            "query": "SELECT \"public\".\"interaction_logs\".\"id\" AS \"id\", \"public\".\"interaction_logs\".\"created_at\" AS \"created_at\", \"public\".\"interaction_logs\".\"direction\" AS \"direction\", \"public\".\"interaction_logs\".\"gateway\" AS \"gateway\", \"public\".\"interaction_logs\".\"kind\" AS \"kind\", \"public\".\"interaction_logs\".\"payment_id\" AS \"payment_id\", \"public\".\"interaction_logs\".\"request\" AS \"request\", \"public\".\"interaction_logs\".\"response\" AS \"response\", \"public\".\"interaction_logs\".\"status\" AS \"status\", \"public\".\"interaction_logs\".\"token\" AS \"token\", \"public\".\"interaction_logs\".\"updated_at\" AS \"updated_at\"\nFROM \"public\".\"interaction_logs\"\nORDER BY \"public\".\"interaction_logs\".\"id\" DESC\nLIMIT 4",
+            "template_tags": {}
+          }
+        },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+	},
+    {
+      "name": "test_refund",
+      "dataset_query": {
+        "database": 2,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"payments\".\"id\" AS \"id\", \"public\".\"payments\".\"amount\" AS \"amount\", \"public\".\"payments\".\"bank_card_id\" AS \"bank_card_id\", \"public\".\"payments\".\"browser_info\" AS \"browser_info\", \"public\".\"payments\".\"business_account_legal_name\" AS \"business_account_legal_name\", \"public\".\"payments\".\"business_account_profileID\" AS \"business_account_profileID\", \"public\".\"payments\".\"callback_url\" AS \"callback_url\", \"public\".\"payments\".\"card_masked_number\" AS \"card_masked_number\", \"public\".\"payments\".\"cardpass_through\" AS \"cardpass_through\", \"public\".\"payments\".\"charge_request_id\" AS \"charge_request_id\", \"public\".\"payments\".\"cleared\" AS \"cleared\", \"public\".\"payments\".\"country_code_by_BIN\" AS \"country_code_by_BIN\", \"public\".\"payments\".\"country_code_by_IP\" AS \"country_code_by_IP\", \"public\".\"payments\".\"country_code_by_phone\" AS \"country_code_by_phone\", \"public\".\"payments\".\"created_at\" AS \"created_at\", \"public\".\"payments\".\"currency\" AS \"currency\", \"public\".\"payments\".\"declination_reason\" AS \"declination_reason\", \"public\".\"payments\".\"device_token\" AS \"device_token\", \"public\".\"payments\".\"extra_return_param\" AS \"extra_return_param\", \"public\".\"payments\".\"gateway_details\" AS \"gateway_details\", \"public\".\"payments\".\"gatewayable_id\" AS \"gatewayable_id\", \"public\".\"payments\".\"gatewayable_type\" AS \"gatewayable_type\", \"public\".\"payments\".\"ip\" AS \"ip\", \"public\".\"payments\".\"kind\" AS \"kind\", \"public\".\"payments\".\"lead_id\" AS \"lead_id\", \"public\".\"payments\".\"merchant_private_key\" AS \"merchant_private_key\", \"public\".\"payments\".\"notified\" AS \"notified\", \"public\".\"payments\".\"operation_type\" AS \"operation_type\", \"public\".\"payments\".\"order_number\" AS \"order_number\", \"public\".\"payments\".\"platform\" AS \"platform\", \"public\".\"payments\".\"product\" AS \"product\", \"public\".\"payments\".\"redirect_fail_url\" AS \"redirect_fail_url\", \"public\".\"payments\".\"redirect_request\" AS \"redirect_request\", \"public\".\"payments\".\"redirect_success_url\" AS \"redirect_success_url\", \"public\".\"payments\".\"refund_id\" AS \"refund_id\", \"public\".\"payments\".\"scoring_remark\" AS \"scoring_remark\", \"public\".\"payments\".\"status\" AS \"status\", \"public\".\"payments\".\"token\" AS \"token\", \"public\".\"payments\".\"updated_at\" AS \"updated_at\", \"public\".\"payments\".\"wallet_token\" AS \"wallet_token\"\nFROM \"public\".\"payments\"\nORDER BY \"public\".\"payments\".\"id\" DESC\nLIMIT 2",
+          "template_tags": {}
+      }
+    },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_three_transactions",
+      "dataset_query": {
+      "database": 2,
+      "type": "native",
+      "native": {
+        "query": "SELECT \"public\".\"payments\".\"id\" AS \"id\", \"public\".\"payments\".\"amount\" AS \"amount\", \"public\".\"payments\".\"bank_card_id\" AS \"bank_card_id\", \"public\".\"payments\".\"browser_info\" AS \"browser_info\", \"public\".\"payments\".\"business_account_legal_name\" AS \"business_account_legal_name\", \"public\".\"payments\".\"business_account_profileID\" AS \"business_account_profileID\", \"public\".\"payments\".\"callback_url\" AS \"callback_url\", \"public\".\"payments\".\"card_masked_number\" AS \"card_masked_number\", \"public\".\"payments\".\"cardpass_through\" AS \"cardpass_through\", \"public\".\"payments\".\"charge_request_id\" AS \"charge_request_id\", \"public\".\"payments\".\"cleared\" AS \"cleared\", \"public\".\"payments\".\"country_code_by_BIN\" AS \"country_code_by_BIN\", \"public\".\"payments\".\"country_code_by_IP\" AS \"country_code_by_IP\", \"public\".\"payments\".\"country_code_by_phone\" AS \"country_code_by_phone\", \"public\".\"payments\".\"created_at\" AS \"created_at\", \"public\".\"payments\".\"currency\" AS \"currency\", \"public\".\"payments\".\"declination_reason\" AS \"declination_reason\", \"public\".\"payments\".\"device_token\" AS \"device_token\", \"public\".\"payments\".\"extra_return_param\" AS \"extra_return_param\", \"public\".\"payments\".\"gateway_amount\" AS \"gateway_amount\", \"public\".\"payments\".\"gateway_currency\" AS \"gateway_currency\", \"public\".\"payments\".\"gateway_details\" AS \"gateway_details\", \"public\".\"payments\".\"gatewayable_id\" AS \"gatewayable_id\", \"public\".\"payments\".\"gatewayable_type\" AS \"gatewayable_type\", \"public\".\"payments\".\"ip\" AS \"ip\", \"public\".\"payments\".\"kind\" AS \"kind\", \"public\".\"payments\".\"lead_id\" AS \"lead_id\", \"public\".\"payments\".\"merchant_private_key\" AS \"merchant_private_key\", \"public\".\"payments\".\"notified\" AS \"notified\", \"public\".\"payments\".\"operation_type\" AS \"operation_type\", \"public\".\"payments\".\"order_number\" AS \"order_number\", \"public\".\"payments\".\"platform\" AS \"platform\", \"public\".\"payments\".\"product\" AS \"product\", \"public\".\"payments\".\"redirect_fail_url\" AS \"redirect_fail_url\", \"public\".\"payments\".\"redirect_request\" AS \"redirect_request\", \"public\".\"payments\".\"redirect_success_url\" AS \"redirect_success_url\", \"public\".\"payments\".\"refund_id\" AS \"refund_id\", \"public\".\"payments\".\"scoring_remark\" AS \"scoring_remark\", \"public\".\"payments\".\"status\" AS \"status\", \"public\".\"payments\".\"token\" AS \"token\", \"public\".\"payments\".\"updated_at\" AS \"updated_at\", \"public\".\"payments\".\"wallet_token\" AS \"wallet_token\"\nFROM \"public\".\"payments\"\nORDER BY \"public\".\"payments\".\"id\" DESC\nLIMIT 3",
+        "template_tags": {}
+      }
+    },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_two_leads",
+      "dataset_query": {
+        "database": 2,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"leads\".\"id\" AS \"id\", \"public\".\"leads\".\"email\" AS \"email\", \"public\".\"leads\".\"settings\" AS \"settings\", \"public\".\"leads\".\"token\" AS \"token\", \"public\".\"leads\".\"user_id\" AS \"user_id\"\nFROM \"public\".\"leads\"\nORDER BY \"public\".\"leads\".\"id\" DESC\nLIMIT 2"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_payment",
+      "dataset_query": {
+        "database": 2,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"interaction_logs\".\"id\" AS \"id\", \"public\".\"interaction_logs\".\"created_at\" AS \"created_at\", \"public\".\"interaction_logs\".\"direction\" AS \"direction\", \"public\".\"interaction_logs\".\"gateway\" AS \"gateway\", \"public\".\"interaction_logs\".\"kind\" AS \"kind\", \"public\".\"interaction_logs\".\"payment_id\" AS \"payment_id\", \"public\".\"interaction_logs\".\"request\" AS \"request\", \"public\".\"interaction_logs\".\"response\" AS \"response\", \"public\".\"interaction_logs\".\"status\" AS \"status\", \"public\".\"interaction_logs\".\"token\" AS \"token\", \"public\".\"interaction_logs\".\"updated_at\" AS \"updated_at\" FROM \"public\".\"interaction_logs\" WHERE \"public\".\"interaction_logs\".\"kind\" = 'payment' ORDER BY \"public\".\"interaction_logs\".\"id\" DESC LIMIT 1\n"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    }
+  ],
+  "core": [
+    {
+      "name": "test_last_feed",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"feeds\".\"id\" AS \"id\", \"public\".\"feeds\".\"amount\" AS \"amount\", \"public\".\"feeds\".\"api_payment_token\" AS \"api_payment_token\", \"public\".\"feeds\".\"bank_account_id\" AS \"bank_account_id\", \"public\".\"feeds\".\"charge_request_id\" AS \"charge_request_id\", \"public\".\"feeds\".\"commission_amount\" AS \"commission_amount\", \"public\".\"feeds\".\"commission_currency\" AS \"commission_currency\", \"public\".\"feeds\".\"commission_value\" AS \"commission_value\", \"public\".\"feeds\".\"created_at\" AS \"created_at\", \"public\".\"feeds\".\"currency\" AS \"currency\", \"public\".\"feeds\".\"description\" AS \"description\", \"public\".\"feeds\".\"extra_data\" AS \"extra_data\", \"public\".\"feeds\".\"extra_param\" AS \"extra_param\", \"public\".\"feeds\".\"feed_date\" AS \"feed_date\", \"public\".\"feeds\".\"file_data\" AS \"file_data\", \"public\".\"feeds\".\"from_profile_id\" AS \"from_profile_id\", \"public\".\"feeds\".\"fType\" AS \"fType\", \"public\".\"feeds\".\"likes\" AS \"likes\", \"public\".\"feeds\".\"message\" AS \"message\", \"public\".\"feeds\".\"order_number\" AS \"order_number\", \"public\".\"feeds\".\"privacy\" AS \"privacy\", \"public\".\"feeds\".\"rate_id\" AS \"rate_id\", \"public\".\"feeds\".\"refund_id\" AS \"refund_id\", \"public\".\"feeds\".\"source\" AS \"source\", \"public\".\"feeds\".\"status\" AS \"status\", \"public\".\"feeds\".\"to_profile_id\" AS \"to_profile_id\", \"public\".\"feeds\".\"trusted\" AS \"trusted\", \"public\".\"feeds\".\"type\" AS \"type\", \"public\".\"feeds\".\"updated_at\" AS \"updated_at\", \"public\".\"feeds\".\"viewed\" AS \"viewed\"\nFROM \"public\".\"feeds\"\norder by created_at desc\nLIMIT 1"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_wallet_request",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"wallet_requests\".\"id\" AS \"id\", \"public\".\"wallet_requests\".\"created_at\" AS \"created_at\", \"public\".\"wallet_requests\".\"feed_id\" AS \"feed_id\", \"public\".\"wallet_requests\".\"req_status\" AS \"req_status\", \"public\".\"wallet_requests\".\"req_type\" AS \"req_type\", \"public\".\"wallet_requests\".\"sourceWallet_id\" AS \"sourceWallet_id\", \"public\".\"wallet_requests\".\"targetWallet_id\" AS \"targetWallet_id\", \"public\".\"wallet_requests\".\"token\" AS \"token\", \"public\".\"wallet_requests\".\"updated_at\" AS \"updated_at\"\nFROM \"public\".\"wallet_requests\"\norder by created_at desc\nLIMIT 1"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_entries",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"entries\".\"id\" AS \"id\", \"public\".\"entries\".\"amount\" AS \"amount\", \"public\".\"entries\".\"created_at\" AS \"created_at\", \"public\".\"entries\".\"credit_profile_id\" AS \"credit_profile_id\", \"public\".\"entries\".\"credit_wallet_id\" AS \"credit_wallet_id\", \"public\".\"entries\".\"currency\" AS \"currency\", \"public\".\"entries\".\"currency_id\" AS \"currency_id\", \"public\".\"entries\".\"debit_wallet_id\" AS \"debit_wallet_id\", \"public\".\"entries\".\"debt_profile_id\" AS \"debt_profile_id\", \"public\".\"entries\".\"operation_code\" AS \"operation_code\", \"public\".\"entries\".\"updated_at\" AS \"updated_at\", \"public\".\"entries\".\"wallet_request_id\" AS \"wallet_request_id\", \"public\".\"entries\".\"wallet_request_type\" AS \"wallet_request_type\"\nFROM \"public\".\"entries\"\nORDER BY \"id\" DESC\nLIMIT 4",
+          "template_tags": {}
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_three_feeds",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"feeds\".\"id\" AS \"id\", \"public\".\"feeds\".\"amount\" AS \"amount\", \"public\".\"feeds\".\"api_payment_token\" AS \"api_payment_token\", \"public\".\"feeds\".\"bank_account_id\" AS \"bank_account_id\", \"public\".\"feeds\".\"charge_request_id\" AS \"charge_request_id\", \"public\".\"feeds\".\"commission_amount\" AS \"commission_amount\", \"public\".\"feeds\".\"commission_currency\" AS \"commission_currency\", \"public\".\"feeds\".\"commission_value\" AS \"commission_value\", \"public\".\"feeds\".\"created_at\" AS \"created_at\", \"public\".\"feeds\".\"currency\" AS \"currency\", \"public\".\"feeds\".\"description\" AS \"description\", \"public\".\"feeds\".\"extra_data\" AS \"extra_data\", \"public\".\"feeds\".\"extra_param\" AS \"extra_param\", \"public\".\"feeds\".\"fType\" AS \"fType\", \"public\".\"feeds\".\"feed_date\" AS \"feed_date\", \"public\".\"feeds\".\"file_data\" AS \"file_data\", \"public\".\"feeds\".\"from_profile_id\" AS \"from_profile_id\", \"public\".\"feeds\".\"likes\" AS \"likes\", \"public\".\"feeds\".\"message\" AS \"message\", \"public\".\"feeds\".\"order_number\" AS \"order_number\", \"public\".\"feeds\".\"privacy\" AS \"privacy\", \"public\".\"feeds\".\"rate_id\" AS \"rate_id\", \"public\".\"feeds\".\"refund_id\" AS \"refund_id\", \"public\".\"feeds\".\"source\" AS \"source\", \"public\".\"feeds\".\"status\" AS \"status\", \"public\".\"feeds\".\"target_amount\" AS \"target_amount\", \"public\".\"feeds\".\"target_currency\" AS \"target_currency\", \"public\".\"feeds\".\"target_currency_rate\" AS \"target_currency_rate\", \"public\".\"feeds\".\"to_profile_id\" AS \"to_profile_id\", \"public\".\"feeds\".\"trusted\" AS \"trusted\", \"public\".\"feeds\".\"type\" AS \"type\", \"public\".\"feeds\".\"updated_at\" AS \"updated_at\", \"public\".\"feeds\".\"viewed\" AS \"viewed\"\nFROM \"public\".\"feeds\"\nORDER BY \"public\".\"feeds\".\"id\" DESC\nLIMIT 3",
+          "template_tags": {}
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+            "table.pivot_column": "id",
+            "table.cell_column": "id"
+      }
+    },
+    {
+      "name": "test_last_three_entries",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"entries\".\"id\" AS \"id\", \"public\".\"entries\".\"amount\" AS \"amount\", \"public\".\"entries\".\"created_at\" AS \"created_at\", \"public\".\"entries\".\"credit_profile_id\" AS \"credit_profile_id\", \"public\".\"entries\".\"credit_wallet_id\" AS \"credit_wallet_id\", \"public\".\"entries\".\"currency\" AS \"currency\", \"public\".\"entries\".\"currency_id\" AS \"currency_id\", \"public\".\"entries\".\"debit_wallet_id\" AS \"debit_wallet_id\", \"public\".\"entries\".\"debt_profile_id\" AS \"debt_profile_id\", \"public\".\"entries\".\"operation_code\" AS \"operation_code\", \"public\".\"entries\".\"updated_at\" AS \"updated_at\", \"public\".\"entries\".\"wallet_request_id\" AS \"wallet_request_id\", \"public\".\"entries\".\"wallet_request_type\" AS \"wallet_request_type\"\nFROM \"public\".\"entries\"\nORDER BY \"public\".\"entries\".\"id\" DESC\nLIMIT 21",
+          "template_tags": {}
+        }
+      },
+      "display": "table",
+      "visualization_settings": {}
+    },
+    {
+      "name": "test_rub_wallet",
+      "dataset_query": {
+      "type": "native",
+      "database": 3,
+      "native": {
+        "query": "SELECT \"public\".\"wallets\".\"id\" AS \"id\", \"public\".\"wallets\".\"IsoCurrency_id\" AS \"IsoCurrency_id\", \"public\".\"wallets\".\"available\" AS \"available\", \"public\".\"wallets\".\"created_at\" AS \"created_at\", \"public\".\"wallets\".\"currency\" AS \"currency\", \"public\".\"wallets\".\"held\" AS \"held\", \"public\".\"wallets\".\"profile_id\" AS \"profile_id\", \"public\".\"wallets\".\"updated_at\" AS \"updated_at\"\nFROM \"public\".\"wallets\"\nWHERE \"public\".\"wallets\".\"currency\" = 'RUB'\n",
+        "template_tags": {}
+        }
+      },
+    "display": "table",
+    "visualization_settings": {}
+    },
+    {
+      "name": "test_last_two_profiles",
+      "dataset_query": {
+        "database": 3,
+        "type": "native",
+        "native": {
+          "query": "SELECT \"public\".\"profiles\".\"id\" AS \"id\", \"public\".\"profiles\".\"fullname\" AS \"fullname\", \"public\".\"profiles\".\"name\" AS \"name\", \"public\".\"profiles\".\"address\" AS \"address\",  \"public\".\"profiles\".\"email\" AS \"email\"\nFROM \"public\".\"profiles\"\nORDER BY \"public\".\"profiles\".\"id\" DESC\nLIMIT 2"
+        }
+      },
+      "display": "table",
+      "visualization_settings": {
+        "table.pivot_column": "id",
+        "table.cell_column": "id"
+      }
+    }
+  ]
+}

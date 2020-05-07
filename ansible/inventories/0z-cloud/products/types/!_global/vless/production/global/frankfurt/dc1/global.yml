@@ -4,6 +4,10 @@ global_zone_datacenter_settings:
   datacenter: dc1
   land_topography:
     from_template:
+      # DEFAULT BASIC TEMPLATE
+      base:
+        count: 1              # minimum is 1
+
       # NETWORK
       ids: 2                  # minimum is 1
       router: 2               # minimum is 1

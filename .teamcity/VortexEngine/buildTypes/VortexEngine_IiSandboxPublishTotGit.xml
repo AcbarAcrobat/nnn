@@ -20,7 +20,7 @@
       <param name="reverse.dep.*.ANSIBLE_CI_PROJECT_NAMESPACE" value="vortex" />
       <param name="reverse.dep.*.ANSIBLE_CLOUD_TYPE" value="bare" />
       <param name="reverse.dep.*.ANSIBLE_COMMIT_SHA" value="%system.build.vcs.number%" />
-      <param name="reverse.dep.*.ANSIBLE_DEPLOY_USERNAME" value="vortex" spec="text label='DEPLOY USERNAME' validationMode='any' display='prompt'" />
+      <param name="reverse.dep.*.ANSIBLE_DEPLOY_USERNAME" value="test_user" spec="text label='DEPLOY USERNAME' validationMode='any' display='prompt'" />
       <param name="reverse.dep.*.ANSIBLE_ENVIRONMENT" value="sandbox" />
       <param name="reverse.dep.*.ANSIBLE_PRODUCT_NAME" value="vortex-dev" />
       <param name="reverse.dep.*.ANSIBLE_REGISTRY_URL" value="registry.vortex.com" />

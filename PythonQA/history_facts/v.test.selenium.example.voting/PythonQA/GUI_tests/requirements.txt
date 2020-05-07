@@ -1,0 +1,8 @@
+behave==1.2.5
+selenium==2.53.6
+requests==2.11.0
+requests_toolbelt
+git+https://github.com/cmjk/behave-teamcity.git@0.1.cmjk-1
+browsermob-proxy==0.7.1
+pyperclip==1.5.27
+jsonpickle==0.9.4

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="44c2b763-d655-4940-a6e8-2dc4ebf8eabf" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2018.1/project-config.xsd">
+  <name>5: QA | Running test suite from PythonQA</name>
+  <description>QA Section</description>
+  <settings ref="AnsibleDeployTemplate">
+    <options>
+      <option name="artifactRules" value="ansible_docker_build_result.zip!** =&gt; ./.local/" />
+      <option name="maximumNumberOfBuilds" value="0" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_1" name="Run QA tests" type="simpleRunner">
+        <parameters>
+          <param name="script.content"><![CDATA[echo "Show running dir contents"
+
+ls -la ./
+
+echo "Load the current tags"
+
+cat ./.local/current_tags.yml
+
+echo "Load the current version"
+
+. ./.local/ci_version.sh
+
+echo "Docker Login:"
+
+docker login "%ANSIBLE_REGISTRY_URL%" -u "%ANSIBLE_REGISTRY_USERNAME%" -p "%ANSIBLE_TRIGGER_TOKEN%"
+
+echo "Change dir to ansible"
+
+cd ./ansible
+
+echo "Show the current .local folder"
+
+ls -la ../.local
+
+echo "Show the password and vault password"
+
+#A_DEPLOY_PASSWORD=`cat ../.local/pass.yml`
+#A_VAULT_PASSWORD=`cat ../.local/vault_pass.yml`
+
+. ../.local/ci_vault.sh
+
+echo "A_DEPLOY_PASSWORD $A_DEPLOY_PASSWORD"
+echo "A_VAULT_PASSWORD $A_VAULT_PASSWORD"
+
+echo "Start run QA section, perform generate settings"
+
+./!_0z-quality_assurance.sh "$ANSIBLE_ENVIRONMENT" "$ANSIBLE_PRODUCT_NAME" "$ANSIBLE_DEPLOY_USERNAME" "$A_DEPLOY_PASSWORD" "$ANSIBLE_APPLICATION_TYPE" "$ANSIBLE_RUN_TYPE" "$ANSIBLE_CLOUD_TYPE" "$A_VAULT_PASSWORD" "$ANSIBLE_REGISTRY_URL" "$ANSIBLE_CI_PROJECT_NAME" "$ANSIBLE_CI_PROJECT_NAMESPACE" "$ANSIBLE_CI_VERSION"
+
+echo "Change dir to PythonQA for run suite"
+
+ls -la ../PythonQA
+
+echo "Load the current QA settings per environment"
+
+cat ../PythonQA/env.sh
+
+echo "Change dir to test suite folder"
+
+cd ../PythonQA
+
+echo "Install python requirements"
+
+pip3 install --no-cache-dir -r ./requirements.txt
+
+echo "Load the current QA settings per environment"
+
+. ./env.sh
+
+echo "Run QA test suite"
+echo "START"
+
+session_id=$(python3 -s -m pytest metabase/session_test.py --runslow $session_data --tb=long)
+
+echo "PRINT"
+
+echo $session_id | sed -e 's/.*SessionID:\([0-9]\+\)*//g' | awk '{print $1}' | sed -e 's/\|n//g' | sed -e "s/\\'//g" | sed -e "s/\\']//g"
+
+session_key=$(echo $session_id | sed -e 's/.*SessionID:\([0-9]\+\)*//g' | awk '{print $1}' | sed -e 's/\|n//g' | sed -e "s/\\']//g" | sed -e 's/\|//g' | sed -e "s/\\|']//g" | sed -e "s/\|//g" )
+
+echo "session parse is: $session_parse"
+echo "session key is: $session_key"
+echo "session data is: $session_data"
+
+session_token_result=$(echo $session_key |  cut -f1 -d "|")
+echo "session_token_result: $session_token_result"
+
+python3 -m pytest -p no:cacheprovider --direction %ANSIBLE_ENVIRONMENT% --session $session_token_result
+
+echo "End"]]></param>
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings />
+    <requirements />
+    <build-triggers />
+    <build-extensions>
+      <extension id="BUILD_EXT_8" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="token" />
+          <param name="providerType" value="gitlab" />
+          <param name="secure:accessToken" value="credentialsJSON:3bdec7f0-9bfb-470b-befb-cde6bcf141cb" />
+          <param name="vcsRootId" value="Teamctity" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_9" type="commit-status-publisher">
+        <parameters>
+          <param name="gitlabApiUrl" value="https://gitlab.vortex.com/api/v4" />
+          <param name="publisherId" value="gitlabStatusPublisher" />
+          <param name="secure:gitlabAccessToken" value="credentialsJSON:3bdec7f0-9bfb-470b-befb-cde6bcf141cb" />
+          <param name="vcsRootId" value="Teamcity" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Template_Main" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="ansible_docker_build_result.zip!** =&gt; ./.local/" />
+      </dependency>
+    </artifact-dependencies>
+    <dependencies>
+      <depend-on sourceBuildTypeId="TemplateEngine_NginxFrontendDnsBackend" />
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+
