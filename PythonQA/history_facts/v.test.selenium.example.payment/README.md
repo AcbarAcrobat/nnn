@@ -1,6 +1,6 @@
 # Example async test suites: v.test.selenium.example.payment
 
-  * Full example and requirements for run suite you can see in full [TeamCity Build Configuration QA Part {# Default CI/CD Step 5 #} ](  ansible/.teamcity/VortexPci_CiCdChain/pluginData/metaRunners/VortexPci_CiCdChain_5qaRunningTestSuiteFromPythonQA1.xml)
+  * Full example and requirements for run suite you can see in full [TeamCity Build Configuration QA Part {# Default CI/CD Step 5 #} ](../../../../../tree/master/.teamcity/VortexPci_CiCdChain/pluginData/metaRunners/VortexPci_CiCdChain_5qaRunningTestSuiteFromPythonQA1.xml)
 
   * Example part of TeamCity Run Suite Step, where runline is ```python3 -m pytest -p no:cacheprovider --direction %ANSIBLE_ENVIRONMENT% --session $session_token_result``` in runner task:
   
