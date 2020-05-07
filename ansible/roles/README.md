@@ -10,7 +10,7 @@
   * Zero Init Roles [../0_init](0_init/)
   * Zero Killer K8 Hard-way Roles [../0_killer](0_killer/)
   * Roles of Wizard of Country 0z [../0_z](0_z/)
-  * Let's Encrypt ACME Roles [../acme](acme/)]
+  * Let's Encrypt ACME Roles [../acme](acme/)
   * Applications Roles [../applications](applications/)
   * Bootstraping Roles [../bootstrap](bootstrap/)
   * Cloud Roles [../cloud](cloud/)
