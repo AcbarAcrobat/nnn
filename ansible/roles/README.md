@@ -1,39 +1,29 @@
-# Roles Readme
 
-## List with links to ReadMe for each role:
 
-    Readme, examples, manual, specific notes
+# ansible: roles
 
-    * [README.md ](README.md/README.md)
-    * [apache ](apache/README.md)
+  - List with links to ReadMe for each role:
+  - Readmes, examples, manuals and specific notes
 
-    ```
-    missed?
-        * [apt ](apt/README.md)
-    ```
+  Roles grouped by types and directions which them may be applicated
 
-    * [audit ](audit/README.md)
-    * [clamav ](clamav/README.md)
-    * [consul ](consul/README.md)
-    * [create-application-directories ](create-application-directories/README.md)
-    * [create-release-directory ](create-release-directory/README.md)
-    * [delete-old-releases ](delete-old-releases/README.md)
-    * [deposits ](deposits/README.md)
-    * [docker-install ](docker-install/README.md)
-    * [docker-registrator ](docker-registrator/README.md)
-    * [download-artifacts ](download-artifacts/README.md)
-    * [java ](java/README.md)
-    * [keepalived ](keepalived/README.md)
-    * [mysql ](mysql/README.md)
-    * [ntp ](ntp/README.md)
-    * [ossec ](ossec/README.md)
-    * [pam_d ](pam_d/README.md)
-    * [pansearch ](pansearch/README.md)
-    * [rsyslog ](rsyslog/README.md)
-    * [semaphore ](semaphore/README.md)
-    * [ssh_access ](ssh_access/README.md)
-    * [supervisor ](supervisor/README.md)
-    * [teamcity-server ](teamcity-server/README.md)
-    * [test ](test/README.md)
-    * [tomcat ](tomcat/README.md)
-    * [watchdog ](watchdog/README.md)
+  * Zero Init Roles [../0_init](0_init/)
+  * Zero Killer K8 Hard-way Roles [../0_killer](0_killer/)
+  * Roles of Wizard of Country 0z [../0_z](0_z/)
+  * Let's Encrypt ACME Roles [../acme](acme/)]
+  * Applications Roles [../applications](applications/)
+  * Bootstraping Roles [../bootstrap](bootstrap/)
+  * Cloud Roles [../cloud](cloud/)
+  * Configuration Roles [../configuration](configuration/)
+  * Databases Roles [../databases](databases/)
+  * Deploy Roles [../deploy](deploy/)
+  * Hooks Roles [../hooks](hooks/)
+  * Kubernetes Roles [../kubernetes](kubernetes/)
+  * Logging Roles [../logging](logging/)
+  * Monitoring Roles [../monitoring](monitoring/)
+  * Networking Roles [../network](network/)
+  * Security Roles [../security](security/)
+  * Storage Roles [../storage](storage/)
+  * System Maintanance Roles [../system_maintanance](system_maintanance/)
+  * Testing Suite Roles [../test_suite](test_suite/)
+
