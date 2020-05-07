@@ -23,15 +23,15 @@
   ```
 ## Readme's links:
 
-- [Ansible](ansible/README.md)
-- [Roles](ansible/roles/README.md)
-- [Inventories](ansible/inventories/README.md)
-- [CI/CD PCI DSS Usage](ansible/CI/documentation/README.md)
+- [Ansible](ansible/)
+- [Roles](ansible/roles/)
+- [Inventories](ansible/inventories/)
+- [CI/CD PCI DSS Usage](ansible/CI/documentation/)
 - [How to add a New Service](ansible/CI/documentation/NEW_SERVICE.md)
 - [Network Maps](ansible/CI/documentation/PCI/network_maps/)
-- [CI/CD Agents Debugger](ansible/!_tests/README.md)
-- [API Inventory Ansible Adapters](ansible/!_root_playbooks/README.md)
-- [In-Repository Vault Storage](ansible/.files/README.md)
+- [CI/CD Agents Debugger](ansible/!_tests/)
+- [API Inventory Ansible Adapters](ansible/!_root_playbooks/)
+- [In-Repository Vault Storage](ansible/.files/)
 
 ## Folders info must to read
 
