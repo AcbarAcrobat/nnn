@@ -29,6 +29,9 @@
 - [CI/CD PCI DSS Usage](ansible/CI/documentation/README.md)
 - [How to add a New Service](ansible/CI/documentation/NEW_SERVICE.md)
 - [Network Maps](ansible/CI/documentation/PCI/network_maps/)
+- [CI/CD Agents Debugger](ansible/!_tests/README.md)
+- [API Inventory Ansible Adapters](ansible/!_root_playbooks/README.md)
+- [In-Repository Vault Storage](ansible/.files/README.md)
 
 ## Folders info must to read
 
