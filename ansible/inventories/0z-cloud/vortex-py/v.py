@@ -100,7 +100,6 @@ class Group_Inventory_Object_Properties:
 class CompareInventoryObjects:
     global arraygroups_map
     global local
-    global tt
     global names
     names = []
     def __init__(self, ifile, uniq_groups, global_hosts_result_inventory, path=[""]):
@@ -346,11 +345,12 @@ def to_json(in_dict):
     return json.dumps(in_dict, sort_keys=True, indent=2)
 
 def main(argv):
+
     global hosts_result_list_list
     hosts_result_list_list = []
     global vars_result_list_list
     vars_result_list_list = []
-    global connection_type
+    # global connection_type
     global connection_type_result 
     global _meta
     global result_groups
@@ -369,9 +369,6 @@ def main(argv):
     bootstrap_file_static_check = ""
     bootstrap_file_dynamic_check = ""
     script_path_result = ""
-    product = ""
-    cloudtype = ""
-    connection_type = ""
     global_group_vars_array = []
     hosts_result_inventory = []
     global_hosts_result_inventory = []
@@ -382,16 +379,12 @@ def main(argv):
     result_groups_hosts = {}
     parser = argparse.ArgumentParser(description='Ansible Inventory System')
     parser.add_argument('--connection_type', help='Network connection mode for primary ip: private or public', required=True)
-    parser.add_argument('--file', help='File to open, default bootstrap_vms/group_vars/all.yml', 
-            default='bootstrap_vms/group_vars/all.yml')
+    parser.add_argument('--file', help='File to open, default bootstrap_vms/group_vars/all.yml', default='bootstrap_vms/group_vars/all.yml')
     parser.add_argument('--product', help='Ansible Product for create a correct load path', required=True)
     parser.add_argument('--cloudtype', help='Ansible Cloud Type for create a correct load path', required=True)
-    parser.add_argument('--environment', help='Ansible Cloud Type for create a correct load path', required=True)
-
+    parser.add_argument('--environment', help='Ansible Environment for create a correct load path', required=True)
     args = parser.parse_args()
-
     loadpath_all_declared = '/products/types/!_' + args.cloudtype + "/" + args.product + "/" + args.environment
-
     if args.connection_type in "public":
         connection_type_result = "public"
     elif args.connection_type in "private":
@@ -400,15 +393,16 @@ def main(argv):
         connection_type_result = "green"
     else:
         connection_type_result = "none"
-
     bootstrap_file_dynamic_check = "bootstrap_vms/group_vars/.dynamic.all.yml"
     bootstrap_file_static_check = "bootstrap_vms/group_vars/all.yml"
-
-    if os.path.isfile(bootstrap_file_dynamic_check):
+    path_normalized_loc_top = get_runpath()
+    full_pre_path_loc_top = "/" + path_normalized_loc_top + loadpath_all_declared
+    replace_duplicate_slash_path_loc_top = full_pre_path_loc_top.replace('\\\\', '\\')
+    bootstrap_file_dynamic_check_target = replace_duplicate_slash_path_loc_top + '\\' + bootstrap_file_dynamic_check
+    if os.path.isfile(bootstrap_file_dynamic_check_target):
         oz_dictionary_file_to_read = bootstrap_file_dynamic_check # "bootstrap_vms/group_vars/.dynamic.all.yml"
     else:
         oz_dictionary_file_to_read = bootstrap_file_static_check # args.file
-
     inventory = Inventory(oz_dictionary_file_to_read, hosts_result_inventory)
     result_groups = Groups_In_Inventory(oz_dictionary_file_to_read, hosts_result_inventory)
     uniq_groups_data = remove_duplicates(list_groups)
