@@ -67,17 +67,10 @@ def load_file(file_name):
         return yaml.load(fh, Loader=yaml.SafeLoader)
 
 def get_yaml(file_name):
-    path_normalized_loc = get_runpath()
-    full_pre_path = "/" + path_normalized_loc + loadpath_all_declared
-    replace_duplicate_slash_path = full_pre_path.replace('\\\\', '\\')
-    #script_path = os.path.dirname(os.path.realpath(__file__))
-    file_name = file_name.replace(replace_duplicate_slash_path, '')
-    inventory_object = load_file("{}/{}".format(replace_duplicate_slash_path, file_name))
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    file_name = file_name.replace(script_path, '')
+    inventory_object = load_file("{}/{}".format(script_path, file_name))
     return inventory_object
-
-def get_runpath():
-    script_path_normalized = os.path.dirname(os.path.realpath(__file__)).strip("vortex-py/")
-    return script_path_normalized
 
 def to_num_if(n):
     try:
@@ -361,16 +354,6 @@ def main(argv):
     global global_hosts_result_inventory
     global hosts_result_inventory
     global global_group_vars_array
-    global script_path_result
-    global bootstrap_file_dynamic_check
-    global bootstrap_file_static_check
-    global loadpath_all_declared
-    loadpath_all_declared = ""
-    bootstrap_file_static_check = ""
-    bootstrap_file_dynamic_check = ""
-    script_path_result = ""
-    product = ""
-    cloudtype = ""
     connection_type = ""
     global_group_vars_array = []
     hosts_result_inventory = []
@@ -384,31 +367,19 @@ def main(argv):
     parser.add_argument('--connection_type', help='Network connection mode for primary ip: private or public', required=True)
     parser.add_argument('--file', help='File to open, default bootstrap_vms/group_vars/all.yml', 
             default='bootstrap_vms/group_vars/all.yml')
-    parser.add_argument('--product', help='Ansible Product for create a correct load path', required=True)
-    parser.add_argument('--cloudtype', help='Ansible Cloud Type for create a correct load path', required=True)
-    parser.add_argument('--environment', help='Ansible Cloud Type for create a correct load path', required=True)
-
     args = parser.parse_args()
-
-    loadpath_all_declared = '/products/types/!_' + args.cloudtype + "/" + args.product + "/" + args.environment
-
     if args.connection_type in "public":
         connection_type_result = "public"
     elif args.connection_type in "private":
-        connection_type_result = "private"
+         connection_type_result = "private"
     elif args.connection_type in "green":
         connection_type_result = "green"
     else:
         connection_type_result = "none"
-
-    bootstrap_file_dynamic_check = "bootstrap_vms/group_vars/.dynamic.all.yml"
-    bootstrap_file_static_check = "bootstrap_vms/group_vars/all.yml"
-
-    if os.path.isfile(bootstrap_file_dynamic_check):
-        oz_dictionary_file_to_read = bootstrap_file_dynamic_check # "bootstrap_vms/group_vars/.dynamic.all.yml"
+    if os.path.isfile('bootstrap_vms/group_vars/.dynamic.all.yml'):
+        oz_dictionary_file_to_read="bootstrap_vms/group_vars/.dynamic.all.yml"
     else:
-        oz_dictionary_file_to_read = bootstrap_file_static_check # args.file
-
+        oz_dictionary_file_to_read=args.file
     inventory = Inventory(oz_dictionary_file_to_read, hosts_result_inventory)
     result_groups = Groups_In_Inventory(oz_dictionary_file_to_read, hosts_result_inventory)
     uniq_groups_data = remove_duplicates(list_groups)

@@ -1,0 +1,64 @@
+mkdir -p /root/.kube
+cp -i /etc/kubernetes/admin.conf /root/.kube/config
+
+
+export KUBECONFIG=/etc/kubernetes/admin.conf
+export DATASTORE_TYPE=kubernetes
+
+
+TYPHA_CLUSTERIP=$(kubectl get svc -n kube-system calico-typha -o jsonpath='{.spec.clusterIP}')
+curl https://$TYPHA_CLUSTERIP:5473 -v --cacert /opt/ca/kube/typhaca.crt
+
+
+openssl x509 -req -in calico-node.csr \
+                  -CA /opt/ca/kube/typhaca.crt \
+                  -CAkey /opt/ca/kube/typhaca.key \
+                  -CAcreateserial \
+                  -out /opt/ca/kube/calico-node.crt \
+                  -days 365
+
+kubectl create secret generic -n kube-system calico-node-certs --from-file=/opt/ca/kube/calico-node.key --from-file=/opt/ca/kube/calico-node.crt
+
+calicoctl get node vortex-node-05-production -o yaml --export > calico-bgp-node.yaml
+
+kubectl create secret generic -n kube-system calico-node-certs --from-file=calico-node.key --from-file=calico-node.crt
+
+
+kubectl config use-context default --kubeconfig=/opt/ca/kube/cni.kubeconfig
+
+
+sudo openssl x509 -req -in cni.csr \
+                  -CA /opt/ca/pki/ca.crt \
+                  -CAkey /opt/ca/pki/ca.key \
+                  -CAcreateserial \
+                  -out cni.crt \
+                  -days 365
+
+
+chmod 755 /opt/cni/bin/calico
+chmod 755 /opt/cni/bin/calico-ipam
+curl -L -o /opt/cni/bin/calico-ipam https://github.com/projectcalico/cni-plugin/releases/download/v3.8.0/calico-ipam-amd64
+
+
+cp /opt/ca/kube/cni.kubeconfig /etc/cni/net.d/calico-kubeconfig
+chmod 600 /etc/cni/net.d/calico-kubeconfig
+
+APISERVER=$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
+kubectl config set-cluster kubernetes \
+    --certificate-authority=/opt/ca/pki/ca.crt \
+    --embed-certs=true \
+    --server=$APISERVER \
+    --kubeconfig=cni.kubeconfig
+
+kubectl config set-credentials calico-cni \
+    --client-certificate=/opt/ca/kube/cni.crt \
+    --client-key=/opt/ca/kube/cni.key \
+    --embed-certs=true \
+    --kubeconfig=/opt/ca/kube/cni.kubeconfig
+
+kubectl config set-context default \
+    --cluster=kubernetes \
+    --user=calico-cni \
+    --kubeconfig=/opt/ca/kube/cni.kubeconfig
+
+kubectl config use-context default --kubeconfig=/opt/ca/kube/cni.kubeconfig

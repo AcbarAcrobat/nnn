@@ -1,0 +1,183 @@
+cloud_bootstrap:
+
+  basic_roles:
+
+    # Future Usage
+
+    - '!_bootstrap/update-dns-config'
+    - '!_bootstrap/ntp-client'
+    - '!_bootstrap/local-repository'
+    - auditd
+    - rsyslog
+    - ossim-agent
+
+  servers:
+
+        vortex_keepalived_01:
+        name: "vortex-keepalived-01"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.200"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - internal-keepalived-servers
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+    vortex_keepalived_02:
+        name: "vortex-keepalived-02"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.201"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - internal-keepalived-servers
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+    vortex_java_ks_docker_01:
+        name: "vortex-java-ks-docker-01"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.33"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - java-ks-swarm-cluster
+            - java-ks-swarm-masters
+            - java-ks-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+    vortex_java_ks_docker_02:
+        name: "vortex-java-ks-docker-02"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.34"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - java-ks-swarm-cluster
+            - java-ks-swarm-masters
+            - java-ks-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+    vortex_java_docker_01:
+        name: "vortex-java-docker-01"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.31"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-01
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - java-web-swarm-cluster
+            - java-web-swarm-masters
+            - java-web-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+    vortex_java_docker_02:
+        name: "vortex-java-docker-02"
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.21.32"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-01
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+            - consul-cluster
+            - java-web-swarm-cluster
+            - java-web-swarm-masters
+            - java-web-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "client"
+            consul_type: "client"
+
+ssh_connect_type_self: ""
+ssh_connect_type_via: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+
+vsphere_ip: "10.0.20.100"
+vsphere_fqdn: "reactive-vcsa-01.reactive.io"
+vsphere_login: "administrator@vsphere.local"
+vsphere_esxi_login: "root"
+vsphere_pass: "reactive"
+
+#vsphere_template_name: "vortex-template-cis-1804"
+vsphere_template_name: "vortex-preprod-template-02"
+
+vsphere_domain: "vortex.com"
+
+#CURRENTLY ONLY CAN BE USED TEMPLATE DATASTORAGE FOR INITIAL CREATION VMs FROM TEMPLATE
+vsphere_storage: "/"
+#-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>
+
+vsphere_dc: "Linx-MSK-M8-6-16"
+
+dns_servers:
+   - 172.16.21.1

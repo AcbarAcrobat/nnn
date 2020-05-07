@@ -1,0 +1,54 @@
+servers:
+    vortexw_docker_04:
+        name: "vortexw-docker-04"
+        network: "vlan_vortexw_DEVELOP_321"
+        ip: "172.16.21.204"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 6
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortexw_DEVELOP_321
+            - swarm-cluster
+            - consul-cluster
+            - swarm-masters
+            - wallets
+            - admin
+            - app-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "master"
+            consul_type: "client"
+
+    vortexw_docker_05:
+        name: "vortexw-docker-05"
+        network: "vlan_vortexw_DEVELOP_321"
+        ip: "172.16.21.205"
+        gw: "172.16.21.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 6
+        resource_pool: docker-develop-pool-01-compute-resource-02
+        vsphere_esxi_target: "10.0.20.90"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortexw_DEVELOP_321
+            - swarm-cluster
+            - consul-cluster
+            - swarm-masters
+            - wallets
+            - admin
+            - app-glusterfs-cluster
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+            swarm_node_type: "master"
+            consul_type: "client"

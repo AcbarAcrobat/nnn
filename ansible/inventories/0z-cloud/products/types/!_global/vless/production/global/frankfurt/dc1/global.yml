@@ -1,0 +1,36 @@
+global_zone_datacenter_settings:
+  zone: frankfurt
+  zone_short: fr
+  datacenter: dc1
+  land_topography:
+    from_template:
+      # NETWORK
+      ids: 2                  # minimum is 1
+      router: 2               # minimum is 1
+      # FRONTEND DMZ WEB
+      front: 3                # minimum is 3 - nginx & coredns dns forward (default)
+      # apache: 3             # minimum is 3 - apache
+      # nginx: 3              # minimum is 3 - nginx
+      # KUBERNETES
+      k8sm: 3                 # minimum is 3
+      k8sc: 4                 # minimum is 1
+      # DATABASES / CACHE / MESSAGE QUEUENG
+      database: 3             # minimum is 3
+      cache: 2                # minimum is 1
+      percona_mysql: 3        # minimum is 3
+      postgresql: 3           # minimum is 3
+      rabbitmq: 2             # minimum is 1
+      redis: 2                # minimum is 1
+      # LOADBALANCER(external/internal)
+      loadbalancer: 2         # minimum is 1
+      # EQUIPMENT SERVICES NODES
+      misc: 2                 # minimum is 1
+      etc: 1                  # minimum is 1
+      # STANDARD NODES
+      all: 4                  # minimum is 1
+      # SENTRY NODES
+      sentry_cache: 3         # minimum is 1
+      sentry_database: 3      # minimum is 1
+      sentry_web: 3           # minimum is 1
+      # CUSTOM HOST TEMPLATE GROUP
+      custom_node: 1          # minimum is 1

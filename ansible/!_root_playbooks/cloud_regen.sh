@@ -96,7 +96,7 @@ if [ "$inventory" != "production" ] && [ "$inventory" != "alpha" ] && [ "$invent
     check_target_inventory_dir;
     echo -e "         ${GREEN}Current ${NC}cloud inventory: ${RED}${inventory}${NC}"
     rm -rf ./inventories/products/$product/$inventory/inventory
-    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
+    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} --product ${product} --cloudtype ${typeofcloud} --environment ${inventory} >> ./inventories/products/$product/$inventory/inventory
 
     if [[ ! -z "$before_inventory_parent" ]]; then
     
@@ -117,7 +117,7 @@ else
     check_target_inventory_dir;
 
     rm -rf ./inventories/products/$product/$inventory/inventory
-    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} >> ./inventories/products/$product/$inventory/inventory
+    ./inventories/0z-cloud/products/types/!_${typeofcloud}/$product/$inventory/v.py --connection_type ${connection_type} --product ${product} --cloudtype ${typeofcloud} --environment ${inventory} >> ./inventories/products/$product/$inventory/inventory
     
     # echo "./inventories/0z-cloud/products/types/\!_${typeofcloud}/$product/$inventory/${connection_type} --connection_type >> ./inventories/products/$product/$inventory/inventory"
 

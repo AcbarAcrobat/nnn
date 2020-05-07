@@ -1,0 +1,176 @@
+ubuntu_default_image_name: "ubuntu_18_04_64_20G_alibase_20181212.vhd"
+ansible_environment: develop
+ansible_product: vortex
+count: 1
+allocate_public_ip: yes
+
+#####
+
+alicloud_bootstrap:
+
+  basic_roles:
+
+    - '!_bootstrap/update-dns-config'
+    - '!_bootstrap/ntp-client'
+    - '!_bootstrap/local-repository'
+    - auditd
+    - rsyslog
+    - ossim-agent
+
+  services:
+    inventory_groups_vars:
+        test-sentry-redis-io-cluster:
+                redis_public_port: 6379
+                redis_slave_public_port: 6380
+                redis_username: redis
+                redis_passowrd: dc1d494f7915dbaee349e35a973d6c037357c548ad
+
+  switches:
+    vswitch_01:
+        vswitch_name: "{{ vswitch_name }}"
+        alicloud_zone: "{{ alicloud_zone }}"
+        vswitch_description: "vSwitch_develop"
+        alicloud_region: "{{ alicloud_region }}"
+        vswitch_cidr: '{{ vswitch_cidr }}'
+        vswitch_id: "REPLACED"
+
+  vpc_zones:
+    vpc_0001:
+        vpc_name: "{{ vpc_name }}"
+        alicloud_region: "{{ alicloud_region }}"
+        vpc_description: "{{ vpc_description }}"
+        cidr_block: "{{ vpc_cidr }}"
+
+  security_zones:
+    sg_zone_0001:
+        sg_group_id: "REPLACED"
+
+  servers:
+
+    vortex_kube_04:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "vortex-kube-04-develop_public_ip_address_REPLACED"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "vortex-kube-04-develop"
+        alicloud_vm_configuration: "{{ instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+            - vlan_all
+            - kubernetes-cluster
+            - kubernetes-master
+            - consul-cluster
+            - cloud-bind
+            - cloud-bind-glusterfs-storage
+        ansible_inventory_vars:
+            swarm_node_type: "client"
+            consul_type: "client"
+            kubernetes_type: "master"
+            second_network: "REPLACED"
+            second_ip: "vortex-kube-04-develop_private_ip_address_REPLACED"
+
+    vortex_kube_03:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "vortex-kube-03-develop_public_ip_address_REPLACED"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "vortex-kube-03-develop"
+        alicloud_vm_configuration: "{{ instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+            - vlan_all
+            - kubernetes-cluster
+            - kubernetes-worker
+            - consul-cluster
+            - cloud-bind
+            - cloud-bind-glusterfs-storage
+        ansible_inventory_vars:
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_ip: "vortex-kube-03-develop_private_ip_address_REPLACED"
+
+    vortex_kube_02:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "vortex-kube-02-develop_public_ip_address_REPLACED"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "vortex-kube-02-develop"
+        alicloud_vm_configuration: "{{ instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+            - vlan_all
+            - kubernetes-cluster
+            - kubernetes-worker
+            - consul-cluster
+            - cloud-bind
+            - cloud-bind-glusterfs-storage
+        ansible_inventory_vars:
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_ip: "vortex-kube-02-develop_private_ip_address_REPLACED"
+
+    vortex_kube_01:
+        # Replaced after VMs bootstrapped in alicloud
+        network: "REPLACED"
+        ip: "vortex-kube-01-develop_public_ip_address_REPLACED"
+        gw: "REPLACED"
+        #
+        template_image_name: "{{ ubuntu_default_image_name }}"
+        name: "vortex-kube-01-develop"
+        alicloud_vm_configuration: "{{ instance_type }}"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+            - vlan_all
+            - kubernetes-cluster
+            - kubernetes-worker
+            - consul-cluster
+            - cloud-bind
+            - cloud-bind-glusterfs-storage
+        ansible_inventory_vars:
+            swarm_node_type: "master"
+            consul_type: "master"
+            kubernetes_type: "client"
+            second_network: "REPLACED"
+            second_ip: "vortex-kube-01-develop_private_ip_address_REPLACED"
+
+ssh_connect_type_self: ""
+ssh_connect_type_via: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+
+alicloud_template_name: "vortex-preprod-template-02"
+
+alicloud_domain: "vortex.com"
+
+#CURRENTLY ONLY CAN BE USED TEMPLATE DATASTORAGE FOR INITIAL CREATION VMs FROM TEMPLATE
+#-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>
+
+alicloud_dc: "Linx-MSK-M8-6-16"
+
+dns_servers:
+   - 8.8.8.8
+   - 1.1.1.1
+
+
+# :
+# #     - vortex-db-01
+# #     - vortex-cache-01
+# #     - vortex-web-01
+# #     - vortex-nginx-01
+
+# #     vortex_
+
+
+# 0z-cloud/group_vars/products/

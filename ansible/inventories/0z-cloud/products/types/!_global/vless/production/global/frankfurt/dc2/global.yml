@@ -1,0 +1,26 @@
+global_zone_datacenter_settings:
+    zone: frankfurt
+    zone_short: fr
+    datacenter: dc2
+    land_topography:
+      from_template:
+        ids: 2
+        router: 2
+        web: 3
+        k8sm: 3
+        k8sc: 4
+        database: 3
+        misc: 2
+        cache: 2
+        etc: 1
+        all: 4
+        loadbalancer: 2
+        rabbitmq: 2
+        redis: 2
+        percona_mysql: 3
+        sentry_cache: 3
+        sentry_database: 3
+        sentry_web: 3
+      from_static:
+        all: 5
+    

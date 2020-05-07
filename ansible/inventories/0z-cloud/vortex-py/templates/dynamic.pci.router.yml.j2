@@ -1,0 +1,46 @@
+cloud_bootstrap:
+
+  routers:
+
+    {{ ansible_product }}_router_{{ template_wants_node_id }}:
+        name: "{{ ansible_product }}-router-{{ template_wants_node_id }}"
+        networks:
+            VLAN_700_NON_PROD:
+                ip4: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_1000_KS_MGMT:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_900_MYSQL:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_500_WEB:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_200_ISCSI:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_100_IPMI:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_20_ESXI:
+                ip: "10.110.0.3"
+                gw4: "noipsp"
+                vip: ""
+            VLAN_9_ISP_1:
+                ip: "10.110.0.3"
+                gw: "10.110.0.1"
+        ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+        memory_size_mb: 8192
+        cpu_count: 6
+        ansible_inventory_groups:
+            - VLAN_ALL
+            - pci-test
+            - vortex-cloud-router
+            - after-bastion

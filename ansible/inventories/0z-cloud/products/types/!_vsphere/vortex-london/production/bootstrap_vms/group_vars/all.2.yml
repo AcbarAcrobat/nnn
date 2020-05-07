@@ -1,0 +1,690 @@
+cloud_bootstrap:
+
+  basic_roles:
+
+    # Future Usage
+
+    - '!_bootstrap/update-dns-config'
+    - '!_bootstrap/ntp-client'
+    - '!_bootstrap/local-repository'
+    - auditd
+    - rsyslog
+    - ossim-agent
+
+  servers:
+
+    # vortex_db_313:
+    #     name: "vortex-db-313"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.13"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8096
+    #     cpu_count: 8
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    vortex_db_013:
+        name: "vortex-db-013"
+        network: "VLAN_900_MYSQL"
+        ip: "10.120.0.13"
+        gw: "10.120.0.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+        memory_size_mb: 73728
+        cpu_count: 8
+        ansible_inventory_groups:
+            - pci-test
+            - vortex-percona-cluster
+            - after-bastion
+
+    vortex_db_113:
+        name: "vortex-db-113"
+        network: "VLAN_900_MYSQL"
+        ip: "10.120.0.113"
+        gw: "10.120.0.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+        memory_size_mb: 73728
+        cpu_count: 8
+        ansible_inventory_groups:
+            - pci-test
+            - vortex-percona-cluster
+            - after-bastion
+
+    vortex_db_213:
+        name: "vortex-db-213"
+        network: "VLAN_900_MYSQL"
+        ip: "10.120.0.213"
+        gw: "10.120.0.1"
+        second_network: "null"
+        second_ip: "null"
+        ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+        memory_size_mb: 73728
+        cpu_count: 8
+        ansible_inventory_groups:
+            - pci-test
+            - vortex-percona-cluster
+            - after-bastion
+
+    # vortex_percona_cluster_170:
+    #     name: "vortex-percona-cluster-170"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.170"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8096
+    #     cpu_count: 8
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # vortex_percona_cluster_180:
+    #     name: "vortex-percona-cluster-180"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.180"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8096
+    #     cpu_count: 8
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # vortex_percona_cluster_160:
+    #     name: "vortex-percona-cluster-160"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.160"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8096
+    #     cpu_count: 8
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # vortex_percona_cluster_140:
+    #     name: "vortex-percona-cluster-140"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.140"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 4096
+    #     cpu_count: 4
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # # vortex_percona_cluster_control_01:
+    # #     name: "vortex-percona-cluster-control-01"
+    # #     network: "VLAN_700_NON_PROD"
+    # #     ip: "10.110.0.42"
+    # #     gw: "10.110.0.1"
+    # #     second_network: "VLAN_900_MYSQL"
+    # #     second_ip: "10.120.0.42"
+    # #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    # #     memory_size_mb: 4096
+    # #     cpu_count: 4
+
+    # vortex_keyserver_01:
+    #     name: "vortex-keyserver-01" 
+    #     network: "VLAN_1000_KS_MGMT"
+    #     ip: "10.0.100.70"
+    #     gw: "10.0.100.1"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     state: enabled
+    #     second_network: "VLAN_1020_KS_DATA"
+    #     second_ip: "10.0.200.70"
+    #     memory_size_mb: "4096"
+    #     cpu_count: "4"
+    #     resource_pool: core_services
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - tomcat-servers
+    #         - after-bastion
+    #         - pansearch-hosts
+    #         - database-watchdog
+    #     ansible_inventory_vars:
+    #         clamav_startup_hour: "21"
+    #         clamav_startup_minutes: "0"
+    #         pansearch_startup_hour: "4"
+    #         pansearch_startup_minutes: "30"
+    #         pansearch_full_path: "/var/lib/tomcat7/logs/* /var/log/* /home/*"
+    #         monitor_config_magic_var: "database_settings_files.java_special_applications.keyserver"
+    #         monitor_config_magic_var_old: "database_settings_files.java_shared_configs"
+    #         java_watch_dog: "true"
+    #         watchdog_password_files_except_user: "tomcat7"
+    #         watchdog_password_files_except_group: "tomcat7"
+    #     host_specific_roles:
+    #         - tomcat
+    #         - mysql/proxy
+
+    # vortex_tomcat_01:
+    #     name: "vortex-tomcat-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.31"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.31"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     state: enabled
+    #     memory_size_mb: "4096"
+    #     cpu_count: "4"
+    #     resource_pool: processing
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - tomcat-servers
+    #         - after-bastion
+    #         - antifraud-web
+    #         - processing-tele2-unauthorized
+    #         - processing-tele2-main
+    #         - front-web
+    #         - processing-bin-bank
+    #         - processing-sflabs-mts
+    #         - processing-vtb-common
+    #         - processing-vtb-main
+    #         - vortex-mysql-router-client
+    #     ansible_inventory_vars:
+    #         clamav_startup_hour: "3"
+    #         clamav_startup_minutes: "0"
+    #         pansearch_startup_hour: "4"
+    #         pansearch_startup_minutes: "30"
+    #         pansearch_full_path: "/var/lib/tomcat7/logs/* /var/log/* /home/*"
+    #         monitor_config_magic_var: "database_settings_files.java_main_applications"
+    #         monitor_config_magic_var_old: "database_settings_files.java_shared_configs"
+    #         java_watch_dog: "true"
+    #         watchdog_password_files_except_user: "tomcat7"
+    #         watchdog_password_files_except_group: "tomcat7"
+    #         k_node_settings_backend_ip: "10.100.100.31"
+    #         java_logs_node_prefix: "T1"
+    #     host_specific_roles:
+    #         - tomcat
+    #         - mysql/proxy
+
+    # vortex_tomcat_02:
+    #     name: "vortex-tomcat-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.32"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.32"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: "4096"
+    #     cpu_count: "4"
+    #     resource_pool: processing
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - tomcat-servers
+    #         - after-bastion
+    #         - antifraud-web
+    #         - processing-tele2-unauthorized
+    #         - processing-tele2-main
+    #         - front-web
+    #         - processing-bin-bank
+    #         - processing-sflabs-mts
+    #         - processing-vtb-common
+    #         - processing-vtb-main
+    #         - vortex-mysql-router-client
+    #     ansible_inventory_vars:
+    #         clamav_startup_hour: "3"
+    #         clamav_startup_minutes: "30"
+    #         pansearch_startup_hour: "4"
+    #         pansearch_startup_minutes: "30"
+    #         pansearch_full_path: "/var/lib/tomcat7/logs/* /var/log/* /home/*"
+    #         monitor_config_magic_var: "database_settings_files.java_main_applications"
+    #         monitor_config_magic_var_old: "database_settings_files.java_shared_configs"
+    #         java_watch_dog: "true"
+    #         watchdog_password_files_except_user: "tomcat7"
+    #         watchdog_password_files_except_group: "tomcat7"
+    #         k_node_settings_backend_ip: "10.100.100.32"
+    #         java_logs_node_prefix: "T2"
+
+    # vortex_tomcat_03:
+    #     name: "vortex-tomcat-03"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.33"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.33"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: "4096"
+    #     cpu_count: "4"
+    #     resource_pool: processing
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - tomcat-servers
+    #         - after-bastion
+    #         - processing-tele2-unauthorized
+    #         - processing-tele2-main
+    #         - front-web
+    #         - processing-bin-bank
+    #         - processing-sflabs-mts
+    #         - processing-tomcat-test
+    #         - vortex-mysql-router-client
+    #     ansible_inventory_vars:
+    #         clamav_startup_hour: "3"
+    #         clamav_startup_minutes: "30"
+    #         pansearch_startup_hour: "4"
+    #         pansearch_startup_minutes: "30"
+    #         pansearch_full_path: "/var/lib/tomcat7/logs/* /var/log/* /home/*"
+    #         monitor_config_magic_var: "database_settings_files.java_main_applications"
+    #         monitor_config_magic_var_old: "database_settings_files.java_shared_configs"
+    #         java_watch_dog: "true"
+    #         watchdog_password_files_except_user: "tomcat7"
+    #         watchdog_password_files_except_group: "tomcat7"
+    #         k_node_settings_backend_ip: "10.100.100.32"
+    #         java_logs_node_prefix: "T3"
+
+    # vortex_percona_cluster_110:
+    #     name: "vortex-percona-cluster-110"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.110"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 4096
+    #     cpu_count: 4
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # vortex_percona_cluster_120:
+    #     name: "vortex-percona-cluster-120"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.120"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 4096
+    #     cpu_count: 4
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+    # vortex_percona_cluster_130:
+    #     name: "vortex-percona-cluster-130"
+    #     network: "VLAN_900_MYSQL"
+    #     ip: "10.120.0.130"
+    #     gw: "10.120.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 4096
+    #     cpu_count: 4
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - vortex-percona-cluster
+    #         - after-bastion
+
+
+
+    # vortex_rsyslog_01:
+    #     name: "vortex-rsyslog-01"
+    #     network: "VLAN_700_NON_PROD"
+    #     ip: "10.110.0.150"
+    #     gw: "10.110.0.1"
+    #     second_network: "null"
+    #     second_ip: "null"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 4096
+    #     cpu_count: 4
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - tomcat-servers
+
+    # vortex_keepalived_01:
+    #     name: "vortex-keepalived-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.200"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.200"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'" 
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: networking
+    #     host_specific_roles:
+    #         - keepalived/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - keepalived-servers
+
+    # vortex_keepalived_02:
+    #     name: "vortex-keepalived-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.201"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.201"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: networking
+    #     host_specific_roles:
+    #         - keepalived/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - keepalived-servers
+
+    # vortex_keepalived_03:
+    #     name: "vortex-keepalived-03"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.202"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.202"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: networking
+    #     host_specific_roles:
+    #         - keepalived/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - keepalived-servers
+
+    # vortex_secureweb_01:
+    #     name: "vortex-secureweb-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.211"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.211"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: web
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - mysql/proxy
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - secureweb-servers
+    #         - web-servers
+    #         - vortex-mysql-router-client
+
+    # vortex_secureweb_02:
+    #     name: "vortex-secureweb-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.212"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.212"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     web:
+    #         type: php
+    #         http: nginx
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: web
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - mysql/proxy
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - secureweb-servers
+    #         - web-servers
+    #         - vortex-mysql-router-client
+
+    # vortex_gateway_01:
+    #     name: "vortex-gateway-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.231"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.231"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 3
+    #     resource_pool: web
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - gateway-servers
+    #         - web-servers
+
+    # vortex_gateway_02:
+    #     name: "vortex-gateway-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.232"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.232"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 3
+    #     resource_pool: web
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - gateway-servers
+    #         - web-servers
+
+    # vortex_brs_proc_01:
+    #     name: "vortex-brs-proc-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.101"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.101"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 2048
+    #     cpu_count: 2
+    #     resource_pool: processing
+    #     host_specific_roles:
+    #         - tomcat
+    #         - mysql/proxy
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - tomcat-servers
+    #         - vortex-mysql-router-client
+
+    # vortex_rabbit_01:
+    #     name: "vortex-rabbit-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.181"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.181"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8192
+    #     cpu_count: 4
+    #     resource_pool: message_queue
+    #     host_specific_roles:
+    #         - rabbitmq/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - vortex-rabbitmq-servers
+    #     ansible_inventory_vars:
+    #         rabbitmq_cluster_master: "vortex-rabbit-01"
+    #         rabbitmq_create_cluster: "True"
+
+    # vortex_rabbit_02:
+    #     name: "vortex-rabbit-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.182"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.182"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8192
+    #     cpu_count: 4
+    #     resource_pool: message_queue
+    #     host_specific_roles:
+    #         - rabbitmq/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - vortex-rabbitmq-servers
+    #     ansible_inventory_vars:
+    #         rabbitmq_cluster_master: "vortex-rabbit-01"
+    #         rabbitmq_create_cluster: "True"
+
+    # vortex_memcache_01:
+    #     name: "vortex-memcache-01"
+    #     network: "VLAN_1000_KS_MGMT"
+    #     ip: "10.0.100.10" 
+    #     gw: "10.0.100.1"
+    #     second_network: "VLAN_1020_KS_DATA"
+    #     second_ip: "10.0.200.10"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 8192
+    #     cpu_count: 4
+    #     resource_pool: core_services
+    #     host_specific_roles:
+    #         - memcached/install
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - vortex-core-memcached-servers
+
+    # vortex_private_services_01:
+    #     name: "vortex-private-services-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.161"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.161"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 16284
+    #     cpu_count: 12
+    #     resource_pool: php_laravel_applications
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - php/install_packages
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - web-servers
+    #         - vortex-mysql-router-client
+    #         - vortex-private-services
+
+    # vortex_private_services_02:
+    #     name: "vortex-private-services-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.162"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.162"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 16284
+    #     cpu_count: 12
+    #     resource_pool: php_laravel_applications
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - php/install_packages
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - web-servers
+    #         - vortex-mysql-router-client
+    #         - vortex-private-services
+
+    # vortex_public_services_01:
+    #     name: "vortex-public-services-01"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.171"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.171"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 16284
+    #     cpu_count: 12
+    #     resource_pool: php_laravel_applications
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - php/install_packages
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - web-servers
+    #         - vortex-mysql-router-client
+    #         - vortex-public-services
+    #         - vortex-admin-ng
+
+    # vortex_public_services_02:
+    #     name: "vortex-public-services-02"
+    #     network: "VLAN_500_WEB"
+    #     ip: "10.11.0.172"
+    #     gw: "10.11.0.1"
+    #     second_network: "VLAN_600_BB_WEB"
+    #     second_ip: "10.100.100.172"
+    #     ssh: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+    #     memory_size_mb: 16284
+    #     cpu_count: 12
+    #     resource_pool: php_laravel_applications
+    #     host_specific_roles:
+    #         - apache2/mod_security
+    #         - php/install_packages
+    #     ansible_inventory_groups:
+    #         - pci-test
+    #         - after-bastion
+    #         - web-servers
+    #         - vortex-mysql-router-client
+    #         - vortex-public-services
+    #         - vortex-admin-ng
+
+ssh_connect_type_self: ""
+ssh_connect_type_via: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+
+vsphere_ip: "10.0.28.254"
+vsphere_fqdn: "vortex-vcsa-01.vortex.co"
+vsphere_login: "administrator@vsphere.local"
+vsphere_esxi_login: "root"
+
+vsphere_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          36303066666234393362303864363464373533636436363538386263656635396131366262343230
+          3863626666323662336365323462346361383239343635640a623438633138323334306664313731
+          31616163656338396561643030303038303265373465393832636431396336616238383136666436
+          3536326634363937660a363436616331323032323035623063326539353161356364663135626361
+          3337
+#vsphere_template_name: "vortex-template-cis-1804"
+vsphere_template_name: "ubuntu-template-1804-nolvm"
+
+vsphere_domain: "vortex.co"
+
+#CURRENTLY ONLY CAN BE USED TEMPLATE DATASTORAGE FOR INITIAL CREATION VMs FROM TEMPLATE
+vsphere_storage: "/"
+#-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>
+
+vsphere_dc: "Linx-Moscow"
+vsphere_esxi_target: "10.0.28.70.vortex.co"
+
+dns_servers:
+   - 10.110.0.51
+   - 10.110.0.52

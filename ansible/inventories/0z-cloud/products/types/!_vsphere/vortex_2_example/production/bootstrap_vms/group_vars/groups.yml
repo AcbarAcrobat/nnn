@@ -1,0 +1,130 @@
+#vsphere_bootstrap_groups:
+#   groups:
+#     linux-hosts:
+#       hosts:
+#         - after-bastion
+#         - vortex-admin-01
+#     alienvault-watchdog:
+#         - "vortex-rsyslog-01"
+#     firewall-host:
+#         - "vortex-ids-01"
+#         - "vortex-ids-02"
+#     bastion-host:
+#         - "vortex-admin-01"
+#     vortex-ossec-hosts:
+#       hosts:
+#         - "vortex-ossec-server"
+#         - "linux-hosts"
+#     vortex-ossec-server:
+#       hosts:
+#         - "vortex-ossim-01"
+#       vars:
+#         ossec_managed_server: "true"
+#     pansearch-hosts:
+#       hosts:
+#         - "web-servers"
+#         - "tomcat-servers"
+#         - "vortex-admin-01"
+#         - "vortex-percona-cluster-01"
+#         - "vortex-percona-cluster-02"
+#         - "vortex-percona-cluster-03"
+#         - "vortex-memcache-01"
+#         - "vortex-rsyslog-01"
+#         - "vortex-gateway-01"
+#         - "vortex-gateway-02"
+#     database-watchdog:
+#       hosts:
+#         - tomcat-servers
+#         - web-servers
+#     pci-test:
+#       hosts:
+#         - vortex-clientweb-01
+#         - vortex-adminweb-01
+#         - vortex-admin-01
+#         - vortex-keyserver-01
+#         - vortex-memcache-01
+#         - vortex-rabbit-01
+#         - vortex-rsyslog-01
+#         - vortex-percona-cluster-01
+#         - vortex-percona-cluster-02
+#         - vortex-percona-cluster-03
+#     tomcat-servers:
+#       hosts:
+#         - vortex-tomcat-01
+#         - vortex-tomcat-02
+#         - vortex-proc-pos-01
+#         - vortex-proc-pos-02
+#         - vortex-brs-proc-01
+#         - vortex-keyserver-01
+#     web-servers:
+#       hosts:
+#         - vortex-clientweb-01
+#         - vortex-clientweb-02
+#         - vortex-adminweb-01
+#         - vortex-adminweb-02
+#         - vortex-topup-tele2-01
+#         - vortex-mobicom-01
+#         - vortex-secureweb-01
+#         - vortex-secureweb-02
+#         - vortex-creditpilot-cards-01
+#         - vortex-public-api-01
+#         - vortex-private-api-01
+#         - vortex-webapp-paymarket-01
+#         - vortex-webapp-merchant-01
+#         - vortex-pay-google-01
+#         - vortex-reports-01
+#         - vortex-services-01
+#         - vortex-pay-google-01
+#     after-bastion:
+#       hosts:
+#         - vortex-admin-ng-01
+#         - vortex-tomcat-01
+#         - vortex-tomcat-02
+#         - vortex-private-api-01
+#         - vortex-public-api-01
+#         - vortex-proc-pos-01
+#         - vortex-proc-pos-02
+#         - vortex-percona-cluster-01
+#         - vortex-percona-cluster-02
+#         - vortex-percona-cluster-03
+#         - vortex-topup-tele2-01
+#         - vortex-mobicom-01
+#         - vortex-transfers-alfabank-01
+#         - vortex-services-01
+#         - vortex-creditpilot-cards-01
+#         - vortex-reports-01
+#         - vortex-dns-01
+#         - vortex-repo-01
+#         - vortex-rsyslog-01
+#         - vortex-clientweb-01
+#         - vortex-clientweb-02
+#         - vortex-keepalived-01
+#         - vortex-keepalived-02
+#         - vortex-keepalived-03
+#         - vortex-secureweb-01
+#         - vortex-secureweb-02
+#         - vortex-adminweb-01
+#         - vortex-adminweb-02
+#         - vortex-gateway-01
+#         - vortex-gateway-02
+#         - vortex-ossim-01
+#         - vortex-logs-data-01
+#         - vortex-brs-proc-01
+#         - vortex-rabbit-01
+#         - vortex-rabbit-02
+#         - vortex-keyserver-01
+#         - vortex-memcache-01
+#         - vortex-storage-01
+#         - vortex-storage-02
+#         - vortex-storage-03
+#         - vortex-webapp-paymarket-01
+#         - vortex-webapp-merchant-01
+#     disabled-hosts:
+#       hosts:
+#         - vortex-vcsa-01
+#         - vortex-vdp-01
+#         - vortex-esxi-01
+#         - vortex-esxi-02
+#         - vortex-esxi-03
+#         - vortex-esxi-04
+#         - vortex-esxi-05

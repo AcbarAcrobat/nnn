@@ -2,7 +2,7 @@
 ansible_environment: prodiction
 ansible_product: vortex
 ansible_datacenter: dc1
-ansible_datacenter_location: moscow
+ansible_datacenter_location: frankfurt
 count: 1
 allocate_public_ip: yes
 

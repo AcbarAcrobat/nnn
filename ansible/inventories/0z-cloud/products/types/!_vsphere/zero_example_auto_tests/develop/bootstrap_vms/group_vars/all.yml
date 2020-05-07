@@ -1,0 +1,66 @@
+cloud_bootstrap:
+
+  basic_roles:
+
+    # Future Usage
+
+    - '!_bootstrap/update-dns-config'
+    - '!_bootstrap/ntp-client'
+    - '!_bootstrap/local-repository'
+    - auditd
+    - rsyslog
+    - ossim-agent
+
+  services:
+    inventory_groups_vars:
+        test-sentry-redis-io-cluster:
+                redis_public_port: 6379
+                redis_slave_public_port: 6380
+                redis_username: redis
+                redis_passowrd: dc1d494f7915dbaee349e35a973d6c037357c548ad
+
+  servers:
+
+    vortex_auto_tests_01:
+        name: "vortex-auto-tests-01"
+        initial_bastion_host: true
+        network: "vlan_vortex_DEVELOP_321"
+        ip: "172.16.31.10"
+        gw: "172.16.31.2"
+        second_network: "vlan_vortex_DEVELOP_321"
+        second_ip: "172.16.21.2"
+        ssh: ""
+        memory_size_mb: 4096
+        cpu_count: 4
+        resource_pool: docker-develop-pool-01-compute-resource-01
+        vsphere_esxi_target: "10.0.20.60"
+        initial_only_dns_servers:
+            - "8.8.8.8"
+        ansible_inventory_groups:
+            - vlan_ALL
+            - vlan_vortex_DEVELOP_321
+        ansible_inventory_vars:
+            clamav_startup_hour: "3"
+            clamav_startup_minutes: "30"
+
+ssh_connect_type_self: ""
+ssh_connect_type_via: "ansible_ssh_common_args='-o ProxyCommand=\"ssh -W %h:%p %r@10.110.0.250\"'"
+
+vsphere_ip: "10.0.20.100"
+vsphere_fqdn: "reactive-vcsa-01.reactive.io"
+vsphere_login: "administrator@vsphere.local"
+vsphere_esxi_login: "root"
+vsphere_pass: "reactive"
+
+vsphere_template_name: "vortex-preprod-template-02"
+
+vsphere_domain: "vortex.me"
+
+#CURRENTLY ONLY CAN BE USED TEMPLATE DATASTORAGE FOR INITIAL CREATION VMs FROM TEMPLATE
+vsphere_storage: "/"
+#-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>-.-.-.-.->>
+
+vsphere_dc: "Linx-MSK-M8-6-16"
+
+dns_servers:
+   - 8.8.8.8
