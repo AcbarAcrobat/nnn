@@ -197,11 +197,9 @@ Target Inventory (GET INVENTORY), resulting inventory:
   * Just clone, cd and run! Like for example -
 
 ```
-
 git clone https://github.com/westsouthnight/vortex/tree/master
 cd votex/ansible
 ./scripts/wrappers/init/\!_stand-k8s.sh beta vortex westsouthnight '9101hfaubvu*@Q' true print_only bare
-
 ```
 
   * Be careful with your hands - think before start doing! Follow by a white rabbit, and good luck! ;)
