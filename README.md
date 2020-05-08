@@ -1,5 +1,5 @@
 # Welcome, to Vortex
-
+    
 ## Repository statements:
   ```
   * Terraform-free ansible realization of Dynamic Infrastructure development/management/deployment 
@@ -22,21 +22,6 @@
   * Storing builded docker images possible to different registries - gitlab, registryv2, nexus, etc.
   ```
 
-## It's not a joke, you can use shared devops cloud infrastructure as warplace, join us!
-
-  * Road Warrior Environment is shared and avaliabled for testing any thing from that repo.
-
-  * Just clone, cd and run! Like for example -
-
-   ```
-       git clone https://github.com/westsouthnight/vortex/tree/master
-
-       cd test_vortex/ansible
-
-       ./scripts/wrappers/init/\!_stand-k8s.sh beta vortex westsouthnight '9101hfaubvu*@Q' true print_only bare
-  ```
-  * Be careful with your hands - think before start doing! Follow by a white rabbit, and good luck! ;)
- 
 ## Readme's links:
 
 - [Ansible](ansible/)
@@ -204,3 +189,20 @@ Target Inventory (GET INVENTORY), resulting inventory:
         6. inventory:    Target inventory is must to be a specified, which be a result of new inventory for cloud location
 
         7. product:      Target product is must to be a specified, which be a result for new cloud location
+
+## It's not a joke, you can use shared devops cloud infrastructure as warplace, join us!
+
+  * Road Warrior Environment is shared and avaliabled for testing any thing from that repo.
+
+  * Just clone, cd and run! Like for example -
+
+```
+
+git clone https://github.com/westsouthnight/vortex/tree/master
+cd test_vortex/ansible
+./scripts/wrappers/init/\!_stand-k8s.sh beta vortex westsouthnight '9101hfaubvu*@Q' true print_only bare
+
+```
+
+  * Be careful with your hands - think before start doing! Follow by a white rabbit, and good luck! ;)
+ 
