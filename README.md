@@ -199,7 +199,7 @@ Target Inventory (GET INVENTORY), resulting inventory:
 ```
 
 git clone https://github.com/westsouthnight/vortex/tree/master
-cd test_vortex/ansible
+cd votex/ansible
 ./scripts/wrappers/init/\!_stand-k8s.sh beta vortex westsouthnight '9101hfaubvu*@Q' true print_only bare
 
 ```
